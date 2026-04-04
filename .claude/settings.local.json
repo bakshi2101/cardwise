@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx:*)",
+      "Bash(sudo chown:*)",
+      "Bash(npm cache:*)",
+      "Bash(cd:*)",
+      "Bash(cp:*)",
+      "Bash(npm install:*)",
+      "Bash(node:*)",
+      "Bash(curl:*)"
+    ]
+  }
+}
+{
+  "model": "sonnet",
+  "env": {
+    "MAX_THINKING_TOKENS": "10000",
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "50",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "haiku"
+  }
+}
