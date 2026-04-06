@@ -1,5 +1,6 @@
 import { getBestCards, getCategories } from "@/lib/recommend";
 import Link from "next/link";
+import BackButton from "@/components/BackButton";
 import RecommendClient from "./RecommendClient";
 
 interface Props {
@@ -43,9 +44,7 @@ export default async function RecommendPage({ params, searchParams }: Props) {
     <div className="max-w-2xl mx-auto px-4 py-6">
       {/* Header */}
       <div className="mb-6">
-        <Link href="/" className="text-sm text-white/30 hover:text-white/60 mb-3 inline-block transition-colors">
-          ← Back
-        </Link>
+        <BackButton />
         <div className="flex items-center gap-3">
           <span className="text-4xl">{category.icon}</span>
           <div>

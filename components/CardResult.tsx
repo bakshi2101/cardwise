@@ -182,21 +182,42 @@ export default function CardResult({
         </div>
 
         {/* ── Notes ───────────────────────────────────── */}
-        {reward.notes && (
-          <div
-            className={[
-              "mt-2 text-xs rounded-lg px-3 py-2",
-              reward.notes.includes("🎁")
-                ? "text-[#22C55E] bg-[#22C55E]/6 border border-[#22C55E]/15"
-                : "text-white/45 bg-white/4 border border-white/8 flex items-start gap-2",
-            ].join(" ")}
-          >
-            {!reward.notes.includes("🎁") && (
-              <span className="shrink-0 mt-px">ℹ</span>
-            )}
-            <span>{reward.notes}</span>
-          </div>
-        )}
+        {reward.notes && (() => {
+          const giftIdx = reward.notes.indexOf("🎁");
+          const baseNote = giftIdx > 0 ? reward.notes.slice(0, giftIdx).trim().replace(/\.$/, "") : null;
+          // Truncate bonus to first sentence only — avoids leaking inline math like "2.45%" into the callout
+          const bonusNote = (() => {
+            if (giftIdx === -1) return null;
+            const raw = reward.notes.slice(giftIdx).trim();
+            const firstPeriod = raw.indexOf(". ", 5); // skip emoji itself
+            return firstPeriod > 0 ? raw.slice(0, firstPeriod + 1) : raw;
+          })();
+          const plainNote = giftIdx === -1 ? reward.notes : null;
+          return (
+            <div className="mt-2 space-y-1.5">
+              {/* Plain note (no brand bonus) */}
+              {plainNote && (
+                <div className="text-xs text-white/45 bg-white/4 border border-white/8 rounded-lg px-3 py-2 flex items-start gap-2">
+                  <span className="shrink-0 mt-px">ℹ</span>
+                  <span>{plainNote}</span>
+                </div>
+              )}
+              {/* Base rate context (text before 🎁) */}
+              {baseNote && (
+                <div className="text-xs text-white/40 bg-white/3 border border-white/6 rounded-lg px-3 py-2 flex items-start gap-2">
+                  <span className="shrink-0 mt-px">ℹ</span>
+                  <span>{baseNote}</span>
+                </div>
+              )}
+              {/* Brand bonus callout */}
+              {bonusNote && (
+                <div className="text-xs text-[#22C55E] bg-[#22C55E]/6 border border-[#22C55E]/15 rounded-lg px-3 py-2">
+                  {bonusNote}
+                </div>
+              )}
+            </div>
+          );
+        })()}
 
         {/* ── Active offers ────────────────────────────── */}
         {reward.active_offers && reward.active_offers.length > 0 && (
@@ -246,49 +267,87 @@ export default function CardResult({
         </div>
 
         {/* ── Expanded details ─────────────────────────── */}
-        {expanded && (
-          <div className="mt-3 pt-3 border-t border-white/5 space-y-3">
-            <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
-              <div>
-                <div className="text-white/35">Annual fee</div>
-                <div className="font-medium text-white/75 font-mono mt-0.5">
-                  {(reward.annual_fee_aed ?? 0) === 0
-                    ? "Free"
-                    : `AED ${(reward.annual_fee_aed ?? 0).toLocaleString()}`}
-                </div>
-              </div>
-              <div>
-                <div className="text-white/35">Earn rate</div>
-                <div className="font-medium text-white/75 font-mono mt-0.5">
-                  {reward.earn_rate != null
-                    ? `${reward.earn_rate} ${reward.earn_unit ?? ""} / AED ${reward.earn_per_x_aed ?? 1}`
-                    : `${displayRate.toFixed(2)}% back`}
-                </div>
-              </div>
-              {reward.min_txn_amount_aed != null && (
+        {expanded && (() => {
+          // Derive point value for points/miles cards
+          // per_aed: point_value = effective_return_pct / (earn_rate × 100)
+          // per_usd: point_value = effective_return_pct × 3.673 / (earn_rate × 100)
+          const isPoints = reward.earn_rate != null && reward.earn_unit != null &&
+            (reward.earn_unit === "per_aed" || reward.earn_unit === "per_usd");
+          let pointValue: number | null = null;
+          if (isPoints && reward.earn_rate && reward.earn_rate > 0) {
+            const usdFactor = reward.earn_unit === "per_usd" ? 3.673 : 1;
+            pointValue = (reward.effective_return_pct * usdFactor) / (reward.earn_rate * 100);
+          }
+
+          // Human-readable earn rate label
+          let earnLabel = `${displayRate.toFixed(2)}% back`;
+          if (reward.earn_rate != null) {
+            const unitLabel = reward.earn_unit === "per_aed" ? "pts per AED"
+              : reward.earn_unit === "per_usd" ? "pts per USD"
+              : reward.earn_unit ?? "";
+            earnLabel = `${reward.earn_rate} ${unitLabel}`;
+          }
+
+          return (
+            <div className="mt-3 pt-3 border-t border-white/5 space-y-3">
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
                 <div>
-                  <div className="text-white/35">Min transaction</div>
+                  <div className="text-white/35">Annual fee</div>
                   <div className="font-medium text-white/75 font-mono mt-0.5">
-                    AED {reward.min_txn_amount_aed.toLocaleString()}
+                    {(reward.annual_fee_aed ?? 0) === 0
+                      ? "Free"
+                      : `AED ${(reward.annual_fee_aed ?? 0).toLocaleString()}`}
                   </div>
                 </div>
-              )}
-              {reward.source_url && (
                 <div>
-                  <div className="text-white/35">Source</div>
-                  <a
-                    href={reward.source_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-white/30 hover:text-white/55 underline underline-offset-2 transition-colors mt-0.5 block truncate"
-                  >
-                    Bank T&amp;C ↗
-                  </a>
+                  <div className="text-white/35">Earn rate</div>
+                  <div className="font-medium text-white/75 font-mono mt-0.5">{earnLabel}</div>
                 </div>
-              )}
+                {/* Point value row — only for points/miles with derivable value */}
+                {pointValue != null && (
+                  <div className="col-span-2">
+                    <div className="text-white/35 mb-0.5">How {displayRate.toFixed(1)}% is calculated</div>
+                    <div className="font-mono text-white/60 bg-white/4 border border-white/6 rounded-lg px-3 py-2 leading-relaxed">
+                      {reward.earn_unit === "per_usd" ? (
+                        <>
+                          {reward.earn_rate} pts/USD × AED {pointValue.toFixed(4).replace(/0+$/, "").replace(/\.$/, "")} per pt ÷ 3.673 (USD→AED) = {displayRate.toFixed(2)}%
+                        </>
+                      ) : (
+                        <>
+                          {reward.earn_rate} pts/AED × AED {pointValue.toFixed(4).replace(/0+$/, "").replace(/\.$/, "")} per pt = {displayRate.toFixed(2)}%
+                        </>
+                      )}
+                      <div className="mt-1 text-white/40">
+                        1 point = AED {pointValue.toFixed(4).replace(/0+$/, "").replace(/\.$/, "")}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {reward.min_txn_amount_aed != null && (
+                  <div>
+                    <div className="text-white/35">Min transaction</div>
+                    <div className="font-medium text-white/75 font-mono mt-0.5">
+                      AED {reward.min_txn_amount_aed.toLocaleString()}
+                    </div>
+                  </div>
+                )}
+                {reward.source_url && (
+                  <div>
+                    <div className="text-white/35">Source</div>
+                    <a
+                      href={reward.source_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-white/30 hover:text-white/55 underline underline-offset-2 transition-colors mt-0.5 block truncate"
+                    >
+                      Bank T&amp;C ↗
+                    </a>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
       </div>
     </div>
   );

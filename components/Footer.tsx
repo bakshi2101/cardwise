@@ -15,9 +15,10 @@ export default function Footer() {
         <nav className="flex items-center gap-1 text-sm" aria-label="Footer navigation">
           {[
             { href: "/", label: "Home" },
-            { href: "/cards", label: "Cards" },
-            { href: "/wallet", label: "Wallet" },
-            { href: "/optimize", label: "Optimize" },
+            { href: "/optimize/add-cards", label: "Optimize" },
+            { href: "/recommend/spending", label: "Recommend" },
+            { href: "/wallet", label: "My Wallet" },
+            { href: "/cards", label: "All Cards" },
           ].map((link) => (
             <Link
               key={link.href}

@@ -194,6 +194,17 @@ export async function getBestCardForCategory(
   return results[0] ?? null;
 }
 
+// All wallet cards for a category, sorted best-first (cap-aware overflow use)
+export async function getAllCardsForCategory(
+  cardIds: string[],
+  categorySlug: string
+): Promise<RewardRanked[]> {
+  if (cardIds.length === 0) return [];
+  const results = await fetchWithFallback(cardIds, categorySlug);
+  results.sort((a, b) => b.effective_return_pct - a.effective_return_pct);
+  return results;
+}
+
 // Best card in the whole market for a category (gap analysis market side)
 export async function getBestMarketRateForCategory(
   categorySlug: string
@@ -215,6 +226,120 @@ export async function getBestMarketRateForCategory(
     monthly_cap_spend_aed: top.monthly_cap_spend_aed ?? null,
     monthly_cap_reward: top.monthly_cap_reward ?? null,
   };
+}
+
+// ---------------------------------------------------------------------------
+// Market-optimal portfolio reward (used to compute gap in Path A)
+// Runs the same greedy as Path B against the full card market so the
+// gap number is exactly what Path B would show with unconstrained card count.
+// ---------------------------------------------------------------------------
+
+interface SimpleCardReward {
+  rate: number;
+  cap_spend: number | null;
+  cap_reward: number | null;
+}
+interface SimpleCard {
+  card_id: string;
+  rewards: Record<string, SimpleCardReward>;
+}
+
+function simpleEffectiveMonthly(
+  card: SimpleCard,
+  catSlug: string,
+  spend: number
+): number {
+  const r = card.rewards[catSlug] ?? card.rewards["general"];
+  if (!r || spend <= 0) return 0;
+  return computeMonthlyReward(spend, r.rate, r.cap_spend, r.cap_reward);
+}
+
+function simpleRawTotal(
+  cards: SimpleCard[],
+  profile: Record<string, number>,
+  slugs: string[]
+): number {
+  let total = 0;
+  for (const slug of slugs) {
+    const spend = profile[slug] ?? 0;
+    if (!spend) continue;
+    let best = 0;
+    for (const card of cards) {
+      best = Math.max(best, simpleEffectiveMonthly(card, slug, spend));
+    }
+    total += best;
+  }
+  return total;
+}
+
+function simpleGreedy(
+  pool: SimpleCard[],
+  profile: Record<string, number>,
+  slugs: string[],
+  maxCards: number
+): SimpleCard[] {
+  const selected: SimpleCard[] = [];
+  while (selected.length < maxCards) {
+    const current = simpleRawTotal(selected, profile, slugs);
+    let bestMarginal = 0;
+    let bestCard: SimpleCard | null = null;
+    for (const card of pool) {
+      if (selected.some((s) => s.card_id === card.card_id)) continue;
+      const marginal = simpleRawTotal([...selected, card], profile, slugs) - current;
+      if (marginal > bestMarginal) {
+        bestMarginal = marginal;
+        bestCard = card;
+      }
+    }
+    if (!bestCard) break;
+    selected.push(bestCard);
+  }
+  return selected;
+}
+
+/**
+ * Returns the total monthly reward achievable by an unconstrained optimal
+ * portfolio from the full card market, given a spending profile.
+ * Uses the same rewards_ranked data source and greedy logic as Path B so
+ * the number is directly comparable to what Path B would show.
+ *
+ * maxCards: how many cards the portfolio is allowed to hold (default: unlimited
+ * — use a large number so we don't under-estimate the market ceiling)
+ */
+export async function getMarketOptimalMonthlyReward(
+  profile: Record<string, number>,
+  activeSlugs: string[],
+  maxCards = 20
+): Promise<number> {
+  if (activeSlugs.length === 0) return 0;
+
+  const { data: rows } = await supabase
+    .from("rewards_ranked")
+    .select("card_id, category_slug, effective_return_pct, monthly_cap_spend_aed, monthly_cap_reward")
+    .in("category_slug", [...activeSlugs, "general"])
+    .eq("is_active", true);
+
+  if (!rows || rows.length === 0) return 0;
+
+  // Build simple card matrix (same pattern as Path B)
+  const cardMap = new Map<string, SimpleCard>();
+  for (const r of rows) {
+    if (!cardMap.has(r.card_id)) {
+      cardMap.set(r.card_id, { card_id: r.card_id, rewards: {} });
+    }
+    const card = cardMap.get(r.card_id)!;
+    if (!card.rewards[r.category_slug]) {
+      card.rewards[r.category_slug] = {
+        rate: r.effective_return_pct,
+        cap_spend: r.monthly_cap_spend_aed ?? null,
+        cap_reward: r.monthly_cap_reward ?? null,
+      };
+    }
+  }
+
+  const pool = Array.from(cardMap.values());
+  const selected = simpleGreedy(pool, profile, activeSlugs, maxCards);
+  return simpleRawTotal(selected, profile, activeSlugs);
 }
 
 export async function getPopularMerchants() {

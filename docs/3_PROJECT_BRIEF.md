@@ -1,168 +1,271 @@
-# CardWise — Project Brief
-
-> What CardWise is, why it exists, and how it works. Reference this when onboarding to new chats or clarifying scope.
+# CardWise — Project Brief (Revised April 2026)
+*UAE Credit Card Rewards Optimization Platform*
 
 ---
 
 ## What is CardWise?
 
-**CardWise** is a UAE credit card rewards optimization web app. It answers the question: **"Which credit card should I use right now?"**
+CardWise is a UAE credit card rewards optimization web app. It answers the question: **"Do I have the right cards for my spending, and am I maximizing rewards across my portfolio?"**
 
 Users tell CardWise:
-1. Which cards they have
+1. Which cards they currently have (if optimizing) OR what their spending profile is (if seeking recommendation)
 2. How much they typically spend in each category (dining, groceries, travel, etc.)
+3. Their preferences (number of cards, benefits they care about)
 
 CardWise tells them:
-- Which card gives the highest rewards **right now** at a specific merchant or category
-- Which new card would add the most value to their portfolio annually
-- Whether they're "leaving money on the table" (missing out on better rewards across categories)
-- What active promotions apply to their cards
+- **Path A (Optimize):** How to get the maximum value out of the cards they already own — which card to use for which category, what they're earning, and how much more is possible
+- **Path B (Recommend):** Which cards to get based on their spending profile and preferences
+- Optional: Quick reference for specific merchants or categories for in-the-moment card selection
+- Optional: Exploration of all UAE cards to understand the broader market
 
 ---
 
 ## The Core Insight
 
-Most UAE credit card users carry 2–4 cards but use the wrong one 60–70% of the time. A 10-second lookup could save them AED 5,000–10,000 per year by optimizing their card choice per transaction.
+Most UAE credit card users carry 2–4 cards but **don't know which of their cards works best for each spending category**, leaving AED 5,000–15,000 on the table annually. They lack a clear map of which card to prioritize for each category, and they don't know if their current card portfolio is even optimal for their lifestyle.
 
-**No tool exists for this in the UAE market.** Comparison sites (Soulwallet, Yallacompare) show card features; they don't optimize spend or answer "which card do I tap right now?"
+> ⚠️ **Gap in the market:** No tool exists for this in the UAE market. Comparison sites (Soulwallet, Yallacompare) show card features; they don't help users audit their portfolio or answer "do I have the right set of cards for how I actually spend?"
 
 ---
 
 ## Core User Jobs (JTBD)
 
-### Job 1: "Which card do I use right now?" (In-the-moment optimization)
-- **Trigger:** User is at a merchant (Carrefour, Emirates, Marriott) or knows the category (dining, travel)
-- **Need:** Instant ranked answer with effective return % + any caps/conditions
-- **Time budget:** Under 3 seconds
-- **Delivered by:** Search bar (merchant name) → Recommendation view → Ranked cards
+### Job 1: "How do I get the most from my cards?" (Portfolio optimization) — PATH A
 
-### Job 2: "Which new card should I get?" (Portfolio building)
-- **Trigger:** User asks, "Am I missing value? Should I add another card?"
-- **Need:** Calculator showing annual rewards by spending profile + welcome bonuses − fees = net annual value
-- **Delivered by:** Card browser → Detail page → Value calculator
+> **Primary focus — Path A.** This is a personal optimization moment. The user wants to know how to correctly use the cards they already carry to maximize rewards, without needing to change anything.
 
-### Job 3: "Am I leaving money on the table?" (Portfolio audit)
-- **Trigger:** User sets their spending profile
-- **Need:** Category-by-category gap analysis: current best card vs. market best card
-- **Delivered by:** My wallet → Spending profile setup → Audit view
+- **Trigger:** User signs up with existing cards and wants to stop leaving rewards on the table
+- **Need:** A clear, actionable guide showing which of their cards to use for each category, how much value they're actually generating, and a realistic sense of their upside
+- **Delivered by:** Add cards → Set spending profile → Portfolio optimization view (card assignment matrix + earnings snapshot + upside teaser)
 
-### Job 4: "Any deals I should know about?" (Offer discovery)
-- **Trigger:** New offers posted by banks
-- **Need:** Filter to user's cards, show value, alert on expiring offers
-- **Delivered by:** Offers page + in-app notifications
+*Key insight: This is an optimization-first moment. The user is not shopping for new cards. They want to use what they have more intelligently. All outputs in Path A are scoped to their wallet only.*
+
+---
+
+### Job 2: "Should I get a better portfolio?" (Portfolio recommendation) — PATH B
+
+> **Primary focus — Path B.** This is a decision-support moment. CardWise helps users build an intentional portfolio from scratch or upgrade an underperforming one.
+
+- **Trigger:** User has completed Path A and wants to explore their upside, OR is starting fresh with no strong card preference
+- **Need:** Understand which set of cards would work best for their spending profile and preferences, accounting for welcome bonuses, annual fees, and lifestyle benefits
+- **Delivered by:** Set spending profile → Select preferences → Get recommendation → See why each card matters
+
+*Key insight: Path B is the natural next step after Path A. The "money left on the table" teaser at the end of Path A is the primary handoff trigger.*
+
+---
+
+### Job 3: "Which card should I use right now?" (In-the-moment reference)
+
+> **Supporting focus — enables both paths.** This is a reference/execution moment. The user already knows their strategy; they need a quick tiebreaker.
+
+- **Trigger:** User is at checkout or a specific merchant and wants a quick card recommendation from their wallet
+- **Need:** Simple category-level guide ("Dining → FAB Cashback at 5%") or specific merchant lookup
+- **Delivered by:** Category optimization matrix → Optional merchant/category search
+
+---
+
+## Path A — Portfolio Optimization: Detailed Design
+
+> 🎯 **Design Principle:** Path A is entirely scoped to the user's own cards. No market comparisons. No "best card available." No cards the user doesn't own. The entire experience should feel like a personal financial report card on their existing wallet.
+
+### Step 1 — Add Cards
+
+User selects which credit cards they currently carry from the CardWise database. Only their selected cards are used in all subsequent calculations.
+
+### Step 2 — Set Spending Profile
+
+User enters estimated monthly AED spend per category (dining, groceries, fuel, etc.). This becomes the basis for all reward calculations in Path A.
+
+### Step 3 — Portfolio Optimization Output
+
+The output screen has three distinct sections:
+
+---
+
+#### Section A — Card Assignment Matrix *(the core)*
+*"Here's which of your cards to use for each category."*
+
+For each spending category, show which of the user's cards yields the highest `effective_return_pct`. Displayed as a glanceable guide — category by category — with the recommended card from their wallet, its effective return %, and any key conditions or caps to be aware of.
+
+**Example output row:**
+```
+Dining → FAB Cashback (5%) | Groceries → ENBD LuLu (7%) | Fuel → FAB ADNOC (15%)
+```
+
+> ⚠️ **Rules:** Never show cards the user does not own. Never reference market alternatives or competitors. Never label anything "best in market."
+
+---
+
+#### Section B — Estimated Rewards Snapshot
+*"Here's what you're earning by using your cards correctly."*
+
+Based on the user's spending profile and the card assignment matrix, calculate and display:
+- Per-category estimated reward value (AED/month)
+- Total monthly rewards value (sum across all categories)
+- Total projected annual rewards value
+
+Label this clearly as **estimated earnings when cards are used optimally**. Respect `monthly_cap_spend_aed` and `monthly_cap_reward` in calculations. Always display as "estimated" not "guaranteed."
+
+---
+
+#### Section C — Upside Teaser + Path B CTA *(bottom of screen only)*
+*"You could be earning more. Ready to find out how?"*
+
+A single, visually distinct callout at the bottom of the screen showing:
+- The aggregate estimated annual gap: *"You could be earning an estimated AED [X] more per year with a better card portfolio."*
+- A single CTA button: **"Build my ideal portfolio →"** (routes to Path B)
+
+Gap calculation: `sum of (market_best_effective_return_pct − user_best_effective_return_pct) × monthly_spend_aed`, annualized. The gap figure references **no specific card by name** — it is a single aggregate number only.
+
+> ⚠️ This section must be visually contained and secondary — not the dominant element. It is a teaser, not a comparison view.
+
+---
+
+### Path A Tone & Language Rules
+
+| ✅ Use this language | ❌ Never say this |
+|---|---|
+| "Here's how to get the most from what you have." | "Compared to the best card on the market..." |
+| "Your estimated earnings using your cards optimally." | "The top card for this category is X." |
+| "You're leaving AED X on the table overall." | "You could switch to Y card for a better rate." |
+| "Ready to upgrade your portfolio?" (CTA only) | "Best in market: 7% at groceries." |
+
+---
+
+## User Journey (MVP Scope)
+
+Both paths begin from a shared entry point where the user chooses their objective.
+
+| PATH A: Optimize Existing Cards | PATH B: Get Portfolio Recommendation |
+|---|---|
+| Add my cards (which cards do you have?) | Set spending profile (monthly spend by category) |
+| Set spending profile (monthly spend by category) | How many cards are you comfortable with? |
+| Card assignment matrix: which of your cards wins each category | What benefits matter to you? (Lounge, Valet, Travel insurance, etc.) |
+| Estimated earnings snapshot (monthly + annual, from your cards) | Recommended portfolio: cards that fit your profile, why each card, estimated annual rewards |
+| Upside teaser + CTA to Path B at bottom | |
+
+**Both paths converge → Optional features available from either path:**
+- Search specific merchant/category for in-the-moment card selection from your wallet
+- Browse UAE card repository: explore all 46+ cards, understand reward structures, compare features
 
 ---
 
 ## Tech Stack
 
-**Frontend:** Next.js (React) + Tailwind CSS  
-**Backend:** Supabase (PostgreSQL) + Row-Level Security (RLS)  
-**State:** React hooks (useState, useContext for user's cards)  
-**Hosting:** Vercel (Next.js native)
+| Layer | Technology |
+|---|---|
+| Frontend | Next.js (React) + Tailwind CSS |
+| Backend | Supabase (PostgreSQL) + Row-Level Security (RLS) |
+| State | React hooks (useState, useContext for user's cards and spending profile) |
+| Hosting | Vercel (Next.js native) |
 
 ---
 
 ## Database Overview
 
-**13 tables, ~46 credit cards, ~16 spending categories.**
+**13 tables, ~52 credit cards (post tier splits), 17 spending categories.**
 
-**Core data flow:**
+### Core data flow — Path A (Optimize)
+
 ```
-User searches "Carrefour" 
-  → Lookup in merchants table (Carrefour = groceries category)
-  → Query card_rewards for all cards + groceries
-  → Filter to user's cards from user_cards table
-  → Sort by effective_return_pct DESC
-  → Show top card with caps, exclusions, last_verified_date
+User provides:
+  - Cards in their wallet (user_cards table)
+  - Monthly spending by category (user_spending_profile table)
+
+CardWise calculates (scoped to user's cards only):
+  - For each category: which of the user's cards gives the highest effective_return_pct
+  - Per-category monthly reward value: spending × effective_return_pct (capped at monthly limits)
+  - Aggregate gap: max(effective_return_pct across all cards) − user's best, × spend, annualized
+
+Output:
+  - Card assignment matrix: best card from user's wallet per category
+  - Earnings snapshot: monthly + annual estimated rewards
+  - Upside teaser: single aggregate gap figure + CTA to Path B
 ```
 
-**Key innovation:** `effective_return_pct` normalizes all reward types (points, miles, cashback %) into one comparable number.
+*Key innovation: `effective_return_pct` normalizes all reward types (points, miles, cashback %) into one comparable number in AED, enabling like-for-like comparison across any card type.*
+
+### Core data flow — Path B (Recommend)
+
+```
+User provides:
+  - Monthly spending by category (user_spending_profile table)
+  - Number of cards they want (preference)
+  - Benefits they care about (lounge, valet, etc.)
+
+CardWise calculates:
+  - Score each card for fit: coverage of their categories + preferences
+  - Recommend N cards that maximize annual value
+  - Include welcome bonuses, annual fees, benefits weighting
+
+Output:
+  - Ranked portfolio recommendations (1–3 portfolios)
+  - For each: estimated annual rewards, why each card matters
+  - Next steps: how to apply, welcome bonus timeline
+```
 
 ---
 
-## Current Status (March 31, 2026)
+## Current Status (April 2026)
 
-### ✅ Complete
-- Database schema finalized (13 tables)
-- Spending categories structured
-- SQL migration scripts written + tested
-- Initial seed data for banks, categories, merchants (~50 popular stores)
-- Research spreadsheet: 46 UAE credit cards mapped with initial rewards data
-
-### 🔄 In Progress
-- **Card-by-card T&C verification** (currently in progress — reading official bank PDFs, cross-checking reward rates, identifying caps/exclusions)
-- Data entry into Supabase (card_rewards table is the bottleneck)
-
-### ⏳ Pending (Post-MVP)
-- Offers table seeding (top 20 current promotions)
-- Loyalty program integration (Skywards, Marriott, etc.)
-- Reward tiers (cards with stepped earn rates)
-- Frontend components (recommendation engine, portfolio audit, card browser)
-- User auth + spending profile onboarding
+| | Item |
+|---|---|
+| ✅ | Database schema finalized (13 tables); 17 spending categories structured |
+| ✅ | SQL migration scripts written and tested; initial seed data for banks, categories, merchants (~50 stores) |
+| ✅ | FAB: all 17 cards verified against official T&C PDFs (including tier splits: Etihad Guest ×3, SHARE ×3, Blue FAB ×3) |
+| ✅ | Emirates NBD: all 6 cards verified (Skywards Infinite, Skywards Signature, Marriott Bonvoy World Elite, Marriott Bonvoy World, LuLu 247 Platinum, LuLu 247 Titanium) |
+| ✅ | Mashreq: 2 cards verified (Cashback, Noon) |
+| 🔄 | Remaining banks: ADIB, DIB, Citi, RAKBank, Liv, Wio, ADCB — scraped data, pending T&C verification |
+| ⏳ | Frontend: portfolio optimization view (Path A), recommendation engine (Path B), category matrix, merchant search |
+| ⏳ | User auth + spending profile onboarding flow |
+| ⏳ | Offers table seeding (top 20 promotions); loyalty program integration; reward tiers |
 
 ---
 
 ## Data Quality Standards
 
 Every row in `card_rewards` must have:
-- ✅ `effective_return_pct` — verified from T&C
-- ✅ `source_url` — link to bank T&C PDF or website
-- ✅ `last_verified_date` — date of verification
-- ✅ `notes` — gotchas, brand bonuses, conditions in plain English
+- `effective_return_pct` — verified from T&C
+- `source_url` — link to bank T&C PDF or website
+- `last_verified_date` — date of verification
+- `notes` — gotchas, brand bonuses, conditions in plain English
 
-**Verification cadence:** Weekly for active cards, monthly for secondary cards.
+*Verification cadence: Weekly for active cards, monthly for secondary cards.*
 
 ---
 
-## Design Principles (why the schema is shaped this way)
+## Design Principles
 
-### 1. Jobs to Be Done (JTBD)
-Every table exists to serve a user job. Banks table → filters cards by issuer. Merchants table → maps real names to categories (Carrefour, Talabat, Emirates).
-
-### 2. Choice Architecture
-Don't show users a spreadsheet of numbers. Show one ranked card + effective return %. Hide complexity (caps, exclusions) in toggles/tooltips, but never hidden.
-
-### 3. Trust & Transparency
-- `last_verified_date` + `source_url` on every reward row (show when/where data came from)
-- `exclusions` field for per-card gotchas
-- `is_promotional` flag so users aren't surprised when a rate expires
-- UI must say "estimated return" not "guaranteed return"
-
-### 4. Context-Awareness
-Users think in merchants ("I'm at Carrefour"), not MCC codes. The `merchants` table bridges this gap. The `card_reward_exclusions` table handles per-card exceptions.
-
-### 5. Normalization for Comparison
-Different cards offer different reward types (points, miles, cashback %). `reward_currency_value_aed` + `effective_return_pct` normalize these into one currency so users can compare apples-to-apples.
+| Principle | What it means | Why |
+|---|---|---|
+| JTBD-first | Every table and view exists to serve a specific user job | Prevents scope creep and keeps the product focused |
+| Path A = wallet-only | Path A never shows or references cards outside the user's wallet | Clarity and trust: users optimize what they have, not what they don't |
+| Two-path architecture | Optimize (Path A) and Recommend (Path B) are distinct flows with a clear handoff | Matches two distinct user mindsets at the right moment |
+| Trust & transparency | `last_verified_date` + `source_url` on every reward row; always say "estimated" | UAE users are skeptical of financial tools; provenance builds trust |
+| Normalization for comparison | `effective_return_pct` converts points, miles, and cashback to a single AED number | Enables apples-to-apples comparison across all card types |
 
 ---
 
 ## Known Constraints & Trade-offs
 
 | Constraint | Impact | Rationale |
-|-----------|--------|-----------|
-| Manual data entry for card T&Cs | Slow MVP, but high trust | No web scraping / API access to bank T&Cs; manual verification ensures accuracy |
-| No live merchant transaction history | Can't auto-categorize actual spend | PSD2/UAE regulations limit data access; users manually set spending profile |
-| Fixed spending categories (14) | Simplifies logic, but less granular | MVP scope; categories cover ~95% of spend patterns |
-| Caps modeled as monthly, not annual | May not fit all cards | Most UAE cards use monthly caps; can add annual cap field if needed |
-| No fees modeled in recommendation engine yet | Oversimplifies card value | Fees will be added in Job 2 (new card calculator) |
-
----
-
-## Revenue & Sustainability (Future)
-
-MVP is free. Monetization paths being explored:
-- Referral fees from bank partner links
-- Premium "white-label" dashboard for corporate/HR integrations
-- Data licensing to fintech partners (anonymized rewards patterns)
+|---|---|---|
+| Manual T&C verification | Slow initial data build, but high trust | No API access to bank T&Cs; manual verification ensures accuracy |
+| No live transaction history | Users manually estimate spend per category | UAE regulations limit data access |
+| Fixed 17 spending categories | Simplifies logic, slightly less granular | MVP scope; covers ~95% of spend patterns |
+| Caps modeled as monthly | May not fit all cards | Most UAE cards use monthly caps; annual cap field can be added if needed |
+| Fees excluded from Path A | More complete picture in Path B | Path A focuses on optimization, not acquisition decisions |
 
 ---
 
 ## Success Metrics (Post-Launch)
 
-1. **Engagement:** % of users who search a merchant within 7 days (target: 60%)
-2. **Utility:** Average estimated annual savings per user (target: AED 4,000)
-3. **Trust:** % of users who return within 30 days (target: 40%)
-4. **Data quality:** % of last_verified_date < 90 days old (target: 95%)
+| Metric | Definition | Target |
+|---|---|---|
+| Engagement | % completing Path A or B within 7 days of signup | 70% |
+| Utility | Average estimated annual savings surfaced per user (Path A + B combined) | AED 5,000+ |
+| Retention | % of users returning within 30 days | 50% |
+| Data quality | % of card_rewards rows with last_verified_date < 90 days old | 95% |
 
 ---
 
@@ -177,34 +280,34 @@ MVP is free. Monetization paths being explored:
 
 ---
 
-## Key Contacts & Resources
-
-**Data sources:**
-- Bank websites (primary)
-- Soulwallet.com (good UAE card comparison)
-- Bank T&C PDFs (definitive for caps/exclusions)
-- CardMaven.in forum (community discussions)
-
-**UAE Banking Context:**
-- ~13 major banks issue credit cards
-- ~500 credit card products exist, but ~42 dominate (top 5 banks account for 70% of market)
-- Mandatory free-for-life cards + supplementary cards are common
-- Forex markup 1.5–3.5% standard; some premium cards offer 0%
-- Lounge access & valet more valuable than cash rewards for high earners
-
----
-
 ## Next Immediate Steps
 
-1. **Complete card-by-card verification** against T&C PDFs
-2. **Populate card_rewards table** with all 46 cards × 16 categories (expect ~200+ rows)
-3. **Add card_benefits** (lounge, valet, welcome bonuses) for all cards
-4. **Seed offers table** with top 20 active promotions
-5. **Build frontend recommendation engine** (search + ranking logic)
-6. **Test with beta users** (friends with multiple UAE credit cards)
+1. Complete T&C verification for ADIB and DIB (priority post-Mashreq; targets ~75–80% UAE market coverage)
+2. Verify remaining banks: Citi, RAKBank, Liv, Wio, ADCB (post-launch additions)
+3. Build user spending profile setup flow (shared by both paths)
+4. Build Path A output: card assignment matrix + earnings snapshot + upside teaser
+5. Build Path B recommendation engine (suggest best card portfolio for spending profile)
+6. Build category optimization matrix (shared reference for both paths)
+7. Build optional merchant search (in-the-moment card selection)
+8. Build card repository browser (optional: explore all cards)
+9. Test with beta users (friends with multiple UAE credit cards)
 
 ---
 
-## Questions?
+## Key Resources
 
-If a new chat/Claude session needs context: reference this brief + the schema.md file. That should be 80% of what's needed to resume work.
+### Data Sources
+- **Bank T&C PDFs** — definitive source for caps, exclusions, and earn rates
+- **Bank websites** — product pages and KFS documents
+- **Soulwallet.com** — useful UAE card comparison reference
+
+### UAE Banking Context
+- ~13 major banks issue credit cards; ~52 dominant products (post tier splits)
+- Top 5 banks account for ~70% of market; FAB + ENBD alone estimated at 45–55%
+- Forex markup 1.5–3.5% standard; some premium cards offer 0%
+- Lounge access & valet more valuable than cash rewards for high earners
+- Mandatory free-for-life cards + supplementary cards common
+
+---
+
+> 📋 **Onboarding note for new sessions:** If a new Claude session needs context, reference this brief + `1_SCHEMA.md`. That should be 80% of what's needed to resume work.

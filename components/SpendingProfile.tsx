@@ -94,31 +94,38 @@ export default function SpendingProfileComponent({
         {profileCategories.map((cat) => (
           <div
             key={cat.id}
-            className="flex items-center gap-3 bg-white/3 rounded-lg px-3 py-2.5 border border-white/5"
+            className="flex items-start gap-3 bg-white/3 rounded-lg px-3 py-2.5 border border-white/5"
           >
-            <span className="text-base w-5 text-center shrink-0">
+            <span className="text-base w-5 text-center shrink-0 mt-0.5">
               {cat.icon}
             </span>
-            <label
-              className="text-xs text-white/55 w-20 sm:w-24 shrink-0 leading-tight"
-              htmlFor={`spend-${cat.slug}`}
-            >
-              {cat.name}
-            </label>
-            <div className="relative flex-1">
-              <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-white/30 text-xs font-mono pointer-events-none">
-                AED
-              </span>
-              <input
-                id={`spend-${cat.slug}`}
-                type="number"
-                min="0"
-                step="100"
-                value={profile[cat.slug] || ""}
-                onChange={(e) => handleChange(cat.slug, e.target.value)}
-                placeholder="0"
-                className="w-full pl-10 pr-2 py-1.5 rounded-md border border-white/10 bg-[#1A1D27] text-white/90 text-xs font-mono placeholder:text-white/20 focus:border-[#6366F1]/50 focus:outline-none transition-colors"
-              />
+            <div className="flex-1 min-w-0">
+              <label
+                className="text-xs font-medium text-white/70 leading-tight block mb-0.5"
+                htmlFor={`spend-${cat.slug}`}
+              >
+                {cat.name}
+              </label>
+              {cat.description && (
+                <div className="text-[10px] text-white/25 leading-snug mb-1.5">
+                  {cat.description}
+                </div>
+              )}
+              <div className="relative">
+                <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-white/30 text-xs font-mono pointer-events-none">
+                  AED
+                </span>
+                <input
+                  id={`spend-${cat.slug}`}
+                  type="number"
+                  min="0"
+                  step="100"
+                  value={profile[cat.slug] || ""}
+                  onChange={(e) => handleChange(cat.slug, e.target.value)}
+                  placeholder="0"
+                  className="w-full pl-10 pr-2 py-1.5 rounded-md border border-white/10 bg-[#1A1D27] text-white/90 text-xs font-mono placeholder:text-white/20 focus:border-[#6366F1]/50 focus:outline-none transition-colors"
+                />
+              </div>
             </div>
           </div>
         ))}

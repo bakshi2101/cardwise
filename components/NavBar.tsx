@@ -9,9 +9,11 @@ export default function NavBar() {
 
   const links = [
     { href: "/", label: "Home" },
-    { href: "/cards", label: "Cards" },
-    { href: "/wallet", label: "Wallet" },
-    { href: "/optimize", label: "Optimize" },
+    { href: "/optimize/add-cards", label: "Optimize", match: "/optimize" },
+    { href: "/recommend/spending", label: "Recommend", match: "/recommend" },
+    { href: "/search", label: "Search", match: "/search" },
+    { href: "/wallet", label: "My Wallet" },
+    { href: "/cards", label: "All Cards" },
   ];
 
   return (
@@ -27,7 +29,13 @@ export default function NavBar() {
 
         <div className="flex items-center gap-0.5 overflow-x-auto scrollbar-none">
           {links.map((link) => {
-            const isActive = pathname === link.href;
+            // "Recommend" only lights up on the Path B flow pages, NOT shared category pages
+        const RECOMMEND_FLOW = ["/recommend/spending", "/recommend/preferences", "/recommend/results"];
+        const isActive =
+              pathname === link.href ||
+              (link.match === "/recommend"
+                ? RECOMMEND_FLOW.some((p) => pathname.startsWith(p))
+                : link.match && pathname.startsWith(link.match) && link.match !== "/");
             return (
               <Link
                 key={link.href}
