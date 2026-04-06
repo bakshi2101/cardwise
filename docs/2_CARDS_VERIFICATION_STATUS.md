@@ -14,7 +14,7 @@
 
 ## Completion Status Summary
 
-**✅ VERIFIED (T&C Cross-checked): 26 cards**
+**✅ VERIFIED (T&C Cross-checked): 31 cards**
 - FAB Cashback Islamic Credit Card
 - FAB Rewards Indulge Card
 - FAB Elite Credit Card
@@ -40,17 +40,23 @@
 - Emirates NBD LuLu 247 Titanium Credit Card *(new tier variant — all 17 categories)*
 - Mashreq Cashback Credit Card *(all 17 categories verified from T&C PDF + KFS)*
 - Mashreq Noon Credit Card *(all 17 categories verified from T&C PDF + KFS)*
+- Liv Cashback Credit Card *(all categories verified from KFS + FAQ PDFs)*
+- Liv Cashback+ Credit Card *(all categories verified from KFS + FAQ PDFs)*
+- ADIB Cashback Visa Covered Card *(caps + source verified from KFS PDF)*
+- ADIB SHARE Infinite Covered Card *(all 17 categories inserted from Comparison PDF)*
+- ADIB SHARE Platinum Covered Card *(all 17 categories inserted from Comparison PDF)*
+- ADCB TouchPoints — benefits partially verified *(benefits PDF only; earn rates unverifiable — web returns 403)*
 
-**⏳ PENDING (Scraped data, needs T&C verification): 26 cards**
-- All non-FAB, non-ENBD banks
+**⏳ PENDING (Scraped data, needs T&C verification): 21 cards**
+- All remaining non-verified banks (Citi, RAKBank, Wio, DIB, CBD, HSBC, Standard Chartered)
 
 ---
 
 ## Verified Cards (26 total)
 
-### Verified Cards — 26/52 Complete *(card count: removed 1 FAB Infinite, added 3 Blue FAB; split FAB Etihad Guest 1→3, FAB SHARE 1→3, LuLu 1→2, Marriott 1→2)*
+### Verified Cards — 31/52 Complete *(card count: removed 1 FAB Infinite, added 3 Blue FAB; split FAB Etihad Guest 1→3, FAB SHARE 1→3, LuLu 1→2, Marriott 1→2)*
 
-All verified cards are FAB products with confirmed T&C cross-checks.
+Cards from FAB, ENBD, Mashreq, Liv, and ADIB are confirmed. ADCB blocked (earn rates unverifiable).
 
 #### 1. FAB Cashback Islamic Credit Card ✅
 - **Card ID:** 120cabc8-903a-4c17-ba49-cea19b032024
@@ -672,20 +678,112 @@ All Mashreq cards verified 2026-04-03. See verified cards section above.
 ### RAKBank — 0/1 verified ⏳
 - RAKBank World Credit Card
 
-### Liv (ENBD Digital) — 0/2 verified ⏳
-- Liv Cashback+ Credit Card
-- Liv Cashback Credit Card
-
-### ADIB (Abu Dhabi Islamic Bank) — 0/2 verified ⏳
-- ADIB SHARE Infinite Covered Card
-- ADIB SHARE Platinum Covered Card
-
 ### Wio Bank — 0/1 verified ⏳
 - Wio Credit Card
+
+### Dubai Islamic Bank — 0/? verified ⏳
+### Commercial Bank of Dubai — 0/? verified ⏳
+### HSBC UAE — 0/? verified ⏳
+### Standard Chartered UAE — 0/? verified ⏳
+
+---
 
 ### FAB — ✅ ALL FAB CARDS VERIFIED (17/17)
 ### ENBD — ✅ ALL ENBD CARDS VERIFIED (6/6)
 ### Mashreq — ✅ ALL MASHREQ CARDS VERIFIED (2/2)
+
+### Liv (ENBD Digital) — ✅ 2/2 verified (2026-04-06)
+
+#### Liv Cashback Credit Card ✅ (verified 2026-04-06)
+- **Card ID:** e976814e-35b9-41b0-b90a-aeda3fec089a
+- **Annual Fee:** Free for life | **Network:** Mastercard
+- **Min Salary:** AED 3,000 | **Forex markup:** 1.99% (corrected from 2.99%)
+- **Sources:** liv-credit-card-kfs-english.pdf + liv-credit-card-faq.pdf + liv-credit-card-termsconditions.pdf
+- **Reward Structure:** Tiered retroactive cashback — ALL categories
+  - AED 10,000+/month: **2%** cashback (AED 750 cap)
+  - AED 5,000–9,999/month: 1.5%
+  - Below AED 5,000: 0.75%
+  - Low merchant MCCs (government, utilities, insurance): **0.10%** flat (any tier)
+- **Key Notes:**
+  - Retroactive model: once you cross a tier threshold, ALL spend that month is recalculated at new rate
+  - Convert cashback to Emirates Skywards miles at 1:1 (limited time offer)
+  - Forex fee 1.99% bank + ~1.15% Mastercard = ~3.14% total cost; at 2% top tier: net ≈ -1.14%
+- **DB Changes:** forex_markup_pct corrected 2.99%→1.99%; inserted international/government/utilities/insurance rows
+
+#### Liv Cashback+ Credit Card ✅ (verified 2026-04-06)
+- **Card ID:** f461a75f-aaf0-4940-8f6b-b2b24dd86507
+- **Annual Fee:** AED 700 | **Network:** Mastercard
+- **Min Salary:** AED 12,000 (corrected from AED 10,000) | **Forex markup:** 1.99%
+- **Reward Structure:** Tiered retroactive cashback — ALL categories
+  - AED 15,000+/month: **4%** cashback (AED 1,500 cap)
+  - AED 7,000–14,999/month: 2%
+  - Below AED 7,000: 1%
+  - Low merchant MCCs (government, utilities, insurance): **0.10%** flat
+- **Key Notes:**
+  - Same retroactive model as free card
+  - At 4% top tier with 1.99% forex: net ≈ +0.86% internationally (marginal benefit)
+- **DB Changes:** min_salary corrected 10,000→12,000; forex_markup_pct corrected 2.99%→1.99%; inserted international/government/utilities/insurance rows
+
+### ADIB (Abu Dhabi Islamic Bank) — ✅ 3/3 verified (2026-04-06)
+
+#### ADIB Cashback Visa Covered Card ✅ (verified 2026-04-06)
+- **Card ID:** 021d6769-871f-4c9d-8610-0587fbb171ed
+- **Annual Fee:** AED 99 | **Network:** Visa | **Sharia-compliant**
+- **Sources:** ADIB-Covered-Cards-KFS.pdf
+- **Reward Structure:**
+  - Groceries: 4% (AED 300/month cap) ← **corrected from 1,000**
+  - Fuel: 4% (AED 300/month cap) ← **corrected from 1,000**
+  - Dining: 4% (AED 200/month cap) ← **corrected from 1,000**
+  - Education: 4% (AED 300/month cap) ← **corrected from 1,000**
+  - Utilities: 4% (AED 100/month cap) ← **corrected from 1,000**
+- **DB Changes:** Fixed monthly_cap_reward on all 5 rows; updated notes + last_verified_date
+
+#### ADIB SHARE Infinite Covered Card ✅ (verified 2026-04-06)
+- **Card ID:** 1012c93e-b3ca-4359-b45c-8c04aa7459aa
+- **Annual Fee:** AED 999 ← **corrected from AED 1,500** | **Network:** Visa Infinite
+- **Sources:** ADIB-Comparison of Card Offering.pdf + adib_Covered-Card_Terms_and_Conditions.pdf + ADIB-Covered-Cards-KFS.pdf
+- **Reward Structure (SHARE Points, 1 pt = AED 0.01):**
+  - 🎁 Carrefour/Mall of Emirates (MAF): **6 pts/AED = 6%**
+  - Standard local categories (dining, shopping, travel, etc.): **2 pts/AED = 2%**
+  - Specific merchant MCCs (groceries general, fuel, utilities, education, govt, rent): **0.5 pts/AED = 0.5%**
+  - International: 2 pts/AED = 2% (but 2.3% forex markup → net ≈ -0.3%)
+- **Key Notes:**
+  - "Specific merchants" = low-interchange MCCs: supermarkets (non-MAF), petrol, utilities, govt, education, real estate, transport, tolls, charities
+  - Fee waiver: AED 75,000 total annual spend or AED 30,000 international
+  - Benefits: Priority Pass lounge access, valet parking
+- **DB Changes:** Annual fee corrected 1,500→999; 17 reward rows inserted from scratch
+
+#### ADIB SHARE Platinum Covered Card ✅ (verified 2026-04-06)
+- **Card ID:** f1246274-59b3-4991-9df9-6b9c7aaf9748
+- **Annual Fee:** AED 199 ← **corrected from AED 500** | **Network:** Visa Platinum
+- **Sources:** Same as SHARE Infinite above
+- **Reward Structure (SHARE Points, 1 pt = AED 0.01):**
+  - 🎁 Carrefour/Mall of Emirates (MAF): **3 pts/AED = 3%**
+  - Standard local categories: **1.25 pts/AED = 1.25%**
+  - Specific merchant MCCs: **0.25 pts/AED = 0.25%**
+  - International: 1.25 pts/AED = 1.25% (but 2.3% forex markup → net ≈ -1.05%)
+- **Key Notes:**
+  - Fee waiver: AED 45,000 total annual spend or AED 15,000 international
+  - Benefits: Valet parking, roadside assistance
+- **DB Changes:** Annual fee corrected 500→199; 17 reward rows inserted from scratch
+
+### ADCB (Abu Dhabi Commercial Bank) — ❌ BLOCKED — earn rates unverifiable
+
+#### ADCB TouchPoints Gold/Platinum/Infinite ❌ (benefits partially verified 2026-04-06)
+- **Card IDs:**
+  - Gold: 400202ee-e8eb-42f9-9733-5286f08f76fc (AED 0 fee)
+  - Platinum: 5ce98d94-f54f-418c-90cb-d2d7c17267c3 (AED 500 fee)
+  - Infinite: 5062d5a3-88d5-48dc-96c5-5471409cd5dc (AED 1,200 fee)
+- **Source available:** adcb-supplemental-tp-tnc-en.pdf (benefits/perks only — no earn rates)
+- **Web fetch:** adcb.com returns HTTP 403 on all product pages
+- **What was confirmed from PDF:**
+  - Lounge access: Platinum ✅, Infinite ✅, Titanium ✅ — Gold ❌ (NOT eligible)
+  - Benefits include VOX Cinema, Talabat, Noon, Caribou offers
+  - Supplemental benefits detailed (golf, hotel, bonus TouchPoints)
+- **What remains unverified:**
+  - Earn rates for all 17 categories
+  - Monthly caps and exclusions
+- **Action needed:** Manual visit to ADCB website or contact bank for official T&C PDF
 
 
 ---
