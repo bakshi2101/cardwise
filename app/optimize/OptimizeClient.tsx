@@ -14,6 +14,8 @@ import {
   computeMonthlyReward,
 } from "@/lib/recommend";
 
+const WIO_CARD_ID = "eef85749-a7da-4975-82fe-eae4f5bcae53";
+
 // ── Types ─────────────────────────────────────────────────────
 
 interface OverflowSlot {
@@ -214,6 +216,7 @@ export default function OptimizeClient({ categories }: Props) {
   );
   const totalAnnual = totalMonthly * 12;
   const hasProfile = Object.values(profile).some((v) => v > 0);
+  const hasWio = walletIds.includes(WIO_CARD_ID);
 
   // ── Loading skeleton ──────────────────────────────────────────
   if (!loaded) {
@@ -479,7 +482,24 @@ export default function OptimizeClient({ categories }: Props) {
         </div>
       </div>
 
-      {/* ── Section 4: Card Benefits ──────────────────────────── */}
+      {/* ── Section 4: Wio bill-pay tip ──────────────────────── */}
+      {hasWio && (
+        <div className="bg-[#1A1D27] border border-[#6366F1]/20 rounded-xl px-4 py-4 flex items-start gap-3">
+          <span className="text-base shrink-0 mt-0.5">💡</span>
+          <div>
+            <div className="text-sm font-semibold text-white/90 mb-1">
+              Wio tip: earn extra cashback on your other card bills
+            </div>
+            <p className="text-xs text-white/50 leading-relaxed">
+              You can pay the bills for any of your other UAE credit cards using Wio Credit and earn an additional{" "}
+              <span className="text-white/75 font-medium">0.5%</span> (Plus plan) or{" "}
+              <span className="text-white/75 font-medium">1%</span> (Salary or Family plan) cashback — on top of whatever those cards already earn. Capped at that percentage of your Wio credit limit per month. Requires AED 5,000+ total spend on Wio Credit in the same month.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* ── Section 5: Card Benefits ──────────────────────────── */}
       {Object.keys(benefitsByCard).length > 0 && (
         <div className="bg-[#1A1D27] rounded-xl border border-white/8 overflow-hidden">
           <div className="px-4 py-3 border-b border-white/8">

@@ -56,6 +56,8 @@ interface Strategy {
   netOngoingValue: number;
 }
 
+const WIO_CARD_ID = "eef85749-a7da-4975-82fe-eae4f5bcae53";
+
 // ── Loyalty weighting helpers ──────────────────────────────────────────────
 
 function loyaltyMultiplier(
@@ -648,6 +650,18 @@ export default function RecommendResultsClient({ categories }: Props) {
                           <div className="flex-1 text-white/60">{cb.welcomeBonusTitle}</div>
                           <div className="font-bold text-[#F59E0B] font-mono shrink-0">
                             ~AED {cb.welcomeBonus.toLocaleString()}
+                          </div>
+                        </div>
+                      )}
+
+                      {cb.card.card_id === WIO_CARD_ID && (
+                        <div className="bg-[#6366F1]/6 border border-[#6366F1]/20 rounded-lg px-3 py-2.5 text-xs flex items-start gap-2">
+                          <span className="shrink-0 mt-px">💡</span>
+                          <div className="text-white/55 leading-relaxed">
+                            <span className="text-white/80 font-medium">Bonus: </span>
+                            Pay your other UAE credit card bills through Wio Credit to earn an extra{" "}
+                            <span className="text-white/75 font-medium">0.5%</span> (Plus plan) or{" "}
+                            <span className="text-white/75 font-medium">1%</span> (Salary/Family plan) cashback on top — capped at that % of your Wio credit limit per month. Requires AED 5,000+ spend in the same month.
                           </div>
                         </div>
                       )}

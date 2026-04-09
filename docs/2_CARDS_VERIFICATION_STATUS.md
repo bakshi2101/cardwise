@@ -14,7 +14,7 @@
 
 ## Completion Status Summary
 
-**✅ VERIFIED (T&C Cross-checked): 31 cards**
+**✅ VERIFIED (T&C Cross-checked): 38 cards**
 - FAB Cashback Islamic Credit Card
 - FAB Rewards Indulge Card
 - FAB Elite Credit Card
@@ -46,15 +46,22 @@
 - ADIB SHARE Infinite Covered Card *(all 17 categories inserted from Comparison PDF)*
 - ADIB SHARE Platinum Covered Card *(all 17 categories inserted from Comparison PDF)*
 - ADCB TouchPoints — benefits partially verified *(benefits PDF only; earn rates unverifiable — web returns 403)*
+- RAKBank World Credit Card *(all 17 categories verified from KFS + FAQ + cashback leaflet PDFs)*
+- RAKBank Titanium Credit Card *(all 17 categories verified + corrected from Sept 2024 enhancement)*
+- RAKBank Elevate Credit Card *(all 17 categories inserted; point value derived from "up to 3% back" on Privilege tier)*
+- Citi Cash Back Credit Card *(all 17 categories verified from T&C PDF; insurance excluded)*
+- Citi Premier Credit Card *(all 17 categories verified from T&C PDF; earn_unit corrected to per_usd; annual fee corrected 600→750)*
+- Citi Prestige Credit Card *(all 17 categories verified from T&C PDF; annual fee corrected 1575→1500; reward_currency_value_aed set to 0.033)*
+- Wio Credit Card *(all 17 categories verified from KFS PDF; forex corrected 0→2%; 0.5% rate for govt/utilities/rent confirmed)*
 
-**⏳ PENDING (Scraped data, needs T&C verification): 21 cards**
-- All remaining non-verified banks (Citi, RAKBank, Wio, DIB, CBD, HSBC, Standard Chartered)
+**⏳ PENDING (Scraped data, needs T&C verification): 14 cards**
+- All remaining non-verified banks (DIB, CBD, HSBC, Standard Chartered)
 
 ---
 
 ## Verified Cards (26 total)
 
-### Verified Cards — 31/52 Complete *(card count: removed 1 FAB Infinite, added 3 Blue FAB; split FAB Etihad Guest 1→3, FAB SHARE 1→3, LuLu 1→2, Marriott 1→2)*
+### Verified Cards — 38/52 Complete *(card count: removed 1 FAB Infinite, added 3 Blue FAB; split FAB Etihad Guest 1→3, FAB SHARE 1→3, LuLu 1→2, Marriott 1→2)*
 
 Cards from FAB, ENBD, Mashreq, Liv, and ADIB are confirmed. ADCB blocked (earn rates unverifiable).
 
@@ -672,14 +679,16 @@ All ENBD cards verified 2026-04-02. See verified cards section above.
 
 All Mashreq cards verified 2026-04-03. See verified cards section above.
 
-### Citi — 0/1 verified ⏳
-- Citi Premier Credit Card
+### Citi — 3/3 verified ✅ (Cash Back + Premier + Prestige all done)
+- Citi Cash Back Credit Card ✅ (2026-04-07)
+- Citi Premier Credit Card ✅ (2026-04-07)
+- Citi Prestige Credit Card ✅ (2026-04-07)
 
-### RAKBank — 0/1 verified ⏳
-- RAKBank World Credit Card
+### RAKBank — 3/3 verified ✅ (World + Titanium + Elevate all done)
+- RAKBank Elevate Credit Card ✅ (2026-04-06)
 
-### Wio Bank — 0/1 verified ⏳
-- Wio Credit Card
+### Wio Bank — 1/1 verified ✅
+- Wio Credit Card ✅ (2026-04-08)
 
 ### Dubai Islamic Bank — 0/? verified ⏳
 ### Commercial Bank of Dubai — 0/? verified ⏳
@@ -691,6 +700,8 @@ All Mashreq cards verified 2026-04-03. See verified cards section above.
 ### FAB — ✅ ALL FAB CARDS VERIFIED (17/17)
 ### ENBD — ✅ ALL ENBD CARDS VERIFIED (6/6)
 ### Mashreq — ✅ ALL MASHREQ CARDS VERIFIED (2/2)
+### Citi — ✅ ALL CITI CARDS VERIFIED (3/3)
+### Wio Bank — ✅ ALL WIO CARDS VERIFIED (1/1)
 
 ### Liv (ENBD Digital) — ✅ 2/2 verified (2026-04-06)
 
@@ -766,6 +777,148 @@ All Mashreq cards verified 2026-04-03. See verified cards section above.
   - Fee waiver: AED 45,000 total annual spend or AED 15,000 international
   - Benefits: Valet parking, roadside assistance
 - **DB Changes:** Annual fee corrected 500→199; 17 reward rows inserted from scratch
+
+### RAKBank — ✅ 3/3 verified (World 2026-04-07, Titanium 2026-04-07, Elevate 2026-04-06)
+
+#### RAKBank World Credit Card ✅ (verified 2026-04-07)
+- **Card ID:** 8b4f300b-a2ec-470c-98f5-1be7ea54b8ad
+- **Annual Fee:** AED 950 (free year 1; waived year 2+ at AED 100K spend) | **Network:** Mastercard World
+- **Min Salary:** AED 20,000
+- **Sources:** rakbank-world-mastercard.pdf (KFS) + rakbank-cashback-leaflet---world.pdf + rakbank-faqs---world.pdf
+- **Critical requirement:** ALL cashback (including 10% categories) requires AED 10,000 total monthly spend — if not met, earns 0% on everything
+- **Reward Structure:**
+  - Travel (flights + hotels + travel agencies): **10%**, shared cap AED 400/month
+  - Groceries/Supermarkets: **10%**, cap AED 300/month
+  - Dining: **10%**, cap AED 300/month
+  - Standard retail (all other): **1%**, cap AED 100/month
+  - E-wallet retail (Apple/Google/Samsung Pay): **3%**, cap AED 150/month
+  - Low-interchange (govt, utilities, education, rent/real estate, charities, transport): **0.25%**
+  - Fuel/petrol stations: **0.25%**, capped specifically at AED 50/month
+  - Annual cashback cap: AED 15,000
+- **Benefits:** Unlimited lounge access (primary + supplementary), 2 complimentary airport transfers/year via Careem
+- **Key gotcha:** Over-cap spend on Travel/Supermarket/Dining earns **nothing** (not even 1%)
+- **DB Changes:** Fixed fuel cap (null → AED 50); added 6 missing category rows; updated all notes + last_verified_date; set lounge_access_count = -1 (unlimited)
+
+#### RAKBank Titanium Credit Card ✅ (verified 2026-04-07)
+- **Card ID:** 3b954443-8044-47b6-a737-0b703d77d460
+- **Annual Fee:** Free for life | **Network:** Mastercard | **Min Salary:** AED 8,000
+- **Sources:** rakbank-titanium-credit-card.pdf (KFS) + rakbank---titanium-cashback--leaflet.pdf + rakbank-faqs---titanium-cc.pdf
+- **Enhancement date:** Sept 1, 2024 — DB had pre-enhancement rates (wrong min spend, wrong caps)
+- **Critical requirement:** ALL cashback requires AED 2,000 total monthly spend (reduced from previous higher threshold)
+- **Reward Structure:**
+  - Groceries/Supermarkets: **5%**, cap AED 100/month
+  - Dining: **5%**, cap AED 100/month
+  - Cinema tickets: **50%**, cap AED 100/month
+  - Video streaming subscriptions (Netflix, Disney+ etc.): **50%**, cap AED 100/month
+  - Combined cap for all 4 above: AED 400/month
+  - Standard retail (all other): **1%**, cap AED 100/month
+  - E-wallet retail: **2%**, cap AED 100/month
+  - Low-interchange (govt, utilities, education, rent, fuel): **0.25%** (fuel capped at AED 50/month)
+  - Airlines/Hotels/Travel: **1%** (no special travel bonus on Titanium)
+  - Total max monthly: AED 600 (400 special + 200 retail)
+- **Benefits:** No lounge access
+- **DB Changes:** Fixed dining + groceries caps (150 → 100); fixed min_spend (5K → 2K); fixed general row notes; inserted 14 missing category rows
+
+#### RAKBank Elevate Credit Card ✅ (verified 2026-04-06)
+- **Card ID:** 06b90da4-14ae-4381-b0a9-cdd64541da54
+- **Annual Fee:** AED 0 (no annual fee; monthly fee if min spend not met: Prime AED 49+VAT, Plus AED 99+VAT, Privilege AED 199+VAT)
+- **Network:** Mastercard World Elite | **Min Salary:** AED 25,000
+- **Sources:** rakbank-elevate-kfs-credit-card.pdf + rakbank-elevate-faqs-elevate.pdf + rakbank-elevate-credit-card.pdf + rakbank-elevate-terms-and-conditions-benefits2.pdf
+- **Tier structure:** Subscription-based (Prime / Plus / Privilege) — cardholder selects tier via app
+- **Point value derivation:** Website states "up to 3% back on airline & hotel redemptions." Privilege earns 4 pts/AED → 4 × AED x = 3% → **1 RAKreward = AED 0.0075**
+- **Earn rates:**
+  - Standard categories (Prime/Plus/Privilege): **2/3/4 pts/AED = 1.5%/2.25%/3.0%** — rate stored is Privilege max
+  - Insurance & Supermarket (groceries): **FIXED 0.6 pts/AED = 0.45%** (all tiers)
+  - European Economic Area countries (international): **FIXED 0.5 pts/AED = 0.375%** (all tiers)
+  - Charities, Govt, Bill Payments, Transit, Real Estate, Petrol, Automobiles, Exchange Houses: **FIXED 0.4 pts/AED = 0.3%** (all tiers)
+- **Redemption restriction:** Points only redeemable against airline/hotel transactions from last 90 days (min 10,000 pts). Travel agency bookings NOT eligible.
+- **Forex:** Prime/Plus: 2.57% bank fee + 1.15% Mastercard scheme. Privilege: 0% bank fee + 1.15% Mastercard scheme only.
+- **Key lifestyle benefits:** Unlimited airport lounges (Mastercard Travel Pass, requires $1 foreign spend + enrolment); Travel medical insurance (USD 500K); Streaming cashback (Prime AED 50/Plus AED 100/Privilege AED 200 per cycle); 50% off VOX Cinema (4 tickets/month, Plus/Privilege); Padel cashback (Plus 2 games / Privilege 4 games at AED 100/game); Zofeur rides (Plus 1/Privilege 2 per cycle); Complimentary airport ride via Careem (code MAUAEWE6, capped AED 110/~USD 30)
+- **DB Changes:** annual_fee_aed set 0; reward_currency_value_aed set 0.0075; forex_markup_pct set 2.57; lounge_access_count set -1 (unlimited); source_url updated to official page; 17 card_rewards rows inserted
+
+---
+
+### Citi (Citibank UAE) — ✅ ALL 3 CITI CARDS VERIFIED (2026-04-07)
+
+**Sources used:**
+- `citi-cashback-program-terms-and-conditions.pdf` (Nov 2022)
+- `citi-prestige-credit-cards-thankyou-points.pdf` (Mar 2024) — covers both Premier and Prestige earn tables
+- `citi-fees-and-charges.pdf` (Jun 2025) — annual fees and forex markup
+
+#### Citi Cash Back Credit Card ✅ (verified 2026-04-07)
+- **Card ID:** d3d6c3bf-9672-4823-a228-70a29deab454
+- **Annual Fee:** AED 300 (confirmed) | **Forex markup:** 2.99%
+- **Reward type:** Direct AED cashback (no points)
+- **Earn rates (all 17 categories):**
+  - **International (non-AED):** 3% — best rate on this card
+  - **Groceries (supermarket MCC 5411):** 2%
+  - All other eligible AED categories: **1%**
+  - Insurance: **EXCLUDED** (no row — insurance products are ineligible)
+- **No monthly caps, no minimum spend**
+- **Key exclusions:** Utility bills paid via Citi Online/Mobile/Phone (earn 0%), exchange houses, cash advances, annual fees, balance transfers, UAE Direct Debit, EIP at 0%, insurance products
+- **DB changes:** Updated 4 existing rows (notes + source_url + last_verified_date); inserted 12 missing category rows; insurance category excluded (no row)
+
+#### Citi Premier Credit Card ✅ (verified 2026-04-07)
+- **Card ID:** 758d5d43-c8c4-4ca4-b111-7e41190ba11b
+- **Annual Fee:** AED 750 (corrected from AED 600) | **Forex markup:** 2.99%
+- **Reward type:** ThankYou Points — earned per USD charged (not per AED). 1 TY point = AED 0.033
+- **Earn rates (per USD charged):**
+  - **Dining, Fuel, Groceries:** 3 pts/USD = **2.70%** effective
+  - **International (non-AED, non-EEA):** 2 pts/USD = **1.80%** effective
+  - **EEA currency spend:** 1 pt/USD = **0.90%** effective (noted in international row)
+  - **All other standard AED categories** (shopping, online, entertainment, healthcare, airlines, hotels, travel, rent): 1 pt/USD = **0.90%**
+  - **Restricted MCCs** (insurance, education, utilities, government): 0.25 pts/USD = **0.22%**
+- **No monthly caps**
+- **Key exclusions:** Utility bills via Citi channels = 0 points (noted in utilities row)
+- **DB changes:** Corrected annual_fee 600→750; fixed earn_unit per_aed→per_usd on 7 existing rows; inserted 10 missing category rows
+
+#### Citi Prestige Credit Card ✅ (verified 2026-04-07)
+- **Card ID:** 41e18546-d724-4fb3-a9b8-8835298f6138
+- **Annual Fee:** AED 1,500 (corrected from AED 1,575) | **Forex markup:** 2.99%
+- **Reward type:** ThankYou Points — earned per USD charged. 1 TY point = AED 0.033
+- **Earn rates (per USD charged):**
+  - **International (non-AED, non-EEA):** 3 pts/USD = **2.70%** effective — best category
+  - **Dining, Fuel, Groceries, General AED:** 2 pts/USD = **1.80%** effective
+  - **All other standard AED categories** (shopping, online, entertainment, healthcare, airlines, hotels, travel, rent): 2 pts/USD = **1.80%**
+  - **EEA currency spend:** 1.5 pts/USD = **1.35%** effective (noted in international row)
+  - **Restricted MCCs** (insurance, education, utilities, government): 0.5 pts/USD = **0.45%**
+- **No monthly caps**
+- **Key exclusions:** Utility bills via Citi channels = 0 points
+- **DB changes:** annual_fee 1575→1500; reward_currency_value_aed null→0.033; inserted 17 card_rewards rows from scratch
+
+**Citi pattern notes:**
+- All ThankYou earn rates are expressed per USD charged (earn_unit=per_usd), NOT per AED
+- "Restricted categories" for both Premier and Prestige: Insurance, Education, Real Estate, Transport/Transit, Utilities, Telecom, Government Services
+- Premier accelerates dining/fuel/groceries (3x); Prestige earns the same 2pts/AED on ALL non-restricted AED categories (no acceleration bonus)
+- Prestige has higher international rate (3pts vs 2pts for Premier) but a much higher annual fee (AED 1,500 vs AED 750)
+
+---
+
+### Wio Bank — ✅ ALL 1 WIO CARD VERIFIED (2026-04-08)
+
+**Source used:** `Wio_Personal_-_Credit_KFS_-_Version_4__Eng__-_August_2025.pdf`
+
+#### Wio Credit Card ✅ (verified 2026-04-08, updated 2026-04-09)
+- **Card ID:** eef85749-a7da-4975-82fe-eae4f5bcae53
+- **Annual Fee:** AED 0 (free; plan costs are account-level, not card fees) | **Network:** Mastercard World
+- **Min Salary:** AED 5,000 | **Forex markup:** 2% (corrected from 0%)
+- **Reward type:** Direct AED cashback — only available on Plus, Salary, or Family plans (Standard plan = 0%)
+- **Plan costs (account-level, not stored as annual_fee):**
+  - Standard: AED 25/month or free with AED 3K balance — earns **0% cashback**
+  - Plus: AED 49/month or free with AED 35K balance — earns **2%/0.5%**
+  - Salary: Free with AED 15K/month salary transfer — earns **2%/0.5%**
+  - Family: AED 49/month or free with AED 35K — earns **2%/0.5%**
+- **Earn rates (Plus/Salary/Family plan):**
+  - **Most categories (dining, groceries, shopping, airlines, hotels, travel, online, entertainment, healthcare, education, insurance, general):** **2% cashback**
+  - **Reduced group (fuel & transport, government, utilities, rent/real estate, telecom):** **0.5% cashback**
+  - **International (foreign currency):** 2% cashback − 2% forex fee = **net 0% effective**
+- **Monthly cap:** AED 2,500/month combined across all categories
+- **Bonus feature (not in recommendation engine):** Paying other banks' credit card bills with Wio Credit earns 0.5% (Plus) or 1% (Salary/Family) — capped at that % of credit limit. Requires AED 5,000+ spend in same month.
+- **Exclusions:** Cash withdrawals, Easy Cash, quasi-cash (digital wallets top-ups, crypto)
+- **DB changes:** `forex_markup_pct` corrected 0→2; fuel row corrected 2%→0.5% (fuel is in reduced-rate group per Schedule of Fees); inserted 14 missing category rows; plan requirement documented in notes
+- **Architecture decision:** Stored as single card using Plus/Salary/Family rates (Standard plan is irrelevant for rewards). Plan complexity captured in notes, not in schema. "Pay other CC bills" bonus not modelled in card_rewards (no matching category exists; unique to Wio).
+
+---
 
 ### ADCB (Abu Dhabi Commercial Bank) — ❌ BLOCKED — earn rates unverifiable
 
