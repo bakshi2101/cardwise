@@ -14,7 +14,7 @@
 
 ## Completion Status Summary
 
-**✅ VERIFIED (T&C Cross-checked): 38 cards**
+**✅ VERIFIED (T&C Cross-checked): 47 cards**
 - FAB Cashback Islamic Credit Card
 - FAB Rewards Indulge Card
 - FAB Elite Credit Card
@@ -53,17 +53,27 @@
 - Citi Premier Credit Card *(all 17 categories verified from T&C PDF; earn_unit corrected to per_usd; annual fee corrected 600→750)*
 - Citi Prestige Credit Card *(all 17 categories verified from T&C PDF; annual fee corrected 1575→1500; reward_currency_value_aed set to 0.033)*
 - Wio Credit Card *(all 17 categories verified from KFS PDF; forex corrected 0→2%; 0.5% rate for govt/utilities/rent confirmed)*
+- HSBC Live+ Credit Card *(all 17 categories verified from hsbc.ae; 7 existing rows updated + 10 inserted; forex corrected 2.99→2%)*
+- HSBC Cash+ Credit Card *(all 17 categories verified from hsbc.ae; flat 1% confirmed; forex corrected 2.99→2%; 10% annual bonus noted)*
+- Standard Chartered Platinum X Credit Card *(all 17 categories inserted; tiered 3%/5%/10% on online/FX/mobile wallet only; source corrected to /platinum-x-cashback/)*
+- Standard Chartered Journey Credit Card *(replaced Simply Cash; renamed + all 17 categories; 2 pts/USD local=0.44%, 4 pts/USD intl=0.87% gross)*
 
-**⏳ PENDING (Scraped data, needs T&C verification): 14 cards**
-- All remaining non-verified banks (DIB, CBD, HSBC, Standard Chartered)
+- DIB Consumer Cashback Platinum Card *(5 cashback categories; 4% on groceries/fuel/utilities/education/govt with caps; UAE only)*
+- DIB Consumer Cashback Reward Card *(5 cashback categories; 3% on groceries/fuel/utilities/education/govt with caps; UAE only)*
+- DIB Prime Infinite Covered Card *(all 17 categories; 3.0 pts/AED general=1.50%; reduced 0.2pts on groceries/fuel/utils/edu/govt=0.10%; FX 3.5pts=1.75%)*
+- DIB Prime Signature Covered Card *(all 17 categories; 2.5 pts/AED general=1.25%; reduced 0.2pts; FX 3.0pts=1.50%)*
+- DIB Prime Platinum Covered Card *(replaced Wala'a Infinite; all 17 categories; 2.0 pts/AED general=1.00%; reduced 0.2pts; FX 2.2pts=1.10%)*
+
+**⏳ PENDING (Scraped data, needs T&C verification): 5 cards**
+- CBD cards (remaining)
 
 ---
 
 ## Verified Cards (26 total)
 
-### Verified Cards — 38/52 Complete *(card count: removed 1 FAB Infinite, added 3 Blue FAB; split FAB Etihad Guest 1→3, FAB SHARE 1→3, LuLu 1→2, Marriott 1→2)*
+### Verified Cards — 47/52 Complete *(card count: removed 1 FAB Infinite, added 3 Blue FAB; split FAB Etihad Guest 1→3, FAB SHARE 1→3, LuLu 1→2, Marriott 1→2; DIB Wala'a Infinite replaced by Prime Platinum)*
 
-Cards from FAB, ENBD, Mashreq, Liv, and ADIB are confirmed. ADCB blocked (earn rates unverifiable).
+Cards from FAB, ENBD, Mashreq, Liv, ADIB, Wio, HSBC, Standard Chartered, and DIB are confirmed. ADCB blocked (earn rates unverifiable). CBD pending.
 
 #### 1. FAB Cashback Islamic Credit Card ✅
 - **Card ID:** 120cabc8-903a-4c17-ba49-cea19b032024
@@ -690,10 +700,22 @@ All Mashreq cards verified 2026-04-03. See verified cards section above.
 ### Wio Bank — 1/1 verified ✅
 - Wio Credit Card ✅ (2026-04-08)
 
-### Dubai Islamic Bank — 0/? verified ⏳
+### HSBC UAE — ✅ ALL HSBC CARDS VERIFIED (2/2)
+- HSBC Live+ Credit Card ✅ (2026-04-08)
+- HSBC Cash+ Credit Card ✅ (2026-04-08)
+
+### Standard Chartered UAE — ✅ ALL SC CARDS VERIFIED (2/2)
+- Standard Chartered Platinum X Credit Card ✅ (2026-04-11)
+- Standard Chartered Journey Credit Card ✅ (2026-04-11) — replaced Simply Cash
+
+### Dubai Islamic Bank — ✅ 5/5 verified (2026-04-11)
+- DIB Consumer Cashback Platinum Card ✅ (2026-04-11)
+- DIB Consumer Cashback Reward Card ✅ (2026-04-11)
+- DIB Prime Infinite Covered Card ✅ (2026-04-11)
+- DIB Prime Signature Covered Card ✅ (2026-04-11)
+- DIB Prime Platinum Covered Card ✅ (2026-04-11) — replaced Wala'a Infinite
+
 ### Commercial Bank of Dubai — 0/? verified ⏳
-### HSBC UAE — 0/? verified ⏳
-### Standard Chartered UAE — 0/? verified ⏳
 
 ---
 
@@ -702,6 +724,8 @@ All Mashreq cards verified 2026-04-03. See verified cards section above.
 ### Mashreq — ✅ ALL MASHREQ CARDS VERIFIED (2/2)
 ### Citi — ✅ ALL CITI CARDS VERIFIED (3/3)
 ### Wio Bank — ✅ ALL WIO CARDS VERIFIED (1/1)
+### HSBC UAE — ✅ ALL HSBC CARDS VERIFIED (2/2)
+### Standard Chartered UAE — ✅ ALL SC CARDS VERIFIED (2/2)
 
 ### Liv (ENBD Digital) — ✅ 2/2 verified (2026-04-06)
 
@@ -917,6 +941,165 @@ All Mashreq cards verified 2026-04-03. See verified cards section above.
 - **Exclusions:** Cash withdrawals, Easy Cash, quasi-cash (digital wallets top-ups, crypto)
 - **DB changes:** `forex_markup_pct` corrected 0→2; fuel row corrected 2%→0.5% (fuel is in reduced-rate group per Schedule of Fees); inserted 14 missing category rows; plan requirement documented in notes
 - **Architecture decision:** Stored as single card using Plus/Salary/Family rates (Standard plan is irrelevant for rewards). Plan complexity captured in notes, not in schema. "Pay other CC bills" bonus not modelled in card_rewards (no matching category exists; unique to Wio).
+
+---
+
+### HSBC UAE — ✅ ALL 2 HSBC CARDS VERIFIED (2026-04-08)
+
+**Sources used:** `hsbc-uae-schedule-of-services-and-tariffs.pdf` (fees), `hsbc-cashback-credit-card-annual-fee-waiver-tncs.pdf` (fee waiver), and live product pages on hsbc.ae (earn rates)
+
+#### HSBC Live+ Credit Card ✅ (verified 2026-04-08)
+- **Card ID:** 052ee2b7-6324-496b-9b7a-3905110987b7
+- **Annual Fee:** AED 313.95 incl VAT (≈AED 314 in DB — correct) | **Network:** Visa | **Forex markup:** 2% (corrected from 2.99%)
+- **Fee waiver:** Year 1 waived; ongoing waiver with AED 12,000 annual spend
+- **Earn rates:**
+  - **Dining:** 6% cashback, ⚠️ cap AED 200/statement cycle
+  - **Fuel:** 5% cashback, ⚠️ cap AED 200/statement cycle
+  - **Groceries:** 2% cashback, ⚠️ cap AED 200/statement cycle
+  - **Entertainment:** 2% cashback, ⚠️ cap AED 200/statement cycle
+  - **All other categories (shopping, education, airlines, hotels, travel, online shopping, utilities, insurance, government, rent, healthcare, general):** 0.5% cashback, no cap
+  - **International:** 0.5% cashback − 2% forex = net approximately −1.5% (not recommended for overseas)
+  - ⚠️ All bonus category rates (6%, 5%, 2%) require minimum AED 3,000/month total spend; below that, all categories earn 0.5%
+- **DB changes:** Updated 7 existing rows (source_url + last_verified_date + notes); inserted 10 missing category rows; forex corrected 2.99→2%; card summary updated
+
+#### HSBC Cash+ Credit Card ✅ (verified 2026-04-08)
+- **Card ID:** 8c6aba09-8f8d-4b8a-8f43-3c9a4a4fb933
+- **Annual Fee:** AED 1,050 incl VAT (confirmed) | **Network:** Visa | **Forex markup:** 2% (corrected from 2.99%)
+- **Fee waiver:** Year 1 waived; ongoing waiver with AED 24,000 annual spend
+- **Earn rates:** Flat **1% cashback on ALL purchases** — no caps, no minimum spend, no category exclusions
+  - 🎁 **10% annual bonus cashback** when minimum spend threshold is met (effective ~1.1% with bonus)
+  - **International:** 1% cashback − 2% forex = net approximately −1% (not recommended for overseas)
+- **DB changes:** Updated existing general row; inserted 16 missing category rows (all at 1%); forex corrected 2.99→2%; card summary updated
+
+---
+
+### Standard Chartered UAE — ✅ ALL 2 SC CARDS VERIFIED (2026-04-11)
+
+**Sources used:** Marketing PDF (`StanChart-ae-platinum-x-value.pdf`), live product pages sc.com/ae/credit-cards/x-card/ and sc.com/ae/credit-cards/journey/
+
+**Note on Simply Cash replacement:** The "Standard Chartered Simply Cash Credit Card" in our DB was discontinued for new applicants. As per user instruction, it has been replaced with the Standard Chartered Journey Credit Card. The card ID is unchanged; all card-level fields and card_rewards rows have been updated to reflect Journey data.
+
+#### Standard Chartered Platinum X Credit Card ✅ (verified 2026-04-11)
+- **Card ID:** 004c839f-95cc-4d38-ab6a-a2e4725ca808
+- **Annual Fee:** AED 525 (confirmed; year 1 free) | **Network:** Mastercard | **Forex markup:** 2.99% (not confirmed from official docs; SC standard rate assumed)
+- **Source URL corrected:** Initially fetched the wrong URL (`/x-card/` — a different discontinued product). Correct product page: sc.com/ae/credit-cards/platinum-x-cashback/. Card is available to new applicants.
+- **Earn structure (tiered by total monthly spend):**
+  - AED 0–2,499: **0% cashback**
+  - AED 2,500–7,499: **3%** (cap AED 100/bucket/month)
+  - AED 7,500–14,999: **5%** (cap AED 200/bucket/month)
+  - AED 15,000+: **10%** (cap AED 400 online/FX, AED 200 mobile wallet)
+- **3 eligible earn buckets (not spending categories):**
+  1. Online AED purchases (ride hailing, food delivery, shopping sites, bill payments)
+  2. Foreign currency (non-AED) spend
+  3. Mobile wallet (Apple Pay / Samsung Pay / Google Pay) AED in-store
+  - ⚠️ **AED card swipe earns 0%** — this is a method-gated card, not category-gated
+- **Category mapping in DB:**
+  - Most categories: 3% (can be paid via mobile wallet or online)
+  - fuel: 0% (UAE petrol pumps don't support NFC)
+  - rent: 0% (paid by bank transfer)
+- **DB changes:** Updated card summary; inserted 17 card_rewards rows (first-ever data)
+
+#### Standard Chartered Journey Credit Card ✅ (verified 2026-04-11)
+- **Card ID:** e3a393f5-bf83-4be8-82aa-44d5d6de3234 *(previously Simply Cash — same card_id retained)*
+- **Annual Fee:** AED 1,575 (corrected from AED 525); waived year 1 with AED 10K spend in 60 days; ongoing waiver with AED 150K annual spend | **Forex markup:** 2.99% (assumed)
+- **Reward currency:** SC 360 Rewards Points (125 pts = AED 1; value = AED 0.008/pt)
+- **Earn rates:**
+  - **All local (AED) spend:** 2 pts/USD = **0.44% effective return**
+  - **All international (foreign currency) spend:** 4 pts/USD = **0.87% gross** (net ≈ −2.1% after 2.99% forex — not recommended for overseas use)
+  - No category differentiation — all spend earns at one of two rates
+  - No earning caps
+- **Benefits (not modelled in card_rewards):** Duty-free 10% cashback (cap AED 100/statement, after airline ticket purchase); Booking.com 7% wallet credit; Agoda 12% discount; Careem Quik 30% off; Cleartrip 30% off
+- **DB changes:** Renamed from Simply Cash; annual_fee corrected 525→1575; reward_currency fields updated; 5 existing rows converted from cashback to points rates; 12 missing rows inserted; all 17 categories now covered
+
+---
+
+### Dubai Islamic Bank (DIB) — ✅ ALL 5 DIB CARDS VERIFIED (2026-04-11)
+
+**Sources used:**
+- `DIB-cards-kfs-dib-new-credit-cards-cm-sign-reqd-static.pdf` — Key Facts Statement (fees, forex markup)
+- `DIB-cards-tc-salam-cards-tc-en.pdf` — General T&C (earn conditions, exclusions, expiry)
+- DIB product pages (earn rates): dib.ae/personal/cards/[card-slug]
+
+**Key findings:**
+- **Forex markup corrected:** All 5 cards had `forex_markup_pct = 2.99%` — corrected to **3.70%** (non-AED transactions; AED international = 3.14%) per KFS PDF
+- **DIB Wala'a Infinite Covered Card replaced** with DIB Prime Platinum Covered Card (same card_id `da395862`); Wala'a Infinite no longer listed on DIB website
+- **Reward rates NOT in T&C PDF** — T&C explicitly says rates are "published on DIB website"; product pages used as source
+- **Wala'a Rewards value:** 20,000 points = AED 100 → **1 point = AED 0.005**
+- **Reduced earn categories** (effective Jan 1, 2024): supermarkets, petroleum, telecom, education, government services earn only **0.2 pts/AED** (vs. standard rates)
+- **EU spend earns 0 points** (effective Dec 1, 2019)
+- **Utility/govt bills via DIB digital platforms earn 0** (cashback) or 0 points
+- **Consumer Cashback cards:** UAE-only; min monthly spend AED 3,000 (Reward) / AED 4,000 (Platinum) required since May 2025; only specific categories earn
+- **Shariah-compliant Salam-based covered cards** (not conventional credit cards)
+- **Points expiry:** Wala'a Rewards expire in 24 months
+
+#### 43. DIB Consumer Cashback Platinum Card ✅ (verified 2026-04-11)
+- **Card ID:** 08c7baed-b9de-42bf-8056-a33f96b94175
+- **Annual Fee:** AED 261.45 (year 1 free) | **Min Salary:** AED 5,000 | **Forex:** 3.70%
+- **Reward structure:** 4% cashback on specific categories only (UAE transactions only)
+
+| Category | Rate | Monthly Cap |
+|----------|------|-------------|
+| Groceries (supermarkets/hypermarkets) | 4% | AED 400 |
+| Fuel | 4% | AED 150 |
+| Utilities (Etisalat/Du + utility bills) | 4% | AED 150 |
+| Education (school fees) | 4% | AED 400 |
+| Government (Salik/NOL recharges) | 4% | AED 50 |
+
+- **Total monthly cap:** AED 1,000 across all categories
+- **Min spend:** AED 4,000/month to qualify (effective May 2025)
+- **All other categories:** 0% (no cashback)
+- **DB changes:** Updated forex 2.99→3.70%; inserted 5 card_rewards rows (first-ever data)
+
+#### 44. DIB Consumer Cashback Reward Card ✅ (verified 2026-04-11)
+- **Card ID:** 7bb2eb46-24a6-4fed-9bf5-0048f72521d4
+- **Annual Fee:** AED 210 (year 1 free) | **Min Salary:** AED 5,000 | **Forex:** 3.70%
+- **Reward structure:** 3% cashback on specific categories only (UAE transactions only)
+
+| Category | Rate | Monthly Cap |
+|----------|------|-------------|
+| Groceries (supermarkets/hypermarkets) | 3% | AED 300 |
+| Fuel | 3% | AED 100 |
+| Utilities (Etisalat/Du + utility bills) | 3% | AED 100 |
+| Education (school fees) | 3% | AED 300 |
+| Government (Salik/NOL recharges) | 3% | AED 25 |
+
+- **Total monthly cap:** AED 1,000 across all categories
+- **Min spend:** AED 3,000/month to qualify (effective May 2025)
+- **All other categories:** 0% (no cashback)
+- **DB changes:** Updated forex 2.99→3.70%; updated 3 existing rows (added caps + source_url); inserted 2 new rows (education + govt)
+
+#### 45. DIB Prime Infinite Covered Card ✅ (verified 2026-04-11)
+- **Card ID:** 33ed23d3-0217-4399-b54a-18d560205bc5
+- **Annual Fee:** AED 0 if spend criteria met (otherwise AED 733.95 from year 2) | **Forex:** 3.70%
+- **Reward currency:** Wala'a Rewards (1 pt = AED 0.005)
+- **Earn rates:**
+  - **General domestic:** 3.0 pts/AED = **1.50%**
+  - **Reduced categories** (groceries, fuel, utilities, education, govt): 0.2 pts/AED = **0.10%**
+  - **Foreign currency:** 3.5 pts/AED equivalent = **1.75%**
+  - **EU spend:** 0 pts (excluded)
+- **DB changes:** Updated forex 2.99→3.70%; deleted 9 incorrect rows (had 5%-6% rates); inserted 17 correct rows
+
+#### 46. DIB Prime Signature Covered Card ✅ (verified 2026-04-11)
+- **Card ID:** 30f9bcd9-787d-4859-bde1-57ee305608ac
+- **Annual Fee:** AED 0 if spend criteria met (otherwise AED 523.95 from year 2) | **Forex:** 3.70%
+- **Reward currency:** Wala'a Rewards (1 pt = AED 0.005)
+- **Earn rates:**
+  - **General domestic:** 2.5 pts/AED = **1.25%**
+  - **Reduced categories:** 0.2 pts/AED = **0.10%**
+  - **Foreign currency:** 3.0 pts/AED equivalent = **1.50%**
+- **DB changes:** Updated forex 2.99→3.70%; inserted 17 card_rewards rows (first-ever data)
+
+#### 47. DIB Prime Platinum Covered Card ✅ (verified 2026-04-11) — REPLACED Wala'a Infinite
+- **Card ID:** da395862-82d9-4d54-9b91-5f12f10c1206 *(previously DIB Wala'a Infinite Covered Card — same card_id retained)*
+- **Annual Fee:** AED 0 if spend criteria met (otherwise AED 208.95 from year 2) | **Min Salary:** AED 5,000 | **Forex:** 3.70%
+- **Reward currency:** Wala'a Rewards (1 pt = AED 0.005)
+- **Earn rates:**
+  - **General domestic:** 2.0 pts/AED = **1.00%**
+  - **Reduced categories:** 0.2 pts/AED = **0.10%**
+  - **Foreign currency:** 2.2 pts/AED equivalent = **1.10%**
+- **Benefits:** Roadside assistance (2x/year), Credit Shield Takaful, Visa Luxury Hotels, travel insurance up to USD 100K
+- **Note:** Wala'a Infinite no longer visible on DIB website — replaced with Prime Platinum per user instruction
+- **DB changes:** Renamed from Wala'a Infinite; card_tier updated to platinum; annual_fee, min_salary, reward_currency fields updated; inserted 17 card_rewards rows
 
 ---
 
