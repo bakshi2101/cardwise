@@ -69,7 +69,7 @@
 
 ---
 
-## Verified Cards (26 total)
+## Verified Cards (47 total)
 
 ### Verified Cards — 47/52 Complete *(card count: removed 1 FAB Infinite, added 3 Blue FAB; split FAB Etihad Guest 1→3, FAB SHARE 1→3, LuLu 1→2, Marriott 1→2; DIB Wala'a Infinite replaced by Prime Platinum)*
 
@@ -1146,20 +1146,10 @@ VERIFIED. 41 FAB Rewards/AED (12%) airlines + hotels. Zero forex. Min AED 5K pre
 
 ## Next Verification Priorities
 
-**Recommended order** (impact + ease):
-
-1. FAB Infinite (widely used base card)
-2. FAB SHARE Platinum (free, high Carrefour usage)
-3. FAB ADNOC Rewards (niche, fuel category)
-4. ENBD LuLu Platinum (free, grocery loyalty)
-5. ENBD Skywards Signature (most popular miles card)
-6. ENBD Skywards Infinite (premium miles)
-7. ~~Mashreq Cashback~~ ✅ Done
-8. ENBD Marriott Bonvoy (transferable points)
-9. Continue with remaining cards
-
+CBD cards (pending)
+ADCB cards (earn rates pending)
 ---
 
 ## Key Insight
 
-**Current status:** Only 6 of 46 cards have been verified against official T&Cs. The remaining 40 cards are based on earlier web scraping and need full T&C review before launch.
+**Current status:** 47 cards out of 52 have been verified against official T&Cs. The remaining cards are based on earlier web scraping and need full T&C review before launch.

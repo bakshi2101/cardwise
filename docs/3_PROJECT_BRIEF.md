@@ -146,7 +146,7 @@ Both paths begin from a shared entry point where the user chooses their objectiv
 
 **Both paths converge → Optional features available from either path:**
 - Search specific merchant/category for in-the-moment card selection from your wallet
-- Browse UAE card repository: explore all 46+ cards, understand reward structures, compare features
+- Browse UAE card repository: explore all 52 cards, understand reward structures, compare features
 
 ---
 
@@ -212,10 +212,20 @@ Output:
 |---|---|
 | ✅ | Database schema finalized (13 tables); 17 spending categories structured |
 | ✅ | SQL migration scripts written and tested; initial seed data for banks, categories, merchants (~50 stores) |
-| ✅ | FAB: all 17 cards verified against official T&C PDFs (including tier splits: Etihad Guest ×3, SHARE ×3, Blue FAB ×3) |
+| ✅ | **47 of 52 cards fully verified** against official T&C PDFs and bank websites |
+| ✅ | FAB: all 17 cards verified (Cashback Islamic, Cashback, Rewards Indulge, Elite, Travel, Z, GEMS; Etihad Guest ×3; SHARE ×3; Blue FAB ×3) |
 | ✅ | Emirates NBD: all 6 cards verified (Skywards Infinite, Skywards Signature, Marriott Bonvoy World Elite, Marriott Bonvoy World, LuLu 247 Platinum, LuLu 247 Titanium) |
 | ✅ | Mashreq: 2 cards verified (Cashback, Noon) |
-| 🔄 | Remaining banks: ADIB, DIB, Citi, RAKBank, Liv, Wio, ADCB — scraped data, pending T&C verification |
+| ✅ | Liv (ENBD Digital): 2 cards verified (Cashback, Cashback+) |
+| ✅ | ADIB: 3 cards verified (Cashback Visa, SHARE Infinite, SHARE Platinum) |
+| ✅ | RAKBank: 3 cards verified (World, Titanium, Elevate) |
+| ✅ | Citi: 3 cards verified (Cash Back, Premier, Prestige) |
+| ✅ | Wio Bank: 1 card verified (Wio Credit Card) |
+| ✅ | HSBC UAE: 2 cards verified (Live+, Cash+) |
+| ✅ | Standard Chartered: 2 cards verified (Platinum X, Journey — replaced Simply Cash) |
+| ✅ | DIB: 5 cards verified (Consumer Cashback Platinum, Consumer Cashback Reward, Prime Infinite, Prime Signature, Prime Platinum — replaced Wala'a Infinite) |
+| ❌ | ADCB TouchPoints: 3 cards — earn rates blocked (adcb.com returns 403; supplemental benefits T&C only) |
+| ⏳ | CBD: ~5 cards — scraped data only, pending T&C verification |
 | ⏳ | Frontend: portfolio optimization view (Path A), recommendation engine (Path B), category matrix, merchant search |
 | ⏳ | User auth + spending profile onboarding flow |
 | ⏳ | Offers table seeding (top 20 promotions); loyalty program integration; reward tiers |
@@ -282,8 +292,8 @@ Every row in `card_rewards` must have:
 
 ## Next Immediate Steps
 
-1. Complete T&C verification for ADIB and DIB (priority post-Mashreq; targets ~75–80% UAE market coverage)
-2. Verify remaining banks: Citi, RAKBank, Liv, Wio, ADCB (post-launch additions)
+1. **Complete CBD card verification** (~5 cards pending; last unverified UAE bank in scope)
+2. **Resolve ADCB earn rates** — adcb.com returns 403 on product pages; try direct PDF download or contact bank for T&C (3 cards blocked)
 3. Build user spending profile setup flow (shared by both paths)
 4. Build Path A output: card assignment matrix + earnings snapshot + upside teaser
 5. Build Path B recommendation engine (suggest best card portfolio for spending profile)
