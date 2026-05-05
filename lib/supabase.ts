@@ -93,6 +93,11 @@ export interface RewardRanked extends CardReward {
   category_name: string;
   category_slug: string;
   category_icon: string | null;
+  // new columns (Migration A / Option 3)
+  reward_event_type?: string;
+  absolute_value_aed?: number | null;
+  annual_spend_threshold_aed?: number | null;
+  display_label?: string | null;
   // computed
   net_return_pct?: number;
   active_offers?: Offer[];

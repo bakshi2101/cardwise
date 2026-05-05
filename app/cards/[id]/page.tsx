@@ -30,6 +30,7 @@ export default async function CardDetailPage({ params }: Props) {
       .select("*, category:spending_categories(name, slug, icon)")
       .eq("card_id", id)
       .eq("is_active", true)
+      .eq("reward_event_type", "ongoing")
       .order("effective_return_pct", { ascending: false }),
     supabase
       .from("card_benefits")

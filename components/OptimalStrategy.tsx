@@ -192,7 +192,8 @@ export default function OptimalStrategy({ profile, categories, walletCardIds }: 
         .select(
           "card_id, card_name, bank_short_name, annual_fee_aed, category_slug, effective_return_pct, monthly_cap_spend_aed, monthly_cap_reward"
         )
-        .eq("is_active", true),
+        .eq("is_active", true)
+        .eq("reward_event_type", "ongoing"),
       supabase
         .from("cards_with_bank")
         .select("id, annual_fee_aed, annual_fee_waiver_spend")

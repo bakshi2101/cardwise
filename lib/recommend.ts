@@ -8,6 +8,7 @@ const REWARD_COLS =
   "effective_return_pct, monthly_cap_spend_aed, monthly_cap_reward, " +
   "min_txn_amount_aed, min_monthly_spend_aed, is_promotional, promo_end_date, " +
   "exclusions, source_url, last_verified_date, notes, is_active, " +
+  "reward_event_type, absolute_value_aed, annual_spend_threshold_aed, display_label, " +
   "card_name, card_image, annual_fee_aed, forex_markup_pct, " +
   "bank_id, bank_name, bank_short_name, category_name, category_slug, category_icon";
 
@@ -27,7 +28,8 @@ async function fetchWithFallback(
       .from("rewards_ranked")
       .select(REWARD_COLS as string)
       .eq("category_slug", slug)
-      .eq("is_active", true);
+      .eq("is_active", true)
+      .eq("reward_event_type", "ongoing");
     if (cardIds && cardIds.length > 0) q = q.in("card_id", cardIds);
     return q;
   }
@@ -317,7 +319,8 @@ export async function getMarketOptimalMonthlyReward(
     .from("rewards_ranked")
     .select("card_id, category_slug, effective_return_pct, monthly_cap_spend_aed, monthly_cap_reward")
     .in("category_slug", [...activeSlugs, "general"])
-    .eq("is_active", true);
+    .eq("is_active", true)
+    .eq("reward_event_type", "ongoing");
 
   if (!rows || rows.length === 0) return 0;
 
