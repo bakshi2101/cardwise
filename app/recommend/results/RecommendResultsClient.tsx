@@ -228,6 +228,36 @@ function buildStrategy(
   };
 }
 
+/**
+ * Generates a short display label from a card_rewards.notes field.
+ * Takes everything before the first period; truncates to ≤60 chars at a
+ * word boundary. Migration B uses client-side truncation; a future migration
+ * will add a dedicated display_label column to card_rewards.
+ */
+function shortLabelFromNotes(notes: string): string {
+  if (!notes) return "Welcome bonus";
+  const firstSentence = notes.split(".")[0]?.trim() ?? notes;
+  if (firstSentence.length <= 80) return firstSentence;
+  const truncated = firstSentence.slice(0, 80);
+  const lastSpace = truncated.lastIndexOf(" ");
+  return (lastSpace > 40 ? truncated.slice(0, lastSpace) : truncated) + "…";
+}
+
+/**
+ * Joins multiple welcome bonus row titles into a single display string.
+ * 1 title → as-is. 2–3 → " + " joined (capped at 120 chars). 4+ → generic.
+ */
+function combineMultiPartTitle(titles: string[]): string {
+  if (titles.length === 0) return "Welcome bonus";
+  if (titles.length === 1) return titles[0];
+  if (titles.length >= 4) return `Welcome bonus (${titles.length} parts)`;
+  const joined = titles.join(" + ");
+  if (joined.length <= 120) return joined;
+  const truncated = joined.slice(0, 120);
+  const lastSpace = truncated.lastIndexOf(" ");
+  return (lastSpace > 60 ? truncated.slice(0, lastSpace) : truncated) + "…";
+}
+
 // ── Component ──────────────────────────────────────────────────────────────
 
 interface Props {
@@ -275,7 +305,8 @@ export default function RecommendResultsClient({ categories }: Props) {
         .select(
           "card_id, card_name, bank_id, bank_short_name, annual_fee_aed, category_slug, effective_return_pct, monthly_cap_spend_aed, monthly_cap_reward"
         )
-        .eq("is_active", true),
+        .eq("is_active", true)
+        .eq("reward_event_type", "ongoing"),
       supabase
         .from("cards_with_bank")
         .select("id, bank_id, annual_fee_aed, annual_fee_waiver_spend, min_salary_aed, reward_currency_name")
@@ -355,21 +386,56 @@ export default function RecommendResultsClient({ categories }: Props) {
       return;
     }
 
-    // ── Fetch welcome bonuses ──────────────────────────────────────────────
+    // ── Fetch welcome bonuses (Migration B: now sourced from card_rewards) ──
     const cardIds = allCards.map((c) => c.card_id);
+    const today = new Date().toISOString().split("T")[0];
+
+    type WelcomeRow = {
+      card_id: string;
+      absolute_value_aed: number | null;
+      notes: string | null;
+      display_label: string | null;
+      reward_event_type: string;
+      promo_end_date: string | null;
+      created_at: string | null;
+    };
+
     const { data: welcomeData } = await supabase
-      .from("card_benefits")
-      .select("card_id, benefit_type, monetary_value_aed, title")
-      .in("benefit_type", ["welcome_miles", "welcome_bonus", "cashback_signup_bonus"])
-      .in("card_id", cardIds)
-      .eq("is_active", true);
+      .from("card_rewards")
+      .select("card_id, absolute_value_aed, notes, display_label, reward_event_type, promo_end_date, created_at")
+      .in("reward_event_type", ["welcome_bonus", "limited_promo"])
+      .eq("is_active", true)
+      .in("card_id", cardIds);
+
+    // Drop expired limited_promo rows client-side
+    const activeWelcomeRows = ((welcomeData ?? []) as WelcomeRow[]).filter((w) =>
+      w.reward_event_type === "welcome_bonus" ||
+      (w.reward_event_type === "limited_promo" &&
+        w.promo_end_date != null &&
+        w.promo_end_date > today)
+    );
+
+    // Group rows by card, sort deterministically, then sum + concatenate titles
+    const rowsByCard = new Map<string, WelcomeRow[]>();
+    for (const w of activeWelcomeRows) {
+      const arr = rowsByCard.get(w.card_id) ?? [];
+      arr.push(w);
+      rowsByCard.set(w.card_id, arr);
+    }
 
     const welcomeMap = new Map<string, { value: number; title: string }>();
-    for (const w of welcomeData ?? []) {
-      const existing = welcomeMap.get(w.card_id);
-      if (!existing || (w.monetary_value_aed ?? 0) > existing.value) {
-        welcomeMap.set(w.card_id, { value: w.monetary_value_aed ?? 0, title: w.title });
-      }
+    for (const [cardId, rows] of rowsByCard.entries()) {
+      rows.sort((a, b) => {
+        const valDiff = (b.absolute_value_aed ?? 0) - (a.absolute_value_aed ?? 0);
+        if (valDiff !== 0) return valDiff;
+        const dateA = a.created_at ?? "";
+        const dateB = b.created_at ?? "";
+        if (dateA !== dateB) return dateA.localeCompare(dateB); // oldest first
+        return (a.notes ?? "").localeCompare(b.notes ?? "");
+      });
+      const totalValue = rows.reduce((sum, r) => sum + (r.absolute_value_aed ?? 0), 0);
+      const titles = rows.map((r) => r.display_label ?? shortLabelFromNotes(r.notes ?? ""));
+      welcomeMap.set(cardId, { value: totalValue, title: combineMultiPartTitle(titles) });
     }
 
     const freeCards = allCards.filter((c) => c.annual_fee_aed === 0);
