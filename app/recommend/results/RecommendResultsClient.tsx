@@ -44,6 +44,8 @@ interface CardBreakdown {
   annualReward: number;
   welcomeBonus: number;
   welcomeBonusTitle: string | null;
+  anniversaryBonus: number;
+  anniversaryBonusLabel: string | null;
 }
 
 interface Strategy {
@@ -52,6 +54,7 @@ interface Strategy {
   totalAnnualRewards: number;
   totalAnnualFees: number;
   totalWelcomeBonus: number;
+  totalAnniversaryBonus: number;
   netFirstYearValue: number;
   netOngoingValue: number;
 }
@@ -166,6 +169,7 @@ function buildStrategy(
   categories: SpendingCategory[],
   totalAnnualSpend: number,
   welcomeMap: Map<string, { value: number; title: string }>,
+  anniversaryMap: Map<string, { value: number; label: string; threshold: number | null }>,
   label: string
 ): Strategy {
   // Per-category: best card assignment (raw, unweighted — for display)
@@ -207,7 +211,21 @@ function buildStrategy(
       }
     }
     const wb = welcomeMap.get(card.card_id);
-    return { card, assignments: cardAssignments, annualReward, welcomeBonus: wb?.value ?? 0, welcomeBonusTitle: wb?.title ?? null };
+    const anniv = anniversaryMap.get(card.card_id);
+    const anniversaryBonusEligible =
+      anniv != null &&
+      (anniv.threshold == null || totalAnnualSpend >= anniv.threshold);
+    const anniversaryBonus = anniversaryBonusEligible ? (anniv?.value ?? 0) : 0;
+    const anniversaryBonusLabel = anniversaryBonusEligible ? (anniv?.label ?? null) : null;
+    return {
+      card,
+      assignments: cardAssignments,
+      annualReward,
+      welcomeBonus: wb?.value ?? 0,
+      welcomeBonusTitle: wb?.title ?? null,
+      anniversaryBonus,
+      anniversaryBonusLabel,
+    };
   });
 
   const totalAnnualRewards = cardBreakdowns.reduce((s, c) => s + c.annualReward, 0);
@@ -216,6 +234,7 @@ function buildStrategy(
     return s + (waived ? 0 : c.annual_fee_aed);
   }, 0);
   const totalWelcomeBonus = cardBreakdowns.reduce((s, c) => s + c.welcomeBonus, 0);
+  const totalAnniversaryBonus = cardBreakdowns.reduce((s, c) => s + c.anniversaryBonus, 0);
 
   return {
     label,
@@ -223,8 +242,9 @@ function buildStrategy(
     totalAnnualRewards,
     totalAnnualFees,
     totalWelcomeBonus,
+    totalAnniversaryBonus,
     netFirstYearValue: totalAnnualRewards + totalWelcomeBonus - totalAnnualFees,
-    netOngoingValue: totalAnnualRewards - totalAnnualFees,
+    netOngoingValue: totalAnnualRewards + totalAnniversaryBonus - totalAnnualFees,
   };
 }
 
@@ -400,6 +420,13 @@ export default function RecommendResultsClient({ categories }: Props) {
       created_at: string | null;
     };
 
+    type AnniversaryRow = {
+      card_id: string;
+      absolute_value_aed: number | null;
+      display_label: string | null;
+      annual_spend_threshold_aed: number | null;
+    };
+
     const { data: welcomeData } = await supabase
       .from("card_rewards")
       .select("card_id, absolute_value_aed, notes, display_label, reward_event_type, promo_end_date, created_at")
@@ -438,6 +465,28 @@ export default function RecommendResultsClient({ categories }: Props) {
       welcomeMap.set(cardId, { value: totalValue, title: combineMultiPartTitle(titles) });
     }
 
+    // ── Fetch anniversary bonuses ──────────────────────────────────────────────
+    const { data: anniversaryData } = await supabase
+      .from("card_rewards")
+      .select("card_id, absolute_value_aed, display_label, annual_spend_threshold_aed")
+      .eq("reward_event_type", "anniversary_bonus")
+      .eq("is_active", true)
+      .in("card_id", cardIds);
+
+    type AnniversaryEntry = { value: number; label: string; threshold: number | null };
+    const anniversaryMap = new Map<string, AnniversaryEntry>();
+    for (const a of (anniversaryData ?? []) as AnniversaryRow[]) {
+      const existing = anniversaryMap.get(a.card_id);
+      const value = a.absolute_value_aed ?? 0;
+      const label = a.display_label ?? "";
+      const threshold = a.annual_spend_threshold_aed ?? null;
+      if (existing) {
+        existing.value += value;
+      } else {
+        anniversaryMap.set(a.card_id, { value, label, threshold });
+      }
+    }
+
     const freeCards = allCards.filter((c) => c.annual_fee_aed === 0);
 
     // ── Pinned cards: always included, reduce remaining greedy slots ───────
@@ -466,10 +515,10 @@ export default function RecommendResultsClient({ categories }: Props) {
     const pinnedLabel = pinnedCards.length > 0 ? ` (${pinnedCards.map((c) => c.card_name).join(", ")} locked in)` : "";
 
     const strats: Strategy[] = [
-      buildStrategy(combo1, profile, activeCategories, totalAnnualSpend, welcomeMap, `Optimal portfolio${pinnedLabel}`),
-      buildStrategy(combo2, profile, activeCategories, totalAnnualSpend, welcomeMap, `Alternative portfolio${pinnedLabel}`),
+      buildStrategy(combo1, profile, activeCategories, totalAnnualSpend, welcomeMap, anniversaryMap, `Optimal portfolio${pinnedLabel}`),
+      buildStrategy(combo2, profile, activeCategories, totalAnnualSpend, welcomeMap, anniversaryMap, `Alternative portfolio${pinnedLabel}`),
       buildStrategy(
-        combo3, profile, activeCategories, totalAnnualSpend, welcomeMap,
+        combo3, profile, activeCategories, totalAnnualSpend, welcomeMap, anniversaryMap,
         freeCards.length >= 1 || pinnedCards.length > 0
           ? `No annual fee portfolio${pinnedLabel}`
           : `${Math.max(1, prefs.maxCards - 1)}-card portfolio${pinnedLabel}`
@@ -720,6 +769,16 @@ export default function RecommendResultsClient({ categories }: Props) {
                         </div>
                       )}
 
+                      {cb.anniversaryBonus > 0 && (
+                        <div className="bg-[#6366F1]/6 border border-[#6366F1]/20 rounded-lg px-3 py-2 text-xs flex items-center gap-2 mt-2">
+                          <span>🔄</span>
+                          <div className="flex-1 text-white/60">{cb.anniversaryBonusLabel}</div>
+                          <div className="font-bold text-[#6366F1] font-mono shrink-0">
+                            ~AED {cb.anniversaryBonus.toLocaleString()}/yr
+                          </div>
+                        </div>
+                      )}
+
                       {cb.card.card_id === WIO_CARD_ID && (
                         <div className="bg-[#6366F1]/6 border border-[#6366F1]/20 rounded-lg px-3 py-2.5 text-xs flex items-start gap-2">
                           <span className="shrink-0 mt-px">💡</span>
@@ -735,7 +794,7 @@ export default function RecommendResultsClient({ categories }: Props) {
                   );
                 })}
 
-                <div className="px-4 py-3 grid grid-cols-3 gap-3 text-xs">
+                <div className="px-4 py-3 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                   <div className="text-center">
                     <div className="text-white/30">Annual rewards</div>
                     <div className="font-bold font-mono text-[#22C55E] mt-0.5">
@@ -747,6 +806,14 @@ export default function RecommendResultsClient({ categories }: Props) {
                     <div className="font-bold font-mono text-[#F59E0B] mt-0.5">
                       {strategy.totalWelcomeBonus > 0
                         ? `AED ${Math.round(strategy.totalWelcomeBonus).toLocaleString()}`
+                        : "—"}
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-white/30">Anniversary</div>
+                    <div className="font-bold font-mono text-[#6366F1] mt-0.5">
+                      {strategy.totalAnniversaryBonus > 0
+                        ? `AED ${Math.round(strategy.totalAnniversaryBonus).toLocaleString()}`
                         : "—"}
                     </div>
                   </div>
