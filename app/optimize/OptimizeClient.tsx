@@ -15,6 +15,7 @@ import {
 } from "@/lib/recommend";
 
 const WIO_CARD_ID = "eef85749-a7da-4975-82fe-eae4f5bcae53";
+const WIO_BILL_PAY_BONUS_PCT = 0.5;
 
 // ── Types ─────────────────────────────────────────────────────
 
@@ -24,6 +25,11 @@ interface OverflowSlot {
   effectiveRate: number;
   spend: number;
   monthlyReward: number;
+}
+
+interface WioStack {
+  wioRate: number;
+  stackedRate: number;
 }
 
 interface Assignment {
@@ -38,6 +44,8 @@ interface Assignment {
   brandBonus: string | null;
   // Overflow card (spend beyond cap), null if no cap or no second card
   overflow: OverflowSlot | null;
+  // Set when paying this category's primary card's bill via Wio would beat Wio's own rate for this category
+  wioStack: WioStack | null;
 }
 
 interface BenefitWithCard extends CardBenefit {
@@ -178,6 +186,20 @@ export default function OptimizeClient({ categories }: Props) {
             }
           }
 
+          // Wio bill-pay stacking: if the user also holds Wio and this category's
+          // primary card isn't Wio itself, check whether paying that card's bill via
+          // Wio (primary rate + bonus) would beat just paying directly with Wio.
+          let wioStack: WioStack | null = null;
+          if (primary.card_id !== WIO_CARD_ID && walletIds.includes(WIO_CARD_ID)) {
+            const wioRow = allCards.find((c) => c.card_id === WIO_CARD_ID);
+            if (wioRow) {
+              const stackedRate = effectiveRate + WIO_BILL_PAY_BONUS_PCT;
+              if (stackedRate > wioRow.effective_return_pct) {
+                wioStack = { wioRate: wioRow.effective_return_pct, stackedRate };
+              }
+            }
+          }
+
           return {
             category: cat,
             monthlySpend: spend,
@@ -188,6 +210,7 @@ export default function OptimizeClient({ categories }: Props) {
             monthlyReward,
             brandBonus: parseBrandBonus(primary.notes),
             overflow,
+            wioStack,
           } satisfies Assignment;
         })
       ),
@@ -216,7 +239,6 @@ export default function OptimizeClient({ categories }: Props) {
   );
   const totalAnnual = totalMonthly * 12;
   const hasProfile = Object.values(profile).some((v) => v > 0);
-  const hasWio = walletIds.includes(WIO_CARD_ID);
 
   // ── Loading skeleton ──────────────────────────────────────────
   if (!loaded) {
@@ -367,6 +389,7 @@ export default function OptimizeClient({ categories }: Props) {
               monthlyReward,
               brandBonus,
               overflow,
+              wioStack,
             }) => {
               const hasCap = cappedSpend < monthlySpend;
               return (
@@ -418,6 +441,14 @@ export default function OptimizeClient({ categories }: Props) {
                           {brandBonus && (
                             <div className="text-[11px] text-[#F59E0B]/80 mt-1 leading-snug">
                               {brandBonus}
+                            </div>
+                          )}
+                          {wioStack && (
+                            <div
+                              className="text-[11px] text-[#6366F1]/70 mt-1 leading-snug cursor-help"
+                              title="Wio's bill-pay bonus is capped by a % of your Wio credit limit (not the bill amount) and requires AED 5,000+ spend on the Wio card itself that month."
+                            >
+                              💡 Pay this bill via Wio for +0.5% → {wioStack.stackedRate.toFixed(1)}% total (beats Wio&apos;s own {wioStack.wioRate.toFixed(1)}% direct rate)
                             </div>
                           )}
                         </div>
@@ -481,23 +512,6 @@ export default function OptimizeClient({ categories }: Props) {
           </div>
         </div>
       </div>
-
-      {/* ── Section 4: Wio bill-pay tip ──────────────────────── */}
-      {hasWio && (
-        <div className="bg-[#1A1D27] border border-[#6366F1]/20 rounded-xl px-4 py-4 flex items-start gap-3">
-          <span className="text-base shrink-0 mt-0.5">💡</span>
-          <div>
-            <div className="text-sm font-semibold text-white/90 mb-1">
-              Wio tip: earn extra cashback on your other card bills
-            </div>
-            <p className="text-xs text-white/50 leading-relaxed">
-              You can pay the bills for any of your other UAE credit cards using Wio Credit and earn an additional{" "}
-              <span className="text-white/75 font-medium">0.5%</span> (Plus plan) or{" "}
-              <span className="text-white/75 font-medium">1%</span> (Salary or Family plan) cashback — on top of whatever those cards already earn. Capped at that percentage of your Wio credit limit per month. Requires AED 5,000+ total spend on Wio Credit in the same month.
-            </p>
-          </div>
-        </div>
-      )}
 
       {/* ── Section 5: Card Benefits ──────────────────────────── */}
       {Object.keys(benefitsByCard).length > 0 && (

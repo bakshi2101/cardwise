@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { supabase, SpendingCategory } from "@/lib/supabase";
+import { supabase, fetchAllRows, SpendingCategory } from "@/lib/supabase";
 import { computeMonthlyReward } from "@/lib/recommend";
 import {
   getSpendingProfile,
@@ -24,6 +24,7 @@ interface CardData {
   annual_fee_aed: number;
   annual_fee_waiver_spend: number | null;
   min_salary_aed: number | null;
+  min_salary_estimated: boolean;
   reward_currency_name: string | null;
   rewards: Record<string, { rate: number; cap_spend: number | null; cap_reward: number | null }>;
 }
@@ -36,6 +37,9 @@ interface Assignment {
   cardName: string;
   monthlyReward: number;
   rate: number;
+  // Set when paying this card's bill via Wio (if Wio is also in this portfolio)
+  // would beat Wio's own rate for this category
+  wioStack: { wioRate: number; stackedRate: number } | null;
 }
 
 interface CardBreakdown {
@@ -60,6 +64,12 @@ interface Strategy {
 }
 
 const WIO_CARD_ID = "eef85749-a7da-4975-82fe-eae4f5bcae53";
+const WIO_BILL_PAY_BONUS_PCT = 0.5;
+
+function categoryRate(card: CardData, catSlug: string): number {
+  const r = card.rewards[catSlug] ?? card.rewards["general"];
+  return r?.rate ?? 0;
+}
 
 // ── Loyalty weighting helpers ──────────────────────────────────────────────
 
@@ -192,6 +202,8 @@ function buildStrategy(
     if (bestCard && best > 0) assignments.set(cat.slug, { card: bestCard, monthly: best, rate: bestRate });
   }
 
+  const wioCard = cards.find((c) => c.card_id === WIO_CARD_ID);
+
   const cardBreakdowns: CardBreakdown[] = cards.map((card) => {
     const cardAssignments: Assignment[] = [];
     let annualReward = 0;
@@ -199,6 +211,16 @@ function buildStrategy(
       const a = assignments.get(cat.slug);
       if (a?.card.card_id === card.card_id) {
         annualReward += a.monthly * 12;
+
+        let wioStack: Assignment["wioStack"] = null;
+        if (wioCard && card.card_id !== WIO_CARD_ID) {
+          const wioRate = categoryRate(wioCard, cat.slug);
+          const stackedRate = a.rate + WIO_BILL_PAY_BONUS_PCT;
+          if (wioRate > 0 && stackedRate > wioRate) {
+            wioStack = { wioRate, stackedRate };
+          }
+        }
+
         cardAssignments.push({
           categorySlug: cat.slug,
           categoryName: cat.name,
@@ -207,6 +229,7 @@ function buildStrategy(
           cardName: card.card_name,
           monthlyReward: a.monthly,
           rate: a.rate,
+          wioStack,
         });
       }
     }
@@ -318,28 +341,46 @@ export default function RecommendResultsClient({ categories }: Props) {
     const totalAnnualSpend = Object.values(profile).reduce((s, v) => s + (v ?? 0), 0) * 12;
     const salaryCeiling = SALARY_TIER_CEILING[prefs.salaryTier];
 
-    // Fetch reward data + card metadata (including min_salary_aed + reward_currency_name)
-    const [rewardsRes, cardsRes] = await Promise.all([
-      supabase
-        .from("rewards_ranked")
-        .select(
-          "card_id, card_name, bank_id, bank_short_name, annual_fee_aed, category_slug, effective_return_pct, monthly_cap_spend_aed, monthly_cap_reward"
-        )
-        .eq("is_active", true)
-        .eq("reward_event_type", "ongoing"),
+    // Fetch reward data + card metadata (including min_salary_aed + reward_currency_name).
+    // rewards_ranked spans all cards x all categories (1000+ rows) — paginate past
+    // PostgREST's default 1000-row cap or specific-category rows silently get dropped
+    // and fall back to a card's general rate.
+    type RewardRow = {
+      card_id: string;
+      card_name: string;
+      bank_id: string | null;
+      bank_short_name: string;
+      annual_fee_aed: number | null;
+      category_slug: string;
+      effective_return_pct: number;
+      monthly_cap_spend_aed: number | null;
+      monthly_cap_reward: number | null;
+    };
+
+    const [allRewards, cardsRes] = await Promise.all([
+      fetchAllRows<RewardRow>((from, to) =>
+        supabase
+          .from("rewards_ranked")
+          .select(
+            "card_id, card_name, bank_id, bank_short_name, annual_fee_aed, category_slug, effective_return_pct, monthly_cap_spend_aed, monthly_cap_reward"
+          )
+          .eq("is_active", true)
+          .eq("reward_event_type", "ongoing")
+          .range(from, to)
+      ),
       supabase
         .from("cards_with_bank")
-        .select("id, bank_id, annual_fee_aed, annual_fee_waiver_spend, min_salary_aed, reward_currency_name")
+        .select("id, bank_id, annual_fee_aed, annual_fee_waiver_spend, min_salary_aed, is_estimated, reward_currency_name")
         .eq("is_active", true),
     ]);
 
-    const allRewards = rewardsRes.data ?? [];
     const cardsMeta = cardsRes.data ?? [];
     const metaMap = new Map(
       cardsMeta.map((c) => [c.id, {
         waiver: c.annual_fee_waiver_spend as number | null,
         bankId: c.bank_id as string,
         minSalary: c.min_salary_aed as number | null,
+        minSalaryEstimated: c.is_estimated as boolean,
         rewardCurrency: c.reward_currency_name as string | null,
       }])
     );
@@ -357,6 +398,7 @@ export default function RecommendResultsClient({ categories }: Props) {
           annual_fee_aed: r.annual_fee_aed ?? 0,
           annual_fee_waiver_spend: meta?.waiver ?? null,
           min_salary_aed: meta?.minSalary ?? null,
+          min_salary_estimated: meta?.minSalaryEstimated ?? false,
           reward_currency_name: meta?.rewardCurrency ?? null,
           rewards: {},
         });
@@ -726,6 +768,14 @@ export default function RecommendResultsClient({ categories }: Props) {
                             ) : (
                               <span className="text-[#22C55E]/70">No annual fee</span>
                             )}
+                            {cb.card.min_salary_aed != null && cb.card.min_salary_estimated && (
+                              <span
+                                className="text-[#F59E0B] cursor-help"
+                                title={`Min. salary AED ${cb.card.min_salary_aed.toLocaleString()} is an estimate, not a bank-published figure — eligibility may differ.`}
+                              >
+                                ⚠ Salary req. estimated
+                              </span>
+                            )}
                           </div>
                         </div>
                         <div className="text-right shrink-0">
@@ -742,18 +792,25 @@ export default function RecommendResultsClient({ categories }: Props) {
                             Use for
                           </div>
                           {cb.assignments.map((a) => (
-                            <div
-                              key={a.categorySlug}
-                              className="flex items-center justify-between text-xs bg-white/3 rounded-lg px-3 py-2 border border-white/5"
-                            >
-                              <div className="flex items-center gap-2 min-w-0">
-                                <span>{a.categoryIcon}</span>
-                                <span className="text-white/70">{a.categoryName}</span>
-                                <span className="text-white/30 font-mono">{a.rate.toFixed(1)}%</span>
+                            <div key={a.categorySlug}>
+                              <div className="flex items-center justify-between text-xs bg-white/3 rounded-lg px-3 py-2 border border-white/5">
+                                <div className="flex items-center gap-2 min-w-0">
+                                  <span>{a.categoryIcon}</span>
+                                  <span className="text-white/70">{a.categoryName}</span>
+                                  <span className="text-white/30 font-mono">{a.rate.toFixed(1)}%</span>
+                                </div>
+                                <span className="font-semibold text-[#22C55E] font-mono shrink-0 ml-2">
+                                  AED {Math.round(a.monthlyReward)}/mo
+                                </span>
                               </div>
-                              <span className="font-semibold text-[#22C55E] font-mono shrink-0 ml-2">
-                                AED {Math.round(a.monthlyReward)}/mo
-                              </span>
+                              {a.wioStack && (
+                                <div
+                                  className="text-[11px] text-[#6366F1]/70 mt-1 px-1 leading-snug cursor-help"
+                                  title="Wio's bill-pay bonus is capped by a % of your Wio credit limit (not the bill amount) and requires AED 5,000+ spend on the Wio card itself that month."
+                                >
+                                  💡 Pay this bill via Wio for +0.5% → {a.wioStack.stackedRate.toFixed(1)}% total (beats Wio&apos;s own {a.wioStack.wioRate.toFixed(1)}% direct rate)
+                                </div>
+                              )}
                             </div>
                           ))}
                         </div>
@@ -779,17 +836,6 @@ export default function RecommendResultsClient({ categories }: Props) {
                         </div>
                       )}
 
-                      {cb.card.card_id === WIO_CARD_ID && (
-                        <div className="bg-[#6366F1]/6 border border-[#6366F1]/20 rounded-lg px-3 py-2.5 text-xs flex items-start gap-2">
-                          <span className="shrink-0 mt-px">💡</span>
-                          <div className="text-white/55 leading-relaxed">
-                            <span className="text-white/80 font-medium">Bonus: </span>
-                            Pay your other UAE credit card bills through Wio Credit to earn an extra{" "}
-                            <span className="text-white/75 font-medium">0.5%</span> (Plus plan) or{" "}
-                            <span className="text-white/75 font-medium">1%</span> (Salary/Family plan) cashback on top — capped at that % of your Wio credit limit per month. Requires AED 5,000+ spend in the same month.
-                          </div>
-                        </div>
-                      )}
                     </div>
                   );
                 })}

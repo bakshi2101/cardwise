@@ -1,4 +1,4 @@
-import { supabase, RewardRanked, Offer } from "./supabase";
+import { supabase, fetchAllRows, RewardRanked, Offer } from "./supabase";
 
 // Explicit column list for rewards_ranked queries.
 // Using select("*") on a view with cr.* wildcard expansion can silently omit
@@ -7,7 +7,7 @@ const REWARD_COLS =
   "id, card_id, category_id, reward_type, earn_rate, earn_unit, earn_per_x_aed, " +
   "effective_return_pct, monthly_cap_spend_aed, monthly_cap_reward, " +
   "min_txn_amount_aed, min_monthly_spend_aed, is_promotional, promo_end_date, " +
-  "exclusions, source_url, last_verified_date, notes, is_active, " +
+  "exclusions, source_url, last_verified_date, notes, is_active, is_estimated, " +
   "reward_event_type, absolute_value_aed, annual_spend_threshold_aed, display_label, " +
   "card_name, card_image, annual_fee_aed, forex_markup_pct, " +
   "bank_id, bank_name, bank_short_name, category_name, category_slug, category_icon";
@@ -315,14 +315,27 @@ export async function getMarketOptimalMonthlyReward(
 ): Promise<number> {
   if (activeSlugs.length === 0) return 0;
 
-  const { data: rows } = await supabase
-    .from("rewards_ranked")
-    .select("card_id, category_slug, effective_return_pct, monthly_cap_spend_aed, monthly_cap_reward")
-    .in("category_slug", [...activeSlugs, "general"])
-    .eq("is_active", true)
-    .eq("reward_event_type", "ongoing");
+  // Spans all cards x active categories — can exceed PostgREST's 1000-row cap
+  // once enough categories are active, so paginate rather than select() directly.
+  type MarketRow = {
+    card_id: string;
+    category_slug: string;
+    effective_return_pct: number;
+    monthly_cap_spend_aed: number | null;
+    monthly_cap_reward: number | null;
+  };
 
-  if (!rows || rows.length === 0) return 0;
+  const rows = await fetchAllRows<MarketRow>((from, to) =>
+    supabase
+      .from("rewards_ranked")
+      .select("card_id, category_slug, effective_return_pct, monthly_cap_spend_aed, monthly_cap_reward")
+      .in("category_slug", [...activeSlugs, "general"])
+      .eq("is_active", true)
+      .eq("reward_event_type", "ongoing")
+      .range(from, to)
+  );
+
+  if (rows.length === 0) return 0;
 
   // Build simple card matrix (same pattern as Path B)
   const cardMap = new Map<string, SimpleCard>();

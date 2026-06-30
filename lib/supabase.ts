@@ -5,6 +5,28 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+// PostgREST on this project caps unbounded selects at 1000 rows server-side.
+// Any query that can plausibly return more than that (e.g. reward rows across
+// all cards x all categories) must paginate with .range() to avoid silently
+// dropping rows.
+const POSTGREST_PAGE_SIZE = 1000;
+
+export async function fetchAllRows<T>(
+  queryFactory: (from: number, to: number) => PromiseLike<{ data: T[] | null; error: unknown }>
+): Promise<T[]> {
+  const rows: T[] = [];
+  let from = 0;
+  for (;;) {
+    const { data, error } = await queryFactory(from, from + POSTGREST_PAGE_SIZE - 1);
+    if (error) throw error;
+    const page = data ?? [];
+    rows.push(...page);
+    if (page.length < POSTGREST_PAGE_SIZE) break;
+    from += POSTGREST_PAGE_SIZE;
+  }
+  return rows;
+}
+
 // Types matching the DB schema
 export interface Bank {
   id: string;
@@ -45,6 +67,7 @@ export interface Card {
   source_url: string | null;
   summary: string | null;
   is_active: boolean;
+  is_estimated: boolean;
   // joined
   bank_name?: string;
   bank_short_name?: string;
@@ -80,6 +103,7 @@ export interface CardReward {
   last_verified_date: string | null;
   notes: string | null;
   is_active: boolean;
+  is_estimated: boolean;
 }
 
 export interface RewardRanked extends CardReward {
