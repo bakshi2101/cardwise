@@ -2,6 +2,7 @@ import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import AddToWalletButton from "@/components/AddToWalletButton";
+import { filterActiveWelcomeRows, summarizeWelcomeBonusRows, type WelcomeBonusRow } from "@/lib/welcomeBonus";
 
 export const revalidate = 3600;
 
@@ -12,9 +13,12 @@ interface Props {
 export default async function CardDetailPage({ params }: Props) {
   const { id } = await params;
 
+  const today = new Date().toISOString().split("T")[0];
+
   const [
     { data: card },
     { data: rewards },
+    { data: welcomeRows },
     { data: benefits },
     { data: offers },
     { data: transferPartners },
@@ -33,6 +37,12 @@ export default async function CardDetailPage({ params }: Props) {
       .eq("reward_event_type", "ongoing")
       .order("effective_return_pct", { ascending: false }),
     supabase
+      .from("card_rewards")
+      .select("absolute_value_aed, notes, display_label, reward_event_type, promo_end_date, created_at")
+      .eq("card_id", id)
+      .eq("is_active", true)
+      .in("reward_event_type", ["welcome_bonus", "limited_promo"]),
+    supabase
       .from("card_benefits")
       .select("*")
       .eq("card_id", id)
@@ -42,7 +52,7 @@ export default async function CardDetailPage({ params }: Props) {
       .select("*")
       .eq("card_id", id)
       .eq("is_active", true)
-      .gte("end_date", new Date().toISOString().split("T")[0]),
+      .gte("end_date", today),
     supabase
       .from("transfer_partners")
       .select("*, program:loyalty_programs(*)")
@@ -51,6 +61,10 @@ export default async function CardDetailPage({ params }: Props) {
   ]);
 
   if (!card) notFound();
+
+  const welcomeBonus = summarizeWelcomeBonusRows(
+    filterActiveWelcomeRows((welcomeRows ?? []) as WelcomeBonusRow[], today)
+  );
 
   const networkBadgeColor: Record<string, string> = {
     visa: "bg-blue-500/10 text-blue-400 border border-blue-500/20",
@@ -108,7 +122,17 @@ export default async function CardDetailPage({ params }: Props) {
           </div>
           {card.min_salary_aed && (
             <div>
-              <div className="text-xs text-white/40">Min. Salary</div>
+              <div className="text-xs text-white/40 flex items-center gap-1">
+                Min. Salary
+                {card.is_estimated && (
+                  <span
+                    className="text-[#F59E0B] cursor-help"
+                    title="Estimated — not a bank-published figure. See the card summary or source for details."
+                  >
+                    ⚠ est.
+                  </span>
+                )}
+              </div>
               <div className="font-semibold mt-0.5 font-mono text-white/90">AED {card.min_salary_aed.toLocaleString()}</div>
             </div>
           )}
@@ -177,12 +201,38 @@ export default async function CardDetailPage({ params }: Props) {
                   </div>
                 </div>
                 <div className="text-right shrink-0">
-                  <div className="font-bold text-[#22C55E] font-mono">{r.effective_return_pct.toFixed(1)}%</div>
+                  <div className="font-bold text-[#22C55E] font-mono flex items-center justify-end gap-1">
+                    {r.effective_return_pct.toFixed(1)}%
+                    {r.is_estimated && (
+                      <span
+                        className="text-[#F59E0B] text-xs cursor-help"
+                        title="Estimated — not directly confirmed in a bank T&C document. See note for details."
+                      >
+                        ⚠
+                      </span>
+                    )}
+                  </div>
                   <div className="text-xs text-white/30 capitalize">{r.reward_type}</div>
                 </div>
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Welcome bonus */}
+      {welcomeBonus && (
+        <div className="bg-[#F59E0B]/6 border border-[#F59E0B]/20 rounded-xl px-4 py-3 flex items-center gap-3">
+          <span className="text-lg shrink-0">🎁</span>
+          <div className="flex-1 min-w-0">
+            <div className="text-xs text-white/40 uppercase tracking-widest">Welcome Bonus</div>
+            <div className="text-sm text-white/70 mt-0.5">{welcomeBonus.title}</div>
+          </div>
+          {welcomeBonus.value > 0 && (
+            <div className="font-bold text-[#F59E0B] font-mono shrink-0">
+              ~AED {welcomeBonus.value.toLocaleString()}
+            </div>
+          )}
         </div>
       )}
 
