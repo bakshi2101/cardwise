@@ -58,13 +58,11 @@ export function combineMultiPartTitle(titles: string[]): string {
 }
 
 /**
- * Sums absolute_value_aed and combines titles across a single card's active
- * welcome-bonus rows (sorted deterministically: highest value first, then
- * oldest first, then alphabetically).
+ * Deterministic display order: highest value first, then oldest first, then
+ * alphabetically by notes.
  */
-export function summarizeWelcomeBonusRows(rows: WelcomeBonusRow[]): WelcomeBonusSummary | null {
-  if (rows.length === 0) return null;
-  const sorted = [...rows].sort((a, b) => {
+export function sortWelcomeBonusRows<T extends WelcomeBonusRow>(rows: T[]): T[] {
+  return [...rows].sort((a, b) => {
     const valDiff = (b.absolute_value_aed ?? 0) - (a.absolute_value_aed ?? 0);
     if (valDiff !== 0) return valDiff;
     const dateA = a.created_at ?? "";
@@ -72,6 +70,16 @@ export function summarizeWelcomeBonusRows(rows: WelcomeBonusRow[]): WelcomeBonus
     if (dateA !== dateB) return dateA.localeCompare(dateB); // oldest first
     return (a.notes ?? "").localeCompare(b.notes ?? "");
   });
+}
+
+/**
+ * Sums absolute_value_aed and combines titles across a single card's active
+ * welcome-bonus rows. Used for compact contexts (e.g. Path B's per-card
+ * summary) where there isn't room to list each row separately.
+ */
+export function summarizeWelcomeBonusRows(rows: WelcomeBonusRow[]): WelcomeBonusSummary | null {
+  if (rows.length === 0) return null;
+  const sorted = sortWelcomeBonusRows(rows);
   const value = sorted.reduce((sum, r) => sum + (r.absolute_value_aed ?? 0), 0);
   const titles = sorted.map((r) => r.display_label ?? shortLabelFromNotes(r.notes ?? ""));
   return { value, title: combineMultiPartTitle(titles) };

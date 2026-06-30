@@ -2,7 +2,7 @@ import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import AddToWalletButton from "@/components/AddToWalletButton";
-import { filterActiveWelcomeRows, summarizeWelcomeBonusRows, type WelcomeBonusRow } from "@/lib/welcomeBonus";
+import { filterActiveWelcomeRows, shortLabelFromNotes, sortWelcomeBonusRows, type WelcomeBonusRow } from "@/lib/welcomeBonus";
 
 export const revalidate = 3600;
 
@@ -62,9 +62,10 @@ export default async function CardDetailPage({ params }: Props) {
 
   if (!card) notFound();
 
-  const welcomeBonus = summarizeWelcomeBonusRows(
+  const activeWelcomeRows = sortWelcomeBonusRows(
     filterActiveWelcomeRows((welcomeRows ?? []) as WelcomeBonusRow[], today)
   );
+  const welcomeBonusTotal = activeWelcomeRows.reduce((sum, r) => sum + (r.absolute_value_aed ?? 0), 0);
 
   const networkBadgeColor: Record<string, string> = {
     visa: "bg-blue-500/10 text-blue-400 border border-blue-500/20",
@@ -221,18 +222,36 @@ export default async function CardDetailPage({ params }: Props) {
       )}
 
       {/* Welcome bonus */}
-      {welcomeBonus && (
-        <div className="bg-[#F59E0B]/6 border border-[#F59E0B]/20 rounded-xl px-4 py-3 flex items-center gap-3">
-          <span className="text-lg shrink-0">🎁</span>
-          <div className="flex-1 min-w-0">
-            <div className="text-xs text-white/40 uppercase tracking-widest">Welcome Bonus</div>
-            <div className="text-sm text-white/70 mt-0.5">{welcomeBonus.title}</div>
+      {activeWelcomeRows.length > 0 && (
+        <div className="bg-[#1A1D27] rounded-xl border border-[#F59E0B]/20 overflow-hidden">
+          <div className="px-4 py-3 border-b border-white/8 flex items-center justify-between gap-3">
+            <h2 className="font-semibold text-white/90 flex items-center gap-2">
+              <span>🎁</span> Welcome Bonus
+            </h2>
+            {welcomeBonusTotal > 0 && (
+              <div className="font-bold text-[#F59E0B] font-mono shrink-0">
+                ~AED {welcomeBonusTotal.toLocaleString()}
+                {activeWelcomeRows.length > 1 && <span className="text-xs font-normal text-white/30"> total</span>}
+              </div>
+            )}
           </div>
-          {welcomeBonus.value > 0 && (
-            <div className="font-bold text-[#F59E0B] font-mono shrink-0">
-              ~AED {welcomeBonus.value.toLocaleString()}
-            </div>
-          )}
+          <div className="divide-y divide-white/5">
+            {activeWelcomeRows.map((w, i) => (
+              <div key={i} className="px-4 py-3 flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="text-sm font-medium text-white/80">
+                    {w.display_label ?? shortLabelFromNotes(w.notes ?? "")}
+                  </div>
+                  {w.notes && <div className="text-xs text-white/40 mt-0.5">{w.notes}</div>}
+                </div>
+                {w.absolute_value_aed != null && (
+                  <div className="text-sm font-semibold text-[#F59E0B] shrink-0 font-mono">
+                    AED {w.absolute_value_aed.toLocaleString()}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
