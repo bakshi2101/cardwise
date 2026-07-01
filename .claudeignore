@@ -1,0 +1,44 @@
+# Build output
+.next/
+out/
+
+# Dependencies
+node_modules/
+
+# Vercel
+.vercel/
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Logs
+*.log
+npm-debug.log*
+
+# Static assets
+public/
+
+# T&C PDFs - never needed for coding
+tcpdfs/
+
+# Diff files
+*.diff
+*.txt
+
+# Build info
+tsconfig.tsbuildinfo
+next-env.d.ts
+
+# Temp folders
+.tmp/
+.tmp_claude/
+.claude-tmp/
+
+# CardWise docs
+docs/
+
+# Supabase
+supabase/
+scripts/

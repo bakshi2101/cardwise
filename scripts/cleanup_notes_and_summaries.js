@@ -227,16 +227,16 @@ const SUMMARIES = {
 
   // ENBD Skywards Infinite
   '3d65db6f-0554-4b4c-8c45-8c3ed632c03d':
-`• Best for Emirates and flydubai frequent flyers — 3.82% Skywards miles on direct bookings
-• 1.91% on all general domestic spend; 2.86% on non-EU/UK international
-• 1 Skywards mile = AED 0.07; 1 USD = AED 3.672
+`• Best for Emirates and flydubai frequent flyers — 2.40% Skywards miles on direct bookings
+• 1.20% on all general domestic spend; 1.80% on non-EU/UK international
+• 1 Skywards mile = AED 0.044 (The Points Guy — 1.2 US cents/mile); 1 USD = AED 3.672
 • Spend cap: AED 100,000/billing cycle; annual fee: AED 1,575`,
 
   // ENBD Skywards Signature
   'c734bcbd-030c-4025-8f6c-5a9cc182856b':
-`• Mid-tier Skywards miles card — 2.86% on Emirates and flydubai direct bookings
-• 1.43% on all general domestic spend; 1.91% on non-EU/UK international
-• 0.75 miles per USD domestic; 1 Skywards mile = AED 0.07; 1 USD = AED 3.672
+`• Mid-tier Skywards miles card — 1.80% on Emirates and flydubai direct bookings
+• 0.90% on all general domestic spend; 1.20% on non-EU/UK international
+• 0.75 miles per USD domestic; 1 Skywards mile = AED 0.044 (The Points Guy — 1.2 US cents/mile); 1 USD = AED 3.672
 • Spend cap: AED 50,000/billing cycle; annual fee: AED 735`,
 
   // ENBD LuLu Platinum

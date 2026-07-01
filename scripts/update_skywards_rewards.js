@@ -8,8 +8,8 @@ const sb = createClient(
 // URL: https://www.emiratesnbd.com/en/help-and-support/earning-skywards-miles-on-your-credit-card
 // Verified: 2026-04-02
 // Conversion: 1 USD = AED 3.672 (confirmed in T&C clause 11)
-// Skywards mile value: AED 0.07/mile
-// effective_return_pct = earn_rate * 0.07 / 3.672
+// Skywards mile value: AED 0.044/mile (The Points Guy monthly valuations — 1.2 US cents/mile)
+// effective_return_pct = earn_rate * 0.044 / 3.672
 
 const SRC = 'https://www.emiratesnbd.com/en/help-and-support/earning-skywards-miles-on-your-credit-card';
 const TODAY = '2026-04-02';
@@ -39,133 +39,134 @@ const C = {
   general:      '8a0dbdfb-1214-4886-9ed2-30ee47d2fd7f',
 };
 
-// earn_rate in miles/USD; effective_return_pct = earn_rate * 0.07 / 3.672
+// earn_rate in miles/USD; effective_return_pct = earn_rate * 0.044 / 3.672
 // INF domestic=1, SIG domestic=0.75
 // Reduced: groceries/QSR/insurance/car dealers = 25% domestic
 // Low: fuel/transit/govt/utilities/rent/education/telecom = 10% domestic
 // Bonus: Emirates+flydubai, online food delivery, duty free = 2 (INF) / 1.5 (SIG) miles/USD
 
-const BASE_NOTE = 'Source: ENBD help page (emiratesnbd.com/en/help-and-support/earning-skywards-miles-on-your-credit-card), verified 2026-04-02. Miles earned per USD spent; 1 USD = AED 3.672. 1 Skywards mile = AED 0.07. Cap: AED 100,000 retail spend/billing cycle.';
-const SIG_CAP_NOTE = 'Source: ENBD help page (emiratesnbd.com/en/help-and-support/earning-skywards-miles-on-your-credit-card), verified 2026-04-02. Miles earned per USD spent; 1 USD = AED 3.672. 1 Skywards mile = AED 0.07. Cap: AED 50,000 retail spend/billing cycle.';
+const BASE_NOTE = 'Source: ENBD help page (emiratesnbd.com/en/help-and-support/earning-skywards-miles-on-your-credit-card), verified 2026-04-02. Miles earned per USD spent; 1 USD = AED 3.672. 1 Skywards mile = AED 0.044 (The Points Guy monthly valuations — 1.2 US cents/mile). Cap: AED 100,000 retail spend/billing cycle.';
+const SIG_CAP_NOTE = 'Source: ENBD help page (emiratesnbd.com/en/help-and-support/earning-skywards-miles-on-your-credit-card), verified 2026-04-02. Miles earned per USD spent; 1 USD = AED 3.672. 1 Skywards mile = AED 0.044 (The Points Guy monthly valuations — 1.2 US cents/mile). Cap: AED 50,000 retail spend/billing cycle.';
 
 // [category_id, inf_earn_rate, inf_eff, sig_earn_rate, sig_eff, notes_inf, notes_sig]
+// effective_return_pct = earn_rate * 0.044 / 3.672 * 100
 const UPDATES = [
   {
     cat: C.dining,
-    inf_rate: 1.0, inf_eff: 1.91,
-    sig_rate: 0.75, sig_eff: 1.43,
-    inf_notes: '1 mile/USD on full-service dining (standard domestic rate). Warning: QSR/fast-food restaurants earn 0.25 miles/USD (0.48%) per help page. ' + BASE_NOTE,
-    sig_notes: '0.75 miles/USD on full-service dining (standard domestic rate). Warning: QSR/fast-food restaurants earn 0.1875 miles/USD (0.36%) per help page. ' + SIG_CAP_NOTE,
+    inf_rate: 1.0, inf_eff: 1.20,
+    sig_rate: 0.75, sig_eff: 0.90,
+    inf_notes: '1 mile/USD on full-service dining (standard domestic rate). Warning: QSR/fast-food restaurants earn 0.25 miles/USD (0.30%) per help page. ' + BASE_NOTE,
+    sig_notes: '0.75 miles/USD on full-service dining (standard domestic rate). Warning: QSR/fast-food restaurants earn 0.1875 miles/USD (0.22%) per help page. ' + SIG_CAP_NOTE,
   },
   {
     cat: C.groceries,
-    inf_rate: 0.25, inf_eff: 0.48,
-    sig_rate: 0.1875, sig_eff: 0.36,
+    inf_rate: 0.25, inf_eff: 0.30,
+    sig_rate: 0.1875, sig_eff: 0.22,
     inf_notes: '0.25 miles/USD on grocery/supermarkets (25% of domestic rate). Per help page: "Grocery, supermarkets, fast-food restaurants, insurance and car dealerships earn Miles at 25% of the domestic earning rate." ' + BASE_NOTE,
     sig_notes: '0.1875 miles/USD on grocery/supermarkets (25% of domestic 0.75 rate). Per help page: "Grocery, supermarkets, fast-food restaurants, insurance and car dealerships earn Miles at 25% of the domestic earning rate." ' + SIG_CAP_NOTE,
   },
   {
     cat: C.fuel,
-    inf_rate: 0.1, inf_eff: 0.19,
-    sig_rate: 0.075, sig_eff: 0.14,
+    inf_rate: 0.1, inf_eff: 0.12,
+    sig_rate: 0.075, sig_eff: 0.09,
     inf_notes: '0.10 miles/USD on fuel/petroleum (10% of domestic rate). Per help page: "Petroleum, transit, government services, utility payments, real estate, education and telecommunication payments earn Miles at 10% of the domestic spend earning rate." ' + BASE_NOTE,
     sig_notes: '0.075 miles/USD on fuel/petroleum (10% of domestic 0.75 rate). Per help page: "Petroleum, transit, government services, utility payments, real estate, education and telecommunication payments earn Miles at 10% of the domestic spend earning rate." ' + SIG_CAP_NOTE,
   },
   {
     cat: C.airlines,
-    inf_rate: 1.0, inf_eff: 1.91,
-    sig_rate: 0.75, sig_eff: 1.43,
-    inf_notes: '1 mile/USD on airline purchases (standard domestic rate for most airlines). Bonus: Emirates and flydubai earn 2 miles/USD (3.81%). ' + BASE_NOTE,
-    sig_notes: '0.75 miles/USD on airline purchases (standard domestic rate for most airlines). Bonus: Emirates and flydubai earn 1.5 miles/USD (2.86%). ' + SIG_CAP_NOTE,
+    inf_rate: 1.0, inf_eff: 1.20,
+    sig_rate: 0.75, sig_eff: 0.90,
+    inf_notes: '1 mile/USD on airline purchases (standard domestic rate for most airlines). Bonus: Emirates and flydubai earn 2 miles/USD (2.40%). ' + BASE_NOTE,
+    sig_notes: '0.75 miles/USD on airline purchases (standard domestic rate for most airlines). Bonus: Emirates and flydubai earn 1.5 miles/USD (1.80%). ' + SIG_CAP_NOTE,
   },
   {
     cat: C.shopping,
-    inf_rate: 1.0, inf_eff: 1.91,
-    sig_rate: 0.75, sig_eff: 1.43,
+    inf_rate: 1.0, inf_eff: 1.20,
+    sig_rate: 0.75, sig_eff: 0.90,
     inf_notes: '1 mile/USD on general shopping (standard domestic rate). ' + BASE_NOTE,
     sig_notes: '0.75 miles/USD on general shopping (standard domestic rate). ' + SIG_CAP_NOTE,
   },
   {
     cat: C.hotels,
-    inf_rate: 1.0, inf_eff: 1.91,
-    sig_rate: 0.75, sig_eff: 1.43,
+    inf_rate: 1.0, inf_eff: 1.20,
+    sig_rate: 0.75, sig_eff: 0.90,
     inf_notes: '1 mile/USD on hotel bookings (standard domestic rate). ' + BASE_NOTE,
     sig_notes: '0.75 miles/USD on hotel bookings (standard domestic rate). ' + SIG_CAP_NOTE,
   },
   {
     cat: C.travel,
-    inf_rate: 1.0, inf_eff: 1.91,
-    sig_rate: 0.75, sig_eff: 1.43,
+    inf_rate: 1.0, inf_eff: 1.20,
+    sig_rate: 0.75, sig_eff: 0.90,
     inf_notes: '1 mile/USD on travel agencies, booking sites, car rentals (standard domestic rate). ' + BASE_NOTE,
     sig_notes: '0.75 miles/USD on travel agencies, booking sites, car rentals (standard domestic rate). ' + SIG_CAP_NOTE,
   },
   {
     cat: C.online,
-    inf_rate: 1.0, inf_eff: 1.91,
-    sig_rate: 0.75, sig_eff: 1.43,
-    inf_notes: '1 mile/USD on general online shopping (Amazon.ae, Noon - standard domestic rate). Bonus: Online food delivery and car booking apps (Talabat, Careem) earn 2 miles/USD (3.81%). ' + BASE_NOTE,
-    sig_notes: '0.75 miles/USD on general online shopping (Amazon.ae, Noon - standard domestic rate). Bonus: Online food delivery and car booking apps (Talabat, Careem) earn 1.5 miles/USD (2.86%). ' + SIG_CAP_NOTE,
+    inf_rate: 1.0, inf_eff: 1.20,
+    sig_rate: 0.75, sig_eff: 0.90,
+    inf_notes: '1 mile/USD on general online shopping (Amazon.ae, Noon - standard domestic rate). Bonus: Online food delivery and car booking apps (Talabat, Careem) earn 2 miles/USD (2.40%). ' + BASE_NOTE,
+    sig_notes: '0.75 miles/USD on general online shopping (Amazon.ae, Noon - standard domestic rate). Bonus: Online food delivery and car booking apps (Talabat, Careem) earn 1.5 miles/USD (1.80%). ' + SIG_CAP_NOTE,
   },
   {
     cat: C.entertain,
-    inf_rate: 1.0, inf_eff: 1.91,
-    sig_rate: 0.75, sig_eff: 1.43,
+    inf_rate: 1.0, inf_eff: 1.20,
+    sig_rate: 0.75, sig_eff: 0.90,
     inf_notes: '1 mile/USD on entertainment (cinemas, theme parks - standard domestic rate). ' + BASE_NOTE,
     sig_notes: '0.75 miles/USD on entertainment (cinemas, theme parks - standard domestic rate). ' + SIG_CAP_NOTE,
   },
   {
     cat: C.utilities,
-    inf_rate: 0.1, inf_eff: 0.19,
-    sig_rate: 0.075, sig_eff: 0.14,
+    inf_rate: 0.1, inf_eff: 0.12,
+    sig_rate: 0.075, sig_eff: 0.09,
     inf_notes: '0.10 miles/USD on utility payments (DEWA, du, Etisalat - 10% of domestic rate). Note: utility bills paid via ENBD Online Banking/Banknet do NOT earn miles per T&C clause 2. ' + BASE_NOTE,
     sig_notes: '0.075 miles/USD on utility payments (DEWA, du, Etisalat - 10% of domestic 0.75 rate). Note: utility bills paid via ENBD Online Banking/Banknet do NOT earn miles per T&C clause 2. ' + SIG_CAP_NOTE,
   },
   {
     cat: C.education,
-    inf_rate: 0.1, inf_eff: 0.19,
-    sig_rate: 0.075, sig_eff: 0.14,
+    inf_rate: 0.1, inf_eff: 0.12,
+    sig_rate: 0.075, sig_eff: 0.09,
     inf_notes: '0.10 miles/USD on education fees (10% of domestic rate). ' + BASE_NOTE,
     sig_notes: '0.075 miles/USD on education fees (10% of domestic 0.75 rate). ' + SIG_CAP_NOTE,
   },
   {
     cat: C.insurance,
-    inf_rate: 0.25, inf_eff: 0.48,
-    sig_rate: 0.1875, sig_eff: 0.36,
+    inf_rate: 0.25, inf_eff: 0.30,
+    sig_rate: 0.1875, sig_eff: 0.22,
     inf_notes: '0.25 miles/USD on insurance premiums (25% of domestic rate). Per help page: same reduced tier as grocery/supermarkets/QSR/car dealers. ' + BASE_NOTE,
     sig_notes: '0.1875 miles/USD on insurance premiums (25% of domestic 0.75 rate). Per help page: same reduced tier as grocery/supermarkets/QSR/car dealers. ' + SIG_CAP_NOTE,
   },
   {
     cat: C.government,
-    inf_rate: 0.1, inf_eff: 0.19,
-    sig_rate: 0.075, sig_eff: 0.14,
+    inf_rate: 0.1, inf_eff: 0.12,
+    sig_rate: 0.075, sig_eff: 0.09,
     inf_notes: '0.10 miles/USD on government services/fees (10% of domestic rate). ' + BASE_NOTE,
     sig_notes: '0.075 miles/USD on government services/fees (10% of domestic 0.75 rate). ' + SIG_CAP_NOTE,
   },
   {
     cat: C.rent,
-    inf_rate: 0.1, inf_eff: 0.19,
-    sig_rate: 0.075, sig_eff: 0.14,
+    inf_rate: 0.1, inf_eff: 0.12,
+    sig_rate: 0.075, sig_eff: 0.09,
     inf_notes: '0.10 miles/USD on real estate/rent payments (10% of domestic rate). Per help page: "real estate" explicitly listed in 10% tier. ' + BASE_NOTE,
     sig_notes: '0.075 miles/USD on real estate/rent payments (10% of domestic 0.75 rate). Per help page: "real estate" explicitly listed in 10% tier. ' + SIG_CAP_NOTE,
   },
   {
     cat: C.healthcare,
-    inf_rate: 1.0, inf_eff: 1.91,
-    sig_rate: 0.75, sig_eff: 1.43,
+    inf_rate: 1.0, inf_eff: 1.20,
+    sig_rate: 0.75, sig_eff: 0.90,
     inf_notes: '1 mile/USD on healthcare (hospitals, clinics, pharmacies - standard domestic rate). ' + BASE_NOTE,
     sig_notes: '0.75 miles/USD on healthcare (hospitals, clinics, pharmacies - standard domestic rate). ' + SIG_CAP_NOTE,
   },
   {
     cat: C.international,
-    inf_rate: 1.5, inf_eff: 2.86,
-    sig_rate: 1.0, sig_eff: 1.91,
-    inf_notes: '1.5 miles/USD on international spend (non-EU/UK). Warning: EU and UK spend earns only 0.75 miles/USD (1.43%) per help page. Forex markup 1.99% applies on foreign currency transactions (net effective for non-EU: 2.86% - 1.99% = 0.87%; net for EU: 1.43% - 1.99% = -0.56%). ' + BASE_NOTE,
-    sig_notes: '1 mile/USD on international spend (non-EU/UK). Warning: EU and UK spend earns only 0.5 miles/USD (0.95%) per help page. Forex markup 1.99% applies (net effective for non-EU: 1.91% - 1.99% = -0.08%; net for EU: 0.95% - 1.99% = -1.04%). ' + SIG_CAP_NOTE,
+    inf_rate: 1.5, inf_eff: 1.80,
+    sig_rate: 1.0, sig_eff: 1.20,
+    inf_notes: '1.5 miles/USD on international spend (non-EU/UK). Warning: EU and UK spend earns only 0.75 miles/USD (0.90%) per help page. Forex markup 1.99% applies on foreign currency transactions (net effective for non-EU: 1.80% - 1.99% = -0.19%; net for EU: 0.90% - 1.99% = -1.09%). ' + BASE_NOTE,
+    sig_notes: '1 mile/USD on international spend (non-EU/UK). Warning: EU and UK spend earns only 0.5 miles/USD (0.60%) per help page. Forex markup 1.99% applies (net effective for non-EU: 1.20% - 1.99% = -0.79%; net for EU: 0.60% - 1.99% = -1.39%). ' + SIG_CAP_NOTE,
   },
   {
     cat: C.general,
-    inf_rate: 1.0, inf_eff: 1.91,
-    sig_rate: 0.75, sig_eff: 1.43,
+    inf_rate: 1.0, inf_eff: 1.20,
+    sig_rate: 0.75, sig_eff: 0.90,
     inf_notes: '1 mile/USD on all other eligible domestic spend (standard domestic default rate). ' + BASE_NOTE,
     sig_notes: '0.75 miles/USD on all other eligible domestic spend (standard domestic default rate). ' + SIG_CAP_NOTE,
   },
