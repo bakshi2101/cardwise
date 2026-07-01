@@ -190,7 +190,7 @@ export default function OptimalStrategy({ profile, categories, walletCardIds }: 
       supabase
         .from("rewards_ranked")
         .select(
-          "card_id, card_name, bank_short_name, annual_fee_aed, category_slug, effective_return_pct, monthly_cap_spend_aed, monthly_cap_reward"
+          "card_id, card_name, bank_short_name, annual_fee_aed, category_slug, effective_return_pct, forex_markup_pct, monthly_cap_spend_aed, monthly_cap_reward"
         )
         .eq("is_active", true)
         .eq("reward_event_type", "ongoing"),
@@ -219,10 +219,15 @@ export default function OptimalStrategy({ profile, categories, walletCardIds }: 
         });
       }
       const card = cardMap.get(r.card_id)!;
-      // Specific rows take priority over general (don't overwrite)
+      // Specific rows take priority over general (don't overwrite).
+      // International: score by net return so cards with negative net
+      // don't get pulled into the portfolio.
       if (!card.rewards[r.category_slug]) {
+        const rate = r.category_slug === "international"
+          ? r.effective_return_pct - (r.forex_markup_pct ?? 0)
+          : r.effective_return_pct;
         card.rewards[r.category_slug] = {
-          rate: r.effective_return_pct,
+          rate,
           cap_spend: r.monthly_cap_spend_aed ?? null,
           cap_reward: r.monthly_cap_reward ?? null,
         };

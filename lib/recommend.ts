@@ -233,10 +233,20 @@ export async function getBestMarketRateForCategory(
 } | null> {
   const results = await fetchWithFallback(null, categorySlug);
   if (results.length === 0) return null;
-  results.sort((a, b) => b.effective_return_pct - a.effective_return_pct);
+  if (categorySlug === "international") {
+    results.forEach((r) => {
+      r.net_return_pct = r.effective_return_pct - (r.forex_markup_pct ?? 0);
+    });
+    results.sort((a, b) => (b.net_return_pct ?? 0) - (a.net_return_pct ?? 0));
+  } else {
+    results.sort((a, b) => b.effective_return_pct - a.effective_return_pct);
+  }
   const top = results[0]!;
+  const displayRate = categorySlug === "international"
+    ? (top.net_return_pct ?? top.effective_return_pct - (top.forex_markup_pct ?? 0))
+    : top.effective_return_pct;
   return {
-    effective_return_pct: top.effective_return_pct,
+    effective_return_pct: displayRate,
     card_name: top.card_name,
     bank_short_name: top.bank_short_name,
     monthly_cap_spend_aed: top.monthly_cap_spend_aed ?? null,
@@ -335,6 +345,7 @@ export async function getMarketOptimalMonthlyReward(
     card_id: string;
     category_slug: string;
     effective_return_pct: number;
+    forex_markup_pct: number | null;
     monthly_cap_spend_aed: number | null;
     monthly_cap_reward: number | null;
   };
@@ -342,7 +353,7 @@ export async function getMarketOptimalMonthlyReward(
   const rows = await fetchAllRows<MarketRow>((from, to) =>
     supabase
       .from("rewards_ranked")
-      .select("card_id, category_slug, effective_return_pct, monthly_cap_spend_aed, monthly_cap_reward")
+      .select("card_id, category_slug, effective_return_pct, forex_markup_pct, monthly_cap_spend_aed, monthly_cap_reward")
       .in("category_slug", [...activeSlugs, "general"])
       .eq("is_active", true)
       .eq("reward_event_type", "ongoing")
@@ -359,8 +370,13 @@ export async function getMarketOptimalMonthlyReward(
     }
     const card = cardMap.get(r.card_id)!;
     if (!card.rewards[r.category_slug]) {
+      // International: use net return (after forex deduction) so cards with
+      // negative net don't inflate the gap estimate.
+      const rate = r.category_slug === "international"
+        ? r.effective_return_pct - (r.forex_markup_pct ?? 0)
+        : r.effective_return_pct;
       card.rewards[r.category_slug] = {
-        rate: r.effective_return_pct,
+        rate,
         cap_spend: r.monthly_cap_spend_aed ?? null,
         cap_reward: r.monthly_cap_reward ?? null,
       };

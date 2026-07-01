@@ -65,10 +65,15 @@ export default function RecommendClient({
   const walletRewards = allRewards.filter((r) => walletCardIds.includes(r.card_id));
   const otherRewards = allRewards.filter((r) => !walletCardIds.includes(r.card_id));
 
+  const getDisplayRate = (r: (typeof allRewards)[0]) =>
+    categorySlug === "international" && r.net_return_pct != null
+      ? r.net_return_pct
+      : r.effective_return_pct;
+
   // Top rate across all visible cards (for the relative performance bar)
-  const globalTopRate = allRewards[0]?.effective_return_pct ?? 0;
-  const walletTopRate = walletRewards[0]?.effective_return_pct ?? 0;
-  const otherTopRate = otherRewards[0]?.effective_return_pct ?? 0;
+  const globalTopRate = allRewards[0] ? getDisplayRate(allRewards[0]) : 0;
+  const walletTopRate = walletRewards[0] ? getDisplayRate(walletRewards[0]) : 0;
+  const otherTopRate = otherRewards[0] ? getDisplayRate(otherRewards[0]) : 0;
 
   // Wio bill-pay stacking: if Wio and at least one other card are in the wallet,
   // check if spending on the non-Wio card then paying its bill via Wio beats Wio directly.
@@ -76,9 +81,11 @@ export default function RecommendClient({
   const bestNonWioWalletRow = walletRewards.find((r) => r.card_id !== WIO_CARD_ID);
   const wioStackTip = (() => {
     if (!wioWalletRow || !bestNonWioWalletRow) return null;
-    const stackedRate = bestNonWioWalletRow.effective_return_pct + WIO_BILL_PAY_BONUS_PCT;
-    if (stackedRate <= wioWalletRow.effective_return_pct) return null;
-    return { stackedRate, wioRate: wioWalletRow.effective_return_pct, cardName: bestNonWioWalletRow.card_name, cardRate: bestNonWioWalletRow.effective_return_pct };
+    const cardRate = getDisplayRate(bestNonWioWalletRow);
+    const wioRate = getDisplayRate(wioWalletRow);
+    const stackedRate = cardRate + WIO_BILL_PAY_BONUS_PCT;
+    if (stackedRate <= wioRate) return null;
+    return { stackedRate, wioRate, cardName: bestNonWioWalletRow.card_name, cardRate };
   })();
 
   const visibleOther = showAllOther ? otherRewards : otherRewards.slice(0, DEFAULT_VISIBLE);

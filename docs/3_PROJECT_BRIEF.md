@@ -175,7 +175,7 @@ User provides:
 CardWise calculates (scoped to user's cards only):
   - For each category: which of the user's cards gives the highest effective_return_pct
   - Per-category monthly reward value: spending × effective_return_pct (capped at monthly limits)
-  - Aggregate gap: max(effective_return_pct across all cards) − user's best, × spend, annualized
+  - Aggregate gap: max(net_return_pct across all market cards) − user's best net_return_pct, × spend, annualized. Net rate = effective_return_pct − forex_markup_pct for the international category; gross rate for all others.
 
 Output:
   - Card assignment matrix: best card from user's wallet per category
@@ -236,6 +236,7 @@ Output:
 | ✅ | AI merchant categorizer (/api/categorize): fixed `travel` slug → `other_travel` (was returning an invalid slug causing missed matches); added missing `international` category so foreign-currency merchants are now correctly classified (July 2026) |
 | ✅ | Card browse and wallet search now filter to `is_active = true` — previously inactive/retired cards could appear in search results (July 2026) |
 | ✅ | CardResult reward estimate is now cap-aware: uses `computeMonthlyReward()` (respects `monthly_cap_spend_aed` and `monthly_cap_reward`) instead of the naive `spend × rate` calculation that overstated rewards for capped cards (July 2026) |
+| ✅ | International spend net-rate fix (July 2026): the recommendation engine now uses `effective_return_pct − forex_markup_pct` as the sorting and scoring rate for all international rows. Fixed across Path A (OptimizeClient wallet optimizer, Wio stacking, gap calculation) and Path B (RecommendResultsClient greedy, OptimalStrategy greedy, RecommendClient per-category view). Three stale `exclusions` fields on ENBD Bonvoy Elite, Citi Premier, and Wio international rows were cleared. Five card notes with incorrect Visa/MC network-fee decompositions (1.99% + ~1.15% = ~3.14%) were corrected — the ~1.15% is an interbank interchange fee, not a separately-billed consumer charge; the consumer-visible cost is the bank's stated forex markup only. |
 | ⏳ | Frontend polish: UX refinements, mobile optimization, edge cases |
 | ⏳ | Offers table seeding (top 20 promotions); loyalty program integration; reward tiers |
 | ⚠️ | 8 minor data gaps remain — none affect recommendation accuracy (see `2_CARDS_VERIFICATION_STATUS.md` for full list) |

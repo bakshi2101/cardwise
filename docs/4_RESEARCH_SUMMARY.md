@@ -347,7 +347,9 @@ Several cards in the initial scrape had wrong forex markups:
 
 **Pass 2 (July 1, 2026):** A second pass removed two remaining patterns across 355 `card_rewards` rows: (1) leading `VERIFIED.` prefix (e.g. "VERIFIED. 10% on flights…" → "10% on flights…") and mid-sentence `VERIFIED:` labels; (2) shorter source citations that survived pass 1 (e.g. `Source: ADIB Covered Cards KFS`, `Source: CBD T&C PDF verified 2026-05-06`). The `VERIFIED` prefix was meaningless to users since all published notes are verified by definition.
 
-**Ongoing convention:** `notes` is user-facing text only. Put source references in `source_url`; never in `notes`.
+**Pass 3 (July 2026):** Three `card_rewards.exclusions` fields contained stale, incorrect forex callouts that contradicted the live `forex_markup_pct` values: (1) ENBD Bonvoy Elite international row said "Forex markup ~2.99% applies. Net return negative." — the actual markup is 1.99% and net is positive; (2) Citi Premier international row said "Net return: -1.19%" — the gross rate had previously been corrected from 1.80% to 1.20%, making the correct net -1.79%, not -1.19%; (3) Wio international row said "ZERO forex markup" — Wio carries a 2% forex fee. All three were cleared to `null`. Additionally, five `card_rewards.notes` fields (Liv Cashback, Liv Cashback+, RAKBank Elevate, ENBD Etihad Guest Elevate, ENBD Etihad Guest Inspire) contained internal research notation decomposing the forex charge as "1.99% bank + ~1.15% Mastercard = ~3.14% total" — the ~1.15% is an interbank interchange fee, not a separately-billed consumer charge; the consumer pays only the bank's stated markup. These notes were corrected to state the bank's markup only and recalculate net figures accordingly.
+
+**Ongoing convention:** `notes` is user-facing text only. Put source references in `source_url`; never in `notes`. Do not decompose forex markup into bank + network components — state the bank's markup only (as shown on the KFS) since the network spread is not a separate consumer-visible charge.
 
 ---
 

@@ -772,7 +772,7 @@
 #### 64. ENBD Etihad Guest Visa Elevate Credit Card ✅ (verified 2026-06-13) — NEW
 - **Card ID:** 87f37bc6-a40d-4246-9bb5-9400f8d1952a
 - **Network:** Visa | **Card Tier:** Infinite | **Annual Fee:** AED 1,575 renewal (AED 2,625 joining fee)
-- **Min Salary:** AED 30,000 | **Forex:** 1.99% ENBD + ~1.15% Visa = ~3.14% total | **Interest:** 3.25%/month (39% p.a.)
+- **Min Salary:** AED 30,000 | **Forex:** 1.99% ENBD | **Interest:** 3.25%/month (39% p.a.)
 - **Reward Currency:** Etihad Guest Miles (1 mile = AED 0.05, consistent with FAB Etihad cards in DB)
 - **Sources:** ENBD-etihad_t_and_c_booklet.pdf (earn rates, exclusions, tier benefits), ENBD-Key Facts KFS 03/2026 (fees, APR), emiratesnbd_credit_card_fees_charges.pdf Feb 2026, Visa Infinite Airport Lounge Access.pdf, ENBD-Product-Etihad Guest Visa Elevate Credit Card.pdf
 - **Earn rates (per AED, from TNC earn table p.6 — original rates expressed as miles per AED 10):**
@@ -799,7 +799,7 @@
 #### 65. ENBD Etihad Guest Visa Inspire Credit Card ✅ (verified 2026-06-13) — NEW
 - **Card ID:** e6099b97-5c18-45e3-918c-13284d50fe3c
 - **Network:** Visa | **Card Tier:** Signature | **Annual Fee:** AED 735 renewal (AED 1,575 joining fee)
-- **Min Salary:** AED 12,000 | **Forex:** 1.99% ENBD + ~1.15% Visa = ~3.14% total | **Interest:** 3.69%/month (44.28% p.a.) per KFS; product page shows 3.25% — trust KFS (regulatory document)
+- **Min Salary:** AED 12,000 | **Forex:** 1.99% ENBD | **Interest:** 3.69%/month (44.28% p.a.) per KFS; product page shows 3.25% — trust KFS (regulatory document)
 - **Reward Currency:** Etihad Guest Miles (1 mile = AED 0.05)
 - **Sources:** ENBD-etihad_t_and_c_booklet.pdf (earn rates, exclusions, tier benefits), ENBD-Key Facts KFS 03/2026 (fees, APR), emiratesnbd_credit_card_fees_charges.pdf Feb 2026, Visa Signature Airport Lounge Access.pdf, ENBD-Product-Etihad Guest Visa Inspire Credit Card.pdf
 - **Earn rates (per AED, from TNC earn table p.6):**
@@ -825,7 +825,7 @@
 #### 66. Emirates NBD noon One Visa Credit Card ✅ (verified 2026-06-14; gaps closed 2026-06-14) — NEW
 - **Card ID:** bb9bb1d8-1d28-44e5-8fb3-ec89d5c72cc5
 - **Network:** Visa | **Card Tier:** Platinum (confirmed — card image on product page shows "VISA Platinum") | **Annual Fee:** Free for life
-- **Min Salary:** AED 5,000 (confirmed from product page Requirements section) | **Forex:** 1.99% ENBD + ~1.15% Visa = ~3.14% total | **Interest:** 3.69%/month (44.28% p.a.)
+- **Min Salary:** AED 5,000 (confirmed from product page Requirements section) | **Forex:** 1.99% ENBD | **Interest:** 3.69%/month (44.28% p.a.)
 - **Reward Currency:** noon Credits (1 noon Credit = AED 1 on noon.ae — not transferable to AED cash)
 - **Sources:** ENBD-noon_one_special_features.pdf (PRIMARY — earn rates, exclusions), KFS 03/2026, fees PDF Feb 2026, ENBD noon One Visa Credit Card Application.pdf (product page PDF — tier, min salary, cinema partner update)
 - **Earn rates (from TNC p.3 earn table — % of transaction credited as noon Credits):**
@@ -853,7 +853,7 @@
 #### 67. Emirates NBD Visa Flexi Credit Card ✅ (verified 2026-06-14; gaps closed 2026-06-14) — NEW
 - **Card ID:** 830bb948-d731-4d51-b3de-3e08a0a2a857
 - **Network:** Visa | **Card Tier:** Platinum (Flexi appears in "Visa Platinum / Mastercard Platinum / Visa Flexi" earn group in official ENBD earn table) | **Annual Fee:** AED 735 (current offer: waived)
-- **Min Salary:** AED 12,000 (confirmed from product page Requirements section) | **Forex:** 1.99% ENBD + ~1.15% Visa = ~3.14% total | **Interest:** 3.69%/month per KFS (product page shows 3.25% — trust KFS, regulatory)
+- **Min Salary:** AED 12,000 (confirmed from product page Requirements section) | **Forex:** 1.99% ENBD | **Interest:** 3.69%/month per KFS (product page shows 3.25% — trust KFS, regulatory)
 - **Reward Currency:** Plus Points (1 PP = AED 1 on instant redemption/Nol/education; 0.75 AED/PP cashback; 7 Skywards or 10 Etihad Miles per PP)
 - **Sources:** emiratesnbd_credit_card_fees_charges.pdf (Feb 2026 — fees), KFS 03/2026 (APR), ENBD-Visa Flexi Credit Card.pdf (product page — benefits model, min salary), ENBD Earn Plus Points.pdf (earn rates — OFFICIAL), ENBD Redeem Plus Points.pdf (redemption rates)
 - **Earn rates (confirmed from official ENBD Earn Plus Points PDF):**
@@ -873,7 +873,7 @@
 #### 68. Emirates NBD Mastercard Titanium Credit Card ✅ (verified 2026-06-14) — NEW
 - **Card ID:** 7fd2aa13-ef85-4632-bcbb-3807c44093f7
 - **Network:** Mastercard | **Card Tier:** Titanium | **Annual Fee:** AED 0 (current offer: waived)
-- **Min Salary:** AED 5,000 | **Forex:** 1.99% ENBD + ~1.15% Mastercard = ~3.14% total | **Interest:** 3.69%/month (KFS)
+- **Min Salary:** AED 5,000 | **Forex:** 1.99% ENBD | **Interest:** 3.69%/month (KFS)
 - **Reward Currency:** Plus Points (1 PP = AED 1 at best redemptions)
 - **Sources:** ENBD Mastercard Titanium product page PDF + ENBD Earn Plus Points PDF + ENBD Redeem Plus Points PDF
 - **Earn rates (from official ENBD Earn Plus Points page):**
@@ -893,7 +893,7 @@
 #### 69. Emirates NBD Mastercard Platinum Credit Card ✅ (verified 2026-06-14) — NEW
 - **Card ID:** 33806857-03ff-45c5-ba29-8ff86f028e46
 - **Network:** Mastercard | **Card Tier:** Platinum | **Annual Fee:** AED 0 (current offer: waived)
-- **Min Salary:** AED 12,000 | **Forex:** 1.99% ENBD + ~1.15% Mastercard = ~3.14% total | **Interest:** 3.69%/month (KFS)
+- **Min Salary:** AED 12,000 | **Forex:** 1.99% ENBD | **Interest:** 3.69%/month (KFS)
 - **Reward Currency:** Plus Points (1 PP = AED 1 at best redemptions)
 - **Sources:** ENBD Mastercard Platinum product page PDF + ENBD Earn Plus Points PDF + ENBD Redeem Plus Points PDF
 - **Earn rates (from official ENBD Earn Plus Points page):**
@@ -913,7 +913,7 @@
 #### 70. Emirates NBD Visa Infinite Credit Card ✅ (verified 2026-06-14) — NEW
 - **Card ID:** 3f244a33-0de8-4d9d-8b7e-f65af6a6f1de
 - **Network:** Visa | **Card Tier:** Infinite | **Annual Fee:** AED 1,575
-- **Min Salary:** AED 30,000 | **Forex:** 1.99% ENBD + ~1.15% Visa = ~3.14% total | **Interest:** 3.69%/month (KFS)
+- **Min Salary:** AED 30,000 | **Forex:** 1.99% ENBD | **Interest:** 3.69%/month (KFS)
 - **Reward Currency:** Plus Points (1 PP = AED 1 at best redemptions)
 - **Sources:** ENBD Visa Infinite product page PDF + ENBD Earn Plus Points PDF + ENBD Redeem Plus Points PDF
 - **Earn rates (from official ENBD Earn Plus Points page):**
@@ -990,7 +990,7 @@
 #### 73. Emirates NBD Priority Banking Visa Infinite Credit Card ✅ (verified 2026-06-14) — NEW
 - **Card ID:** 36d5d0fe-6fdd-482d-a4c5-071c43396efa
 - **Network:** Visa | **Card Tier:** Infinite | **Annual Fee:** AED 1,500 (first year free)
-- **Min Salary:** N/A — requires existing Priority Banking customer status | **Forex:** 1.99% ENBD + ~1.15% Visa = ~3.14% | **Interest:** 3.69%/month (KFS)
+- **Min Salary:** N/A — requires existing Priority Banking customer status | **Forex:** 1.99% ENBD | **Interest:** 3.69%/month (KFS)
 - **Reward Currency:** Plus Points (1 PP = AED 1 at best redemptions)
 - **Sources:** ENBD Priority Banking product page PDF + ENBD Earn Plus Points PDF
 - **⚠️ UNIQUE EARN STRUCTURE — Transaction-size tiered (not category-based for general spend):**
@@ -1018,7 +1018,7 @@
 #### 74. Emirates NBD Duo Credit Card ✅ (verified 2026-06-14) — NEW
 - **Card ID:** 16a7f477-475a-4986-816d-491e30e6b0d3
 - **Network:** Mastercard (primary) + Diners Club (secondary) — two physical cards, one account | **Card Tier:** Platinum | **Annual Fee:** AED 0 (promotional); **base annual fee AED 840** (confirmed 2026-06-18 from ENBD fees & charges PDF reference; ENBD campaign page confirmed AED 700 figure refers to an older promo period — AED 840 is the current listed fee)
-- **Min Salary:** AED 12,000 | **Eligibility:** Abu Dhabi residents only | **Forex:** 1.99% ENBD + ~1.15% MC = ~3.14% | **Interest:** 3.69%/month (KFS)
+- **Min Salary:** AED 12,000 | **Eligibility:** Abu Dhabi residents only | **Forex:** 1.99% ENBD | **Interest:** 3.69%/month (KFS)
 - **Reward Currency:** Plus Points (1 PP = AED 1 at best redemptions)
 - **Sources:** ENBD Duo product page PDF + ENBD Earn Plus Points PDF
 - **Earn rates (effective 5 April 2025):**
@@ -1044,7 +1044,7 @@
 #### 75. Emirates NBD Go4it Platinum Credit Card ✅ (verified 2026-06-15) — NEW
 - **Card ID:** 3cca0d07-2695-4692-81c9-33d0947af6a3
 - **Network:** Visa | **Card Tier:** Platinum | **Annual Fee:** AED 0 (promotional — Free for Life offer); **base annual fee AED 208.95 incl VAT** (confirmed 2026-06-18 from official ENBD fees & charges PDF, February 2026: "Go4it Platinum/Gold: 208.95/103.95". Note: AED 199 pre-VAT × 1.05 = AED 208.95.)
-- **Min Salary:** AED 12,000 | **Forex:** 1.99% ENBD + ~1.15% Visa = ~3.14% | **Interest:** 3.69%/month (KFS)
+- **Min Salary:** AED 12,000 | **Forex:** 1.99% ENBD | **Interest:** 3.69%/month (KFS)
 - **Reward Currency:** Plus Points (1 PP = AED 1 at best redemptions)
 - **Sources:** ENBD Go4it Platinum product page PDF + ENBD Earn Plus Points PDF
 - **⚠️ UNIQUE EARN STRUCTURE — Time/Merchant-based (NOT category-based):**
@@ -1068,7 +1068,7 @@
 #### 76. Emirates NBD Go4it Gold Credit Card ✅ (verified 2026-06-15) — NEW
 - **Card ID:** 6528145e-ca38-408e-9e38-8502fa7b1775
 - **Network:** Visa | **Card Tier:** Gold | **Annual Fee:** AED 0 (promotional offer); **base annual fee AED 103.95 incl VAT** (✅ CONFIRMED 2026-06-18 from official ENBD fees & charges PDF, February 2026: "Go4it Platinum/Gold: 208.95/103.95". Previous secondary source masarif.ae had 208.95 — that is Go4it **Platinum's** fee.)
-- **Min Salary:** AED 5,000 | **Forex:** 1.99% ENBD + ~1.15% Visa = ~3.14% | **Interest:** 3.69%/month (KFS)
+- **Min Salary:** AED 5,000 | **Forex:** 1.99% ENBD | **Interest:** 3.69%/month (KFS)
 - **Reward Currency:** Plus Points (1 PP = AED 1 at best redemptions)
 - **Sources:** ENBD Go4it Gold product page PDF + ENBD Earn Plus Points PDF
 - **⚠️ UNIQUE EARN STRUCTURE — Time/Merchant-based (NOT category-based):**
@@ -1581,7 +1581,7 @@ Mashreq Platinum Plus Credit Card ✅ (2026-06-13) | Mashreq Solitaire Credit Ca
 - **Key Notes:**
   - Retroactive model: once you cross a tier threshold, ALL spend that month is recalculated at new rate
   - Convert cashback to Emirates Skywards miles at 1:1 (limited time offer)
-  - Forex fee 1.99% bank + ~1.15% Mastercard = ~3.14% total cost; at 2% top tier: net ≈ -1.14%
+  - Forex fee 1.99% bank-stated; at 2% top tier: net ≈ +0.01% (essentially break-even internationally)
 - **DB Changes:** forex_markup_pct corrected 2.99%→1.99%; inserted international/government/utilities/insurance rows
 
 #### Liv Cashback+ Credit Card ✅ (verified 2026-04-06)
@@ -1595,7 +1595,7 @@ Mashreq Platinum Plus Credit Card ✅ (2026-06-13) | Mashreq Solitaire Credit Ca
   - Low merchant MCCs (government, utilities, insurance): **0.10%** flat
 - **Key Notes:**
   - Same retroactive model as free card
-  - At 4% top tier with 1.99% forex: net ≈ +0.86% internationally (marginal benefit)
+  - At 4% top tier with 1.99% forex: net ≈ +2.01% internationally
 - **DB Changes:** min_salary corrected 10,000→12,000; forex_markup_pct corrected 2.99%→1.99%; inserted international/government/utilities/insurance rows
 
 ### ADIB (Abu Dhabi Islamic Bank) — ✅ 3/3 verified (2026-04-06)
@@ -1695,7 +1695,7 @@ Mashreq Platinum Plus Credit Card ✅ (2026-06-13) | Mashreq Solitaire Credit Ca
   - European Economic Area countries (international): **FIXED 0.5 pts/AED = 0.375%** (all tiers)
   - Charities, Govt, Bill Payments, Transit, Real Estate, Petrol, Automobiles, Exchange Houses: **FIXED 0.4 pts/AED = 0.3%** (all tiers)
 - **Redemption restriction:** Points only redeemable against airline/hotel transactions from last 90 days (min 10,000 pts). Travel agency bookings NOT eligible.
-- **Forex:** Prime/Plus: 2.57% bank fee + 1.15% Mastercard scheme. Privilege: 0% bank fee + 1.15% Mastercard scheme only.
+- **Forex:** Prime/Plus: 2.57% bank-stated fee. Privilege: 0% bank-stated fee.
 - **Key lifestyle benefits:** Unlimited airport lounges (Mastercard Travel Pass, requires $1 foreign spend + enrolment); Travel medical insurance (USD 500K); Streaming cashback (Prime AED 50/Plus AED 100/Privilege AED 200 per cycle); 50% off VOX Cinema (4 tickets/month, Plus/Privilege); Padel cashback (Plus 2 games / Privilege 4 games at AED 100/game); Zofeur rides (Plus 1/Privilege 2 per cycle); Complimentary airport ride via Careem (code MAUAEWE6, capped AED 110/~USD 30)
 - **DB Changes:** annual_fee_aed set 0; reward_currency_value_aed set 0.0075; forex_markup_pct set 2.57; lounge_access_count set -1 (unlimited); source_url updated to official page; 17 card_rewards rows inserted
 
