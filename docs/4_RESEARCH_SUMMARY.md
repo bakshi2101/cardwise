@@ -294,7 +294,7 @@ ENBD has launched three co-branded card families tied to UAE master-developer/re
 **Optimal:** FAB Rewards Active Credit Card (1.5% at sports MCCs: gyms, golf, sporting goods, sports apparel; 4 free gym visits via ADV+; free fitness ring). Pair with a cashback card for groceries/fuel.
 
 ### Profile: Budget / First Card
-**Best single card:** Wio Credit Card (0.5% flat on all spend, 2% forex, lowest friction) or Liv Cashback (4% dining + groceries, free for life).
+**Best single card:** Wio Credit Card (2% on most categories; 0.5% on fuel/utilities/government/rent/telecom; net 0% international after 2% forex; AED 2,500/month combined cap; requires Plus/Salary/Family plan) or Liv Cashback (4% dining + groceries, free for life).
 
 ---
 
