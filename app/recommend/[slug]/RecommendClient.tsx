@@ -14,6 +14,8 @@ interface Props {
 }
 
 const DEFAULT_VISIBLE = 3;
+const WIO_CARD_ID = "eef85749-a7da-4975-82fe-eae4f5bcae53";
+const WIO_BILL_PAY_BONUS_PCT = 0.5;
 
 export default function RecommendClient({
   allRewards,
@@ -68,6 +70,17 @@ export default function RecommendClient({
   const walletTopRate = walletRewards[0]?.effective_return_pct ?? 0;
   const otherTopRate = otherRewards[0]?.effective_return_pct ?? 0;
 
+  // Wio bill-pay stacking: if Wio and at least one other card are in the wallet,
+  // check if spending on the non-Wio card then paying its bill via Wio beats Wio directly.
+  const wioWalletRow = walletRewards.find((r) => r.card_id === WIO_CARD_ID);
+  const bestNonWioWalletRow = walletRewards.find((r) => r.card_id !== WIO_CARD_ID);
+  const wioStackTip = (() => {
+    if (!wioWalletRow || !bestNonWioWalletRow) return null;
+    const stackedRate = bestNonWioWalletRow.effective_return_pct + WIO_BILL_PAY_BONUS_PCT;
+    if (stackedRate <= wioWalletRow.effective_return_pct) return null;
+    return { stackedRate, wioRate: wioWalletRow.effective_return_pct, cardName: bestNonWioWalletRow.card_name };
+  })();
+
   const visibleOther = showAllOther ? otherRewards : otherRewards.slice(0, DEFAULT_VISIBLE);
   const visibleMarket = showAllMarket ? allRewards : allRewards.slice(0, DEFAULT_VISIBLE);
 
@@ -91,6 +104,14 @@ export default function RecommendClient({
           {walletRewards.length > 0 ? (
             <section>
               <SectionLabel label="Your Wallet" count={walletRewards.length} />
+              {wioStackTip && (
+                <div
+                  className="mb-3 bg-[#6366F1]/8 border border-[#6366F1]/20 rounded-xl px-3 py-2.5 text-[11px] text-[#6366F1]/80 leading-snug cursor-help"
+                  title="Wio's bill-pay bonus is capped by a % of your Wio credit limit (not the bill amount) and requires AED 5,000+ spend on the Wio card itself that month."
+                >
+                  💡 <span className="font-semibold">Stack for {wioStackTip.stackedRate.toFixed(1)}%:</span> pay with {wioStackTip.cardName} ({(wioStackTip.stackedRate - WIO_BILL_PAY_BONUS_PCT).toFixed(1)}%), then pay that card&apos;s bill via Wio (+0.5%) — beats Wio&apos;s direct {wioStackTip.wioRate.toFixed(1)}%
+                </div>
+              )}
               <div className="space-y-3">
                 {walletRewards.map((reward, i) => (
                   <CardResult

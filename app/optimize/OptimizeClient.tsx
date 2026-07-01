@@ -148,8 +148,32 @@ export default function OptimizeClient({ categories }: Props) {
         activeCategories.map(async (cat) => {
           const spend = profile[cat.slug] ?? 0;
           const allCards = await getAllCardsForCategory(walletIds, cat.slug);
-          const primary = allCards[0] ?? null;
+          let primary = allCards[0] ?? null;
           if (!primary) return null;
+
+          // Wio bill-pay stacking: must run before effectiveRate is derived so we
+          // can promote the stacking card to primary when it wins. When Wio is the
+          // naive best card, check if any non-Wio card stacks higher via bill pay.
+          let wioStack: WioStack | null = null;
+          if (walletIds.includes(WIO_CARD_ID)) {
+            const wioRow = allCards.find((c) => c.card_id === WIO_CARD_ID);
+            const wioDirectRate = wioRow?.effective_return_pct ?? 0;
+            if (primary.card_id === WIO_CARD_ID) {
+              const bestNonWio = allCards.find((c) => c.card_id !== WIO_CARD_ID);
+              if (bestNonWio) {
+                const stackedRate = bestNonWio.effective_return_pct + WIO_BILL_PAY_BONUS_PCT;
+                if (stackedRate > wioDirectRate) {
+                  primary = bestNonWio;
+                  wioStack = { wioRate: wioDirectRate, stackedRate };
+                }
+              }
+            } else if (wioRow) {
+              const stackedRate = primary.effective_return_pct + WIO_BILL_PAY_BONUS_PCT;
+              if (stackedRate > wioDirectRate) {
+                wioStack = { wioRate: wioDirectRate, stackedRate };
+              }
+            }
+          }
 
           const effectiveRate = primary.effective_return_pct;
           const capSpend = deriveCapSpend(
@@ -183,20 +207,6 @@ export default function OptimizeClient({ categories }: Props) {
                   next.monthly_cap_reward
                 ),
               };
-            }
-          }
-
-          // Wio bill-pay stacking: if the user also holds Wio and this category's
-          // primary card isn't Wio itself, check whether paying that card's bill via
-          // Wio (primary rate + bonus) would beat just paying directly with Wio.
-          let wioStack: WioStack | null = null;
-          if (primary.card_id !== WIO_CARD_ID && walletIds.includes(WIO_CARD_ID)) {
-            const wioRow = allCards.find((c) => c.card_id === WIO_CARD_ID);
-            if (wioRow) {
-              const stackedRate = effectiveRate + WIO_BILL_PAY_BONUS_PCT;
-              if (stackedRate > wioRow.effective_return_pct) {
-                wioStack = { wioRate: wioRow.effective_return_pct, stackedRate };
-              }
             }
           }
 
