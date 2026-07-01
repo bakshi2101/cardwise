@@ -229,10 +229,13 @@ Output:
 | ✅ | Emirates Islamic: 1 card (Amazon World Credit Card — Shariah-compliant; added June 2026 as bank #14) |
 | ✅ | Frontend: Path A (portfolio optimization) and Path B (recommendation engine) both implemented |
 | ✅ | Welcome bonus consolidated into `card_rewards` as single source (Migration C, 2026-06-30) — card_benefits no longer holds welcome bonus data; card detail page reads from card_rewards and renders each bonus row individually with eligibility conditions |
-| ✅ | Wio bill-pay stacking tip: per-category inline suggestion shown in both Path A and Path B when paying via Wio beats the assigned card's direct rate for that category |
+| ✅ | Wio bill-pay stacking tip: shown in Path A (/optimize card matrix) and the /search → /recommend/[slug] category page (Job 3 — in-the-moment reference). When paying with a non-Wio card then paying that card's bill via Wio yields a higher combined return than any single card, the tip is surfaced inline. Bug fix (July 2026): tip now also fires when Wio itself is the highest direct-rate card for the category (e.g. utilities) — previously the check short-circuited in that case; the best non-Wio stacking card is now promoted to primary in Path A and the tip banner is shown in the search tab. |
 | ✅ | `fetchAllRows()` pagination utility added to prevent silent data truncation at PostgREST's 1,000-row limit |
 | ✅ | Path B recommendation engine: strategy labels ("Optimal portfolio" / "Alternative portfolio") now assigned after the final sort-by-value step, so the highest net-value option is always labelled "Optimal portfolio" regardless of welcome-bonus influence on ranking (July 2026) |
 | ✅ | Path B recommendation engine: cards within each portfolio breakdown are now ordered by annual reward (highest-contributing card shown first) rather than greedy-insertion order (July 2026) |
+| ✅ | AI merchant categorizer (/api/categorize): fixed `travel` slug → `other_travel` (was returning an invalid slug causing missed matches); added missing `international` category so foreign-currency merchants are now correctly classified (July 2026) |
+| ✅ | Card browse and wallet search now filter to `is_active = true` — previously inactive/retired cards could appear in search results (July 2026) |
+| ✅ | CardResult reward estimate is now cap-aware: uses `computeMonthlyReward()` (respects `monthly_cap_spend_aed` and `monthly_cap_reward`) instead of the naive `spend × rate` calculation that overstated rewards for capped cards (July 2026) |
 | ⏳ | Frontend polish: UX refinements, mobile optimization, edge cases |
 | ⏳ | Offers table seeding (top 20 promotions); loyalty program integration; reward tiers |
 | ⚠️ | 8 minor data gaps remain — none affect recommendation accuracy (see `2_CARDS_VERIFICATION_STATUS.md` for full list) |
