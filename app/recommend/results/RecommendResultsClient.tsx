@@ -68,6 +68,34 @@ interface Strategy {
 const WIO_CARD_ID = "eef85749-a7da-4975-82fe-eae4f5bcae53";
 const WIO_BILL_PAY_BONUS_PCT = 0.5;
 
+// Basis for each non-cashback reward currency shown in the Path B disclosure.
+// "industry estimate" — third-party mile/point valuation (TPG or equivalent)
+// "cash redemption rate" — verified floor: what you get redeeming for statement credit
+// "fixed program rate" — the loyalty programme itself publishes a fixed AED value
+const CURRENCY_BASIS: Record<string, string> = {
+  "Etihad Guest Miles":     "industry estimate",
+  "Skywards Miles":         "industry estimate",
+  "Marriott Bonvoy Points": "industry estimate",
+  "Voyager Miles":          "industry estimate",
+  "Citi ThankYou Points":   "cash redemption rate",
+  "Wala'a Rewards":         "cash redemption rate",
+  "FAB Rewards":            "cash redemption rate",
+  "FAB Miles":              "cash redemption rate",
+  "TouchPoints":            "cash redemption rate",
+  "Mashreq Vantage Points": "cash redemption rate",
+  "SC 360 Rewards Points":  "cash redemption rate",
+  "CBD Reward Points":      "cash redemption rate",
+  "RAKRewards Points":      "cash redemption rate",
+  "LuLu Points":            "fixed program rate",
+  "SHARE Points":           "fixed program rate",
+  "ADNOC Rewards":          "fixed program rate",
+  "Shukrans":               "fixed program rate",
+  "Darna Points":           "fixed program rate",
+  "UPoints":                "fixed program rate",
+  "Smiles Points":          "fixed program rate",
+  "Al-Futtaim FAB Rewards": "fixed program rate",
+};
+
 function categoryRate(card: CardData, catSlug: string): number {
   const r = card.rewards[catSlug] ?? card.rewards["general"];
   return r?.rate ?? 0;
@@ -746,7 +774,7 @@ export default function RecommendResultsClient({ categories }: Props) {
                           </div>
                           {cb.card.reward_currency_value_aed != null && cb.card.reward_currency_value_aed !== 1 && cb.card.reward_currency_name && (
                             <div className="text-xs text-white/30 mt-1">
-                              ⓘ 1 {cb.card.reward_currency_name} valued at AED {cb.card.reward_currency_value_aed} — worth more with travel or hotel redemptions
+                              ⓘ 1 {cb.card.reward_currency_name} = AED {cb.card.reward_currency_value_aed}{CURRENCY_BASIS[cb.card.reward_currency_name] ? ` (${CURRENCY_BASIS[cb.card.reward_currency_name]})` : ""}
                             </div>
                           )}
                         </div>
