@@ -7,6 +7,7 @@ export default async function CardsPage() {
   const { data: cards } = await supabase
     .from("cards_with_bank")
     .select("*")
+    .eq("is_active", true)
     .order("annual_fee_aed", { ascending: true });
 
   const { data: banks } = await supabase

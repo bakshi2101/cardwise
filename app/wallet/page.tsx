@@ -11,7 +11,8 @@ export default async function WalletPage() {
       .order("sort_order"),
     supabase
       .from("cards_with_bank")
-      .select("id, name, bank_name, bank_short_name, annual_fee_aed, card_network, is_islamic, reward_currency_name"),
+      .select("id, name, bank_name, bank_short_name, annual_fee_aed, card_network, is_islamic, reward_currency_name")
+      .eq("is_active", true),
   ]);
 
   return (

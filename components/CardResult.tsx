@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { RewardRanked } from "@/lib/supabase";
+import { computeMonthlyReward } from "@/lib/recommend";
 import AddToWalletButton from "./AddToWalletButton";
 
 interface Props {
@@ -27,7 +28,14 @@ export default function CardResult({
       : reward.effective_return_pct;
 
   const estimatedReward =
-    spendAmount != null ? (spendAmount * displayRate) / 100 : null;
+    spendAmount != null
+      ? computeMonthlyReward(
+          spendAmount,
+          displayRate,
+          reward.monthly_cap_spend_aed,
+          reward.monthly_cap_reward
+        )
+      : null;
 
   const daysAgo = reward.last_verified_date
     ? Math.floor(

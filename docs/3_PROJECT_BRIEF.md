@@ -1,4 +1,4 @@
-# CardWise — Project Brief (Revised April 2026)
+# CardWise — Project Brief (Revised June 2026)
 *UAE Credit Card Rewards Optimization Platform*
 
 ---
@@ -146,7 +146,7 @@ Both paths begin from a shared entry point where the user chooses their objectiv
 
 **Both paths converge → Optional features available from either path:**
 - Search specific merchant/category for in-the-moment card selection from your wallet
-- Browse UAE card repository: explore all 52 cards, understand reward structures, compare features
+- Browse UAE card repository: explore all 91 cards, understand reward structures, compare features
 
 ---
 
@@ -163,7 +163,7 @@ Both paths begin from a shared entry point where the user chooses their objectiv
 
 ## Database Overview
 
-**13 tables, ~52 credit cards (post tier splits), 17 spending categories.**
+**13 tables, 91 credit cards (post tier splits), 17 spending categories.**
 
 ### Core data flow — Path A (Optimize)
 
@@ -206,29 +206,36 @@ Output:
 
 ---
 
-## Current Status (April 2026)
+## Current Status (June 2026)
 
 | | Item |
 |---|---|
 | ✅ | Database schema finalized (13 tables); 17 spending categories structured |
 | ✅ | SQL migration scripts written and tested; initial seed data for banks, categories, merchants (~50 stores) |
-| ✅ | **47 of 52 cards fully verified** against official T&C PDFs and bank websites |
-| ✅ | FAB: all 17 cards verified (Cashback Islamic, Cashback, Rewards Indulge, Elite, Travel, Z, GEMS; Etihad Guest ×3; SHARE ×3; Blue FAB ×3) |
-| ✅ | Emirates NBD: all 6 cards verified (Skywards Infinite, Skywards Signature, Marriott Bonvoy World Elite, Marriott Bonvoy World, LuLu 247 Platinum, LuLu 247 Titanium) |
-| ✅ | Mashreq: 2 cards verified (Cashback, Noon) |
-| ✅ | Liv (ENBD Digital): 2 cards verified (Cashback, Cashback+) |
-| ✅ | ADIB: 3 cards verified (Cashback Visa, SHARE Infinite, SHARE Platinum) |
-| ✅ | RAKBank: 3 cards verified (World, Titanium, Elevate) |
-| ✅ | Citi: 3 cards verified (Cash Back, Premier, Prestige) |
-| ✅ | Wio Bank: 1 card verified (Wio Credit Card) |
-| ✅ | HSBC UAE: 2 cards verified (Live+, Cash+) |
-| ✅ | Standard Chartered: 2 cards verified (Platinum X, Journey — replaced Simply Cash) |
-| ✅ | DIB: 5 cards verified (Consumer Cashback Platinum, Consumer Cashback Reward, Prime Infinite, Prime Signature, Prime Platinum — replaced Wala'a Infinite) |
-| ❌ | ADCB TouchPoints: 3 cards — earn rates blocked (adcb.com returns 403; supplemental benefits T&C only) |
-| ⏳ | CBD: ~5 cards — scraped data only, pending T&C verification |
-| ⏳ | Frontend: portfolio optimization view (Path A), recommendation engine (Path B), category matrix, merchant search |
-| ⏳ | User auth + spending profile onboarding flow |
+| ✅ | **All 91 cards fully verified** against official T&C PDFs and bank websites (14 banks) |
+| ✅ | FAB: 17 cards (Cashback Islamic, Cashback, Rewards Indulge, Elite, Travel, Z, GEMS; Etihad Guest ×3; SHARE ×3; Blue FAB ×3) |
+| ✅ | Emirates NBD: 26 cards (Skywards ×2, Marriott Bonvoy ×2, LuLu 247 ×2, MC Titanium/Platinum/Visa Infinite, Flexi, noon One, Etihad Guest Inspire/Elevate, dnata Platinum/World, Priority Banking Infinite, Duo, Go4it Platinum/Gold, U by Emaar ×3, Darna ×3, SHARE ×4, Voyager ×2) |
+| ✅ | Mashreq: 4 cards (Cashback, Noon, Platinum Plus, Solitaire) |
+| ✅ | Liv (ENBD Digital): 2 cards (Cashback, Cashback+) |
+| ✅ | ADIB: 3 cards (Cashback Visa, SHARE Infinite, SHARE Platinum) |
+| ✅ | RAKBank: 3 cards (World, Titanium, Elevate) |
+| ✅ | Citi: 3 cards (Cash Back, Premier, Prestige) |
+| ✅ | Wio Bank: 1 card (Wio Credit Card) |
+| ✅ | HSBC UAE: 2 cards (Live+, Cash+) |
+| ✅ | Standard Chartered: 2 cards (Platinum X, Journey) |
+| ✅ | DIB: 5 cards (Consumer Cashback Platinum/Reward, Prime Infinite/Signature/Platinum) |
+| ✅ | ADCB: 11 cards (TouchPoints Gold/Titanium/Platinum/Infinite, Traveller World Elite, 365 Cashback, Essential Cashback, LuLu Titanium/Platinum, talabat ADCB, Shukran ADCB) |
+| ✅ | CBD: 4 cards (Super Saver, Visa Infinite, Smiles Signature, CBD One) |
+| ✅ | Emirates Islamic: 1 card (Amazon World Credit Card — Shariah-compliant; added June 2026 as bank #14) |
+| ✅ | Frontend: Path A (portfolio optimization) and Path B (recommendation engine) both implemented |
+| ✅ | Welcome bonus consolidated into `card_rewards` as single source (Migration C, 2026-06-30) — card_benefits no longer holds welcome bonus data; card detail page reads from card_rewards and renders each bonus row individually with eligibility conditions |
+| ✅ | Wio bill-pay stacking tip: per-category inline suggestion shown in both Path A and Path B when paying via Wio beats the assigned card's direct rate for that category |
+| ✅ | `fetchAllRows()` pagination utility added to prevent silent data truncation at PostgREST's 1,000-row limit |
+| ✅ | Path B recommendation engine: strategy labels ("Optimal portfolio" / "Alternative portfolio") now assigned after the final sort-by-value step, so the highest net-value option is always labelled "Optimal portfolio" regardless of welcome-bonus influence on ranking (July 2026) |
+| ✅ | Path B recommendation engine: cards within each portfolio breakdown are now ordered by annual reward (highest-contributing card shown first) rather than greedy-insertion order (July 2026) |
+| ⏳ | Frontend polish: UX refinements, mobile optimization, edge cases |
 | ⏳ | Offers table seeding (top 20 promotions); loyalty program integration; reward tiers |
+| ⚠️ | 8 minor data gaps remain — none affect recommendation accuracy (see `2_CARDS_VERIFICATION_STATUS.md` for full list) |
 
 ---
 
@@ -238,7 +245,7 @@ Every row in `card_rewards` must have:
 - `effective_return_pct` — verified from T&C
 - `source_url` — link to bank T&C PDF or website
 - `last_verified_date` — date of verification
-- `notes` — gotchas, brand bonuses, conditions in plain English
+- `notes` — gotchas, brand bonuses, conditions in plain English (user-facing only; no `Source: filename.pdf` citations, no internal file paths — those belong in `source_url`)
 
 *Verification cadence: Weekly for active cards, monthly for secondary cards.*
 
@@ -292,15 +299,13 @@ Every row in `card_rewards` must have:
 
 ## Next Immediate Steps
 
-1. **Complete CBD card verification** (~5 cards pending; last unverified UAE bank in scope)
-2. **Resolve ADCB earn rates** — adcb.com returns 403 on product pages; try direct PDF download or contact bank for T&C (3 cards blocked)
-3. Build user spending profile setup flow (shared by both paths)
-4. Build Path A output: card assignment matrix + earnings snapshot + upside teaser
-5. Build Path B recommendation engine (suggest best card portfolio for spending profile)
-6. Build category optimization matrix (shared reference for both paths)
-7. Build optional merchant search (in-the-moment card selection)
-8. Build card repository browser (optional: explore all cards)
-9. Test with beta users (friends with multiple UAE credit cards)
+1. **Frontend polish** — UX refinements for Path A and Path B based on user testing; mobile optimization; edge case handling
+2. **Resolve 8 minor data gaps** — see `2_CARDS_VERIFICATION_STATUS.md`; none block recommendations. Key ones: Go4it Gold lounge count (Visa Gold tier), healthcare rate assumptions for Darna/SHARE/EI Amazon, CBD Smiles min salary (website 403)
+3. **Seed offers table** — top 20 active UAE credit card promotions
+4. **Fill transfer_partners table** — loyalty program transfer rates for points cards (FAB, ENBD, ADCB, Citi, etc.)
+5. **Merchant lookup** — build in-the-moment card selection feature (merchant → category → best card from wallet)
+6. **Card repository browser** — explore all 91 cards with filtering and comparison
+7. **Beta testing** — test with users carrying multiple UAE credit cards
 
 ---
 
@@ -312,7 +317,7 @@ Every row in `card_rewards` must have:
 - **Soulwallet.com** — useful UAE card comparison reference
 
 ### UAE Banking Context
-- ~13 major banks issue credit cards; ~52 dominant products (post tier splits)
+- 14 major banks issue credit cards; 91 verified products (post tier splits)
 - Top 5 banks account for ~70% of market; FAB + ENBD alone estimated at 45–55%
 - Forex markup 1.5–3.5% standard; some premium cards offer 0%
 - Lounge access & valet more valuable than cash rewards for high earners

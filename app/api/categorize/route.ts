@@ -8,7 +8,7 @@ const CATEGORIES = [
   { slug: "airlines",        name: "Airlines",          icon: "✈️",  description: "Airline ticket purchases directly from airlines (Emirates, Etihad, flydubai, Qatar Airways)" },
   { slug: "shopping",        name: "Shopping & Fashion",icon: "🛍️",  description: "Clothing, fashion, department stores, electronics, home goods, jewellery, beauty, footwear" },
   { slug: "hotels",          name: "Hotels",            icon: "🏨",  description: "Hotel stays (Marriott, Hilton, Jumeirah), resort bookings" },
-  { slug: "travel",          name: "Other Travel",      icon: "🗺️",  description: "Travel agencies, online booking platforms (Booking.com, Airbnb, Agoda), car rentals, ride-hailing (Careem, Uber)" },
+  { slug: "other_travel",    name: "Other Travel",      icon: "🗺️",  description: "Travel agencies, online booking platforms (Booking.com, Airbnb, Agoda), car rentals, ride-hailing (Careem, Uber)" },
   { slug: "online_shopping", name: "Online Shopping",   icon: "💻",  description: "E-commerce platforms (Amazon.ae, Noon, Shein, AliExpress, Namshi), online-only retailers" },
   { slug: "entertainment",   name: "Entertainment",     icon: "🎬",  description: "Cinemas, theme parks, streaming (Netflix, Spotify), concerts, gaming, leisure attractions" },
   { slug: "utilities",       name: "Utilities",         icon: "💡",  description: "Electricity (DEWA, SEWA), telecom (Etisalat/e&, du), toll/transport cards (Salik, Nol)" },
@@ -17,6 +17,7 @@ const CATEGORIES = [
   { slug: "government",      name: "Government",        icon: "🏛️",  description: "Government service fees, fines, visa charges (RTA, ICA, DLD, MOHRE, municipality)" },
   { slug: "rent",            name: "Rent",              icon: "🏠",  description: "Property rental payments, real estate agencies (Ejari, Bayut, Property Finder)" },
   { slug: "healthcare",      name: "Healthcare",        icon: "🏥",  description: "Hospitals, clinics, pharmacies, dentists, opticians, health supplements" },
+  { slug: "international",   name: "International",     icon: "🌍",  description: "Any spend in foreign currency — goods or services purchased outside the UAE or billed in a non-AED currency" },
   { slug: "general",         name: "General",           icon: "💳",  description: "Gyms, fitness clubs, pet services, miscellaneous spend not fitting other categories" },
 ];
 

@@ -1,6 +1,6 @@
 # CardWise — Database Schema (Current)
 
-> Latest schema as of March 31, 2026. Update this when tables are added or restructured.
+> Latest schema as of June 2026. Update this when tables are added or restructured.
 
 ---
 
@@ -15,7 +15,7 @@
 ## Core Tables
 
 ### 1. banks
-Stores the ~10–13 UAE banks that issue credit cards.
+Stores the 14 UAE banks that issue credit cards.
 
 | Column | Type | Nullable | Default |
 |--------|------|----------|---------|
@@ -28,12 +28,12 @@ Stores the ~10–13 UAE banks that issue credit cards.
 | created_at | timestamptz | YES | now() |
 | updated_at | timestamptz | YES | now() |
 
-**Seeded:** FAB, Emirates NBD (ENBD), ADCB, Mashreq, DIB, CBD, RAKBank, Citi, HSBC, StanChart, ADIB, Liv, Wio.
+**Seeded:** FAB, Emirates NBD (ENBD), ADCB, Mashreq, DIB, CBD, RAKBank, Citi, HSBC, StanChart, ADIB, Liv, Wio, Emirates Islamic (EI — added June 2026 as bank #14).
 
 ---
 
 ### 2. cards
-Each credit card product. **The largest table — expect 42–60 rows (1 per card product).**
+Each credit card product. **Currently 91 rows (1 per card product). All 91 verified against official T&Cs as of June 2026.**
 
 | Column | Type | Nullable | Default |
 |--------|------|----------|---------|
@@ -65,18 +65,20 @@ Each credit card product. **The largest table — expect 42–60 rows (1 per car
 | apply_url | text | YES | null |
 | source_url | text | YES | null |
 | summary | text | YES | null |
+| is_estimated | boolean | YES | false |
 | is_active | boolean | YES | true |
 | created_at | timestamptz | YES | now() |
 | updated_at | timestamptz | YES | now() |
 
 **Key fields:**
-- `reward_currency_value_aed`: Estimated AED value per point (e.g., 0.01 = 1 fil per point). Powers cross-card comparison.
+- `reward_currency_value_aed`: AED value per reward point/mile. Powers cross-card comparison via `effective_return_pct`. Three sourcing tiers: (1) direct cash-redemption rate stated in T&C (most reliable); (2) industry benchmark when no cash-out rate exists (e.g. Skywards Miles = AED 0.044 per The Points Guy 1.2¢/mile); (3) assumed from a lower card tier when the target tier has no published rate — in this case `card_rewards.is_estimated` is set to `true` on affected rows (e.g. CBD Visa Infinite uses Platinum/Titanium card rate of AED 0.004/pt). Never change without updating all dependent `card_rewards.effective_return_pct` rows.
+- `is_estimated`: `true` when the salary requirement (min_salary_aed) is estimated rather than a bank-published figure. The UI shows a "⚠ est." warning badge next to the salary when this is set.
 - `source_url`: Where this card's data came from (bank website, T&C PDF, etc.).
 
 ---
 
 ### 3. spending_categories
-Fixed list of 16 spending categories. Users earn different rewards for different categories.
+Fixed list of 17 spending categories. Users earn different rewards for different categories.
 
 | Column | Type | Nullable | Default |
 |--------|------|----------|---------|
@@ -87,7 +89,7 @@ Fixed list of 16 spending categories. Users earn different rewards for different
 | description | text | YES | null |
 | sort_order | integer | YES | null |
 
-**Seeded categories (16 total, sorted by sort_order):**
+**Seeded categories (17 total, sorted by sort_order):**
 1. dining (🍽️) — Restaurants, cafés, food delivery (Talabat, Deliveroo)
 2. groceries (🛒) — Supermarkets (Carrefour, Lulu, Spinneys, Choithrams)
 3. fuel (⛽) — Petrol stations (ADNOC, ENOC, Emarat)
@@ -118,17 +120,21 @@ Fixed list of 16 spending categories. Users earn different rewards for different
 | id | uuid | NO | gen_random_uuid() |
 | card_id | uuid | YES | null |
 | category_id | uuid | YES | null |
+| **reward_event_type** | text | YES | 'ongoing' |
 | reward_type | text | YES | null |
 | earn_rate | numeric | YES | null |
 | earn_unit | text | YES | null |
 | earn_per_x_aed | numeric | YES | null |
 | **effective_return_pct** | numeric | NO | — |
+| absolute_value_aed | numeric | YES | null |
+| display_label | text | YES | null |
 | monthly_cap_spend_aed | numeric | YES | null |
 | monthly_cap_reward | numeric | YES | null |
 | min_txn_amount_aed | numeric | YES | null |
 | min_monthly_spend_aed | numeric | YES | null |
 | is_promotional | boolean | YES | false |
 | promo_end_date | date | YES | null |
+| is_estimated | boolean | YES | false |
 | exclusions | text | YES | null |
 | source_url | text | YES | null |
 | last_verified_date | date | YES | null |
@@ -138,14 +144,19 @@ Fixed list of 16 spending categories. Users earn different rewards for different
 | updated_at | timestamptz | YES | now() |
 
 **Key fields:**
-- `effective_return_pct`: Normalized AED return per AED spent (e.g., 3% = 3 fils per AED). **This powers the recommendation engine.**
+- `reward_event_type`: Distinguishes the kind of reward row. Values: `'ongoing'` (regular earn rate — powers all ranking), `'welcome_bonus'` (one-time sign-up bonus), `'limited_promo'` (time-limited offer, expires at `promo_end_date`), `'anniversary_bonus'` (annual renewal benefit). The recommendation engine filters to `'ongoing'` for scoring; welcome bonuses and promos are surfaced separately. **Convention:** `welcome_bonus` and `anniversary_bonus` rows use `category_id = '8a0dbdfb-1214-4886-9ed2-30ee47d2fd7f'` (the 'general' category) since they aren't tied to a spending category.
+- `effective_return_pct`: Normalized AED return per AED spent (e.g., 3% = 3 fils per AED). **This powers the recommendation engine.** For points/miles cards: `earn_rate × reward_currency_value_aed × 100` (per_aed) or `earn_rate × reward_currency_value_aed / exchange_rate × 100` (per_usd). Set to 0 for welcome_bonus rows (they are valued via `absolute_value_aed` instead).
+- `absolute_value_aed`: Total AED value of a welcome bonus or promo (e.g., 75,000 Bonvoy points ≈ AED 2,250). Used for display and for Path B's annual-value calculation. Only populated on non-ongoing rows.
+- `display_label`: Short user-facing label for welcome/promo bonus rows (e.g., "75,000 Bonvoy points on activation"). Falls back to auto-generated label from `notes` if null.
+- `is_estimated`: `true` when the `effective_return_pct` was computed using an assumed or cross-tier redemption value rather than a rate confirmed directly from that card's own T&C. The UI should treat these rows as approximate.
 - `monthly_cap_spend_aed`, `monthly_cap_reward`: Caps apply per month.
-- `notes`: Brand bonuses, conditions, gotchas. E.g., "1.23% at any hotel. 🎁 Earns 2.45% at Marriott Bonvoy."
+- `notes`: User-facing conditions, caveats, and brand bonuses. E.g., "2 miles/USD on Emirates = 2.40%. ⚠️ Other airlines = 1.20%." For welcome bonus rows, this holds the eligibility condition (e.g., "Spend USD 15,000 in first 3 billing cycles"). **Do not store source file citations here** — those belong in `source_url` only. Notes must be readable as standalone plain English by an end user (no `Source: xyz.pdf` trails).
 - `last_verified_date`: When this row was last checked against T&Cs.
 
 **Example rows:**
 ```
-ENBD Marriott Bonvoy + hotels → 1.23% (general), 2.45% at Marriott (in notes)
+ENBD Marriott Bonvoy World Elite + hotels → 4.90% (Marriott participating), ⚠️ 2.45% at non-Marriott (in notes)
+ENBD Skywards Infinite + airlines → 2.40% (Emirates/flydubai), ⚠️ 1.20% other airlines (in notes)
 FAB Travel Card + airlines → 12%
 DIB Prime Infinite + airlines → 5%
 Citi Premier + dining → 3% (earned via points)
@@ -154,7 +165,9 @@ Citi Premier + dining → 3% (earned via points)
 ---
 
 ### 5. card_benefits
-Benefits tied to each card (not category-specific). Lounge access, valet, insurance, welcome bonuses, etc.
+Non-category perks tied to each card. Lounge access, valet, insurance, dining privileges, etc.
+
+> ⚠️ **Welcome bonuses do NOT live here.** As of 2026-06-30 (Migration C), all welcome bonus data was migrated from this table into `card_rewards` (reward_event_type='welcome_bonus'). Any `benefit_type='welcome_bonus'` rows have been deleted. See `card_rewards.reward_event_type` for the single source of truth.
 
 | Column | Type | Nullable | Default |
 |--------|------|----------|---------|
@@ -172,10 +185,10 @@ Benefits tied to each card (not category-specific). Lounge access, valet, insura
 | updated_at | timestamptz | YES | now() |
 
 **Typical rows:**
-- Welcome bonus: 200 AED cashback (first 3 months)
 - Lounge access: Priority Pass, 4 visits/year
 - Valet parking: 2 complimentary per month
 - Purchase protection: Up to AED 2,500
+- Golf privileges, cinema BOGOF, concierge, travel insurance
 
 ---
 
@@ -363,12 +376,12 @@ CREATE INDEX idx_user_spending ON user_spending_profile(user_id);
 
 | Table | Rows | Verified | Last Check |
 |-------|------|----------|------------|
-| banks | 13 | ✅ | Initial seed |
-| spending_categories | 16 | ✅ | March 31 |
-| cards | ~42 | 🔄 | In progress (card-by-card verification) |
-| card_rewards | ~200+ | 🔄 | In progress |
+| banks | 14 | ✅ | June 2026 (EI added as bank #14) |
+| spending_categories | 17 | ✅ | March 2026 |
+| cards | 91 | ✅ | June 2026 — all 91 verified against T&Cs |
+| card_rewards | ~1,500+ | ✅ | June 2026 |
 | merchants | ~50 | ✅ | Initial seed |
-| card_benefits | ~100+ | 🔄 | In progress |
+| card_benefits | ~500+ | ✅ | June 2026 |
 | offers | ~20 | ⏳ | Pending |
 | loyalty_programs | ~10 | ✅ | Initial seed |
 | transfer_partners | ~30 | ⏳ | Pending |
@@ -379,5 +392,6 @@ CREATE INDEX idx_user_spending ON user_spending_profile(user_id);
 
 - **When adding categories:** Update `spending_categories` + adjust `sort_order` of existing rows if needed.
 - **When updating card rewards:** Always set `last_verified_date` to today + include `source_url` (bank T&C link).
-- **Brand bonuses:** Store in the `notes` field of `card_rewards` with emoji callouts (🎁 for bonus, ⚠️ for gotchas).
-- **Exclusions:** Use `card_reward_exclusions` table *only* for merchant-specific exceptions; use `notes` for general caveats.
+- **Brand bonuses (general):** Store in the `notes` field of `card_rewards` with emoji callouts (🎁 for bonus, ⚠️ for gotchas). Keep notes user-facing: no `Source: filename.pdf` trails, no internal file paths, no clause references — those belong in `source_url`.
+- **Structural loyalty co-brands:** For cards where the loyalty program IS the card's identity (e.g. Skywards = Emirates, Marriott Bonvoy = Marriott), set `effective_return_pct` to the brand-specific (elevated) rate on the card's "home" category. Document the reduced non-brand rate in `notes` with ⚠️. Do NOT use the brand rate for ecosystem/portal bonuses (SHARE, U by Emaar, Darna, dnata Travel) — those keep the base rate in `effective_return_pct`.
+- **Exclusions (two distinct mechanisms):** The `exclusions` text column on `card_rewards` holds a single short sentence shown as an amber ⚠ callout in the UI — use it for a meaningful rate caveat on that specific category row (e.g., "Non-Marriott hotels earn only 3 pts/USD = 2.45%"). Only populate it when the caveat is genuinely relevant to that category. The separate `card_reward_exclusions` table is reserved for merchant-specific exceptions (e.g., "5% dining on DIB Prime, but NOT Talabat"). General conditions and gotchas that don't warrant a dedicated callout belong in `notes` with a ⚠️ emoji.

@@ -260,6 +260,8 @@ function buildStrategy(
   const totalWelcomeBonus = cardBreakdowns.reduce((s, c) => s + c.welcomeBonus, 0);
   const totalAnniversaryBonus = cardBreakdowns.reduce((s, c) => s + c.anniversaryBonus, 0);
 
+  cardBreakdowns.sort((a, b) => b.annualReward - a.annualReward);
+
   return {
     label,
     cardBreakdowns,
@@ -526,6 +528,16 @@ export default function RecommendResultsClient({ categories }: Props) {
       )
       .sort((a, b) => b.netFirstYearValue - a.netFirstYearValue)
       .slice(0, 3);
+
+    // Relabel by sorted position — the greedy labels are assigned before the
+    // final sort, so "Alternative portfolio" can end up ranked #1 if it has a
+    // higher welcome bonus. Reassign the first two slots so the label always
+    // matches what the user sees.
+    const positionalLabels = ["Optimal portfolio", "Alternative portfolio"];
+    strats.forEach((s, i) => {
+      if (i < 2) s.label = `${positionalLabels[i]}${pinnedLabel}`;
+      // i === 2 keeps its original label ("No annual fee portfolio", "n-card portfolio", …)
+    });
 
     setStrategies(strats);
     setExpanded(0);
