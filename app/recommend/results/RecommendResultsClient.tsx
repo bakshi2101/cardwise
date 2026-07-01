@@ -327,6 +327,7 @@ export default function RecommendResultsClient({ categories }: Props) {
       annual_fee_aed: number | null;
       category_slug: string;
       effective_return_pct: number;
+      forex_markup_pct: number | null;
       monthly_cap_spend_aed: number | null;
       monthly_cap_reward: number | null;
     };
@@ -336,7 +337,7 @@ export default function RecommendResultsClient({ categories }: Props) {
         supabase
           .from("rewards_ranked")
           .select(
-            "card_id, card_name, bank_id, bank_short_name, annual_fee_aed, category_slug, effective_return_pct, monthly_cap_spend_aed, monthly_cap_reward"
+            "card_id, card_name, bank_id, bank_short_name, annual_fee_aed, category_slug, effective_return_pct, forex_markup_pct, monthly_cap_spend_aed, monthly_cap_reward"
           )
           .eq("is_active", true)
           .eq("reward_event_type", "ongoing")
@@ -382,7 +383,9 @@ export default function RecommendResultsClient({ categories }: Props) {
       const card = cardMap.get(r.card_id)!;
       if (!card.rewards[r.category_slug]) {
         card.rewards[r.category_slug] = {
-          rate: r.effective_return_pct,
+          rate: r.category_slug === "international"
+            ? r.effective_return_pct - (r.forex_markup_pct ?? 0)
+            : r.effective_return_pct,
           cap_spend: r.monthly_cap_spend_aed ?? null,
           cap_reward: r.monthly_cap_reward ?? null,
         };
@@ -743,7 +746,7 @@ export default function RecommendResultsClient({ categories }: Props) {
                           </div>
                           {cb.card.reward_currency_value_aed != null && cb.card.reward_currency_value_aed !== 1 && cb.card.reward_currency_name && (
                             <div className="text-xs text-white/30 mt-1">
-                              ⓘ Rates assume 1 {cb.card.reward_currency_name} = AED {cb.card.reward_currency_value_aed} — actual value varies by redemption
+                              ⓘ 1 {cb.card.reward_currency_name} valued at AED {cb.card.reward_currency_value_aed} — worth more with travel or hotel redemptions
                             </div>
                           )}
                         </div>
