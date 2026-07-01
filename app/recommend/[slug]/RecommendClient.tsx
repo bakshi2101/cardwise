@@ -78,7 +78,7 @@ export default function RecommendClient({
     if (!wioWalletRow || !bestNonWioWalletRow) return null;
     const stackedRate = bestNonWioWalletRow.effective_return_pct + WIO_BILL_PAY_BONUS_PCT;
     if (stackedRate <= wioWalletRow.effective_return_pct) return null;
-    return { stackedRate, wioRate: wioWalletRow.effective_return_pct, cardName: bestNonWioWalletRow.card_name };
+    return { stackedRate, wioRate: wioWalletRow.effective_return_pct, cardName: bestNonWioWalletRow.card_name, cardRate: bestNonWioWalletRow.effective_return_pct };
   })();
 
   const visibleOther = showAllOther ? otherRewards : otherRewards.slice(0, DEFAULT_VISIBLE);
@@ -109,7 +109,7 @@ export default function RecommendClient({
                   className="mb-3 bg-[#6366F1]/8 border border-[#6366F1]/20 rounded-xl px-3 py-2.5 text-[11px] text-[#6366F1]/80 leading-snug cursor-help"
                   title="Wio's bill-pay bonus is capped by a % of your Wio credit limit (not the bill amount) and requires AED 5,000+ spend on the Wio card itself that month."
                 >
-                  💡 <span className="font-semibold">Stack for {wioStackTip.stackedRate.toFixed(1)}%:</span> pay with {wioStackTip.cardName} ({(wioStackTip.stackedRate - WIO_BILL_PAY_BONUS_PCT).toFixed(1)}%), then pay that card&apos;s bill via Wio (+0.5%) — beats Wio&apos;s direct {wioStackTip.wioRate.toFixed(1)}%
+                  💡 <span className="font-semibold">Stack for {wioStackTip.stackedRate.toFixed(1)}%:</span> pay with {wioStackTip.cardName} ({wioStackTip.cardRate.toFixed(1)}%), then pay that card&apos;s bill via Wio (+0.5%) — beats Wio&apos;s direct {wioStackTip.wioRate.toFixed(1)}%
                 </div>
               )}
               <div className="space-y-3">
