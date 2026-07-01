@@ -192,7 +192,14 @@ export async function getBestCardForCategory(
   if (cardIds.length === 0) return null;
   const results = await fetchWithFallback(cardIds, categorySlug);
   if (results.length === 0) return null;
-  results.sort((a, b) => b.effective_return_pct - a.effective_return_pct);
+  if (categorySlug === "international") {
+    results.forEach((r) => {
+      r.net_return_pct = r.effective_return_pct - (r.forex_markup_pct ?? 0);
+    });
+    results.sort((a, b) => (b.net_return_pct ?? 0) - (a.net_return_pct ?? 0));
+  } else {
+    results.sort((a, b) => b.effective_return_pct - a.effective_return_pct);
+  }
   return results[0] ?? null;
 }
 
@@ -203,7 +210,14 @@ export async function getAllCardsForCategory(
 ): Promise<RewardRanked[]> {
   if (cardIds.length === 0) return [];
   const results = await fetchWithFallback(cardIds, categorySlug);
-  results.sort((a, b) => b.effective_return_pct - a.effective_return_pct);
+  if (categorySlug === "international") {
+    results.forEach((r) => {
+      r.net_return_pct = r.effective_return_pct - (r.forex_markup_pct ?? 0);
+    });
+    results.sort((a, b) => (b.net_return_pct ?? 0) - (a.net_return_pct ?? 0));
+  } else {
+    results.sort((a, b) => b.effective_return_pct - a.effective_return_pct);
+  }
   return results;
 }
 

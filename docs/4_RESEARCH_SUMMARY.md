@@ -146,15 +146,15 @@ Points-based cards (FAB Rewards, ENBD Skywards, Citi ThankYou, SC 360°, DIB Wal
 **Point/mile values — sourcing tiers:**
 
 *T&C-stated cash conversion (most reliable):*
-- Citi ThankYou Points / Citi Miles: AED 0.033/pt (verified from T&C)
-- SC 360° Rewards: AED 0.008/pt (125 pts = AED 1)
-- DIB Wala'a Rewards: AED 0.005/pt (20,000 pts = AED 100)
+- Citi ThankYou Points / Citi Miles: AED 0.022/pt (cash rebate floor: 45 pts = AED 1; confirmed citibank.ae). Higher via Cash for Points: 15,000 pts = AED 500 on any travel purchase (0.033/pt); or Fly with Points: 25 pts = AED 1 (0.04/pt).
+- SC 360° Rewards: AED 0.008/pt (125 pts = AED 1; confirmed sc.com/ae/360rewards/ — lowest floor; 50 pts = AED 1 available on airline ticket redemptions)
+- DIB Wala'a Rewards: AED 0.004/pt (Pay with Rewards cashback floor: 20,000 pts = AED 80; confirmed dib.ae). Higher for flights, hotels, or bill payments: 20,000 pts = AED 100 (0.005/pt).
 - FAB Rewards: AED 0.003/pt (66,800 pts = AED 200 cashback — confirmed bankfab.com calculator)
 - Mashreq Vantage Points: AED 0.00263/pt (380 pts = AED 1 cashback via app — lowest floor used per conservative policy)
 - ADIB/FAB SHARE Points: AED 0.01/pt (1 pt = AED 0.01 per FAB Schedule B T&C)
 - ENBD SHARE / Darna / UPoints: AED 0.10/pt (10 pts = AED 1 per programme T&C)
 - Voyager Miles: AED 0.01/mile (100 miles = AED 1 per T&C)
-- ADNOC Rewards Points: AED 0.001/pt (confirmed from welcome-bonus implied conversion)
+- ADNOC Rewards Points: AED 0.001/pt (confirmed on ADNOC Distribution website)
 - Shukrans: AED 0.05/Shukran (20 Shukrans = AED 1 — confirmed from Shukran website)
 - Smiles Points: AED 0.01/pt (confirmed via CBD website + e& website)
 
@@ -310,8 +310,8 @@ FAB Cashback, Mashreq Cashback, Mashreq Noon, Liv Cashback, Liv Cashback+, ADIB 
 - **SC Journey (360° Rewards):** AED 0.008/pt (T&C-stated: 125 pts = AED 1). 1.09% on domestic spend; weak vs. cashback alternatives.
 
 ### Points Programs
-- **Citi ThankYou Points / Citi Miles:** AED 0.033/pt (T&C-verified). Strongest verified cash value in the set; transfers to airlines.
-- **DIB Wala'a Rewards:** AED 0.005/pt (T&C-stated: 20,000 pts = AED 100). Redeemable for flights, hotels, bill pay; 24-month expiry.
+- **Citi ThankYou Points / Citi Miles:** AED 0.022/pt (cash rebate floor, citibank.ae). Higher rates available for travel — see tier 1 above. Transfers to 11+ airline and hotel programs.
+- **DIB Wala'a Rewards:** AED 0.004/pt (Pay with Rewards cashback floor, dib.ae; 20,000 pts = AED 100 for flights/hotels/bill payments). 24-month expiry.
 - **ADIB/FAB SHARE Points:** AED 0.01/pt (T&C-stated). 1.5% effective on general spend (Infinite tier).
 - **ENBD SHARE / Darna / UPoints:** AED 0.10/pt (T&C-stated: 10 pts = AED 1). Strong within ecosystem but base rate only 0.75%–2.0%.
 - **FAB Rewards:** AED 0.003/pt (confirmed: 66,800 pts = AED 200 cashback). Lowest effective value in the set.

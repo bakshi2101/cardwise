@@ -98,9 +98,9 @@
 
 - DIB Consumer Cashback Platinum Card *(5 cashback categories; 4% on groceries/fuel/utilities/education/govt with caps; UAE only)*
 - DIB Consumer Cashback Reward Card *(5 cashback categories; 3% on groceries/fuel/utilities/education/govt with caps; UAE only)*
-- DIB Prime Infinite Covered Card *(all 17 categories; 3.0 pts/AED general=1.50%; reduced 0.2pts on groceries/fuel/utils/edu/govt=0.10%; FX 3.5pts=1.75%)*
-- DIB Prime Signature Covered Card *(all 17 categories; 2.5 pts/AED general=1.25%; reduced 0.2pts; FX 3.0pts=1.50%)*
-- DIB Prime Platinum Covered Card *(replaced Wala'a Infinite; all 17 categories; 2.0 pts/AED general=1.00%; reduced 0.2pts; FX 2.2pts=1.10%)*
+- DIB Prime Infinite Covered Card *(all 17 categories; 3.0 pts/AED general=1.20%; reduced 0.2pts on groceries/fuel/utils/edu/govt=0.08%; FX 3.5pts=1.40%; reward_currency_value_aed revised 0.005→0.004 2026-07-02)*
+- DIB Prime Signature Covered Card *(all 17 categories; 2.5 pts/AED general=1.00%; reduced 0.2pts=0.08%; FX 3.0pts=1.20%; reward_currency_value_aed revised 0.005→0.004 2026-07-02)*
+- DIB Prime Platinum Covered Card *(replaced Wala'a Infinite; all 17 categories; 2.0 pts/AED general=0.80%; reduced 0.2pts=0.08%; FX 2.2pts=0.88%; reward_currency_value_aed revised 0.005→0.004 2026-07-02)*
 - CBD Super Saver Credit Card *(corrected: general row deleted; 4 B.E.S.T rows updated; forex 2.99→3.5%; min_salary 8000→5000)*
 - CBD Visa Infinite Credit Card *(NEW — all 17 categories; min_salary 30000→15000; waiver 100000 added; 2.5 pts domestic=1.0%, 0.5 pts restricted=0.2%, 3 pts intl=1.2%; ⚠️ redemption rate AED 0.004/pt assumed from Platinum/Titanium PDFs — is_estimated=true)*
 - CBD Smiles Visa Signature Credit Card *(NEW — all 17 categories; fuel/govt corrected 2→0.5 pts/AED; min_salary→5000; waiver→24000; lounge→8; travel+prot→true)*
@@ -1724,13 +1724,13 @@ Mashreq Platinum Plus Credit Card ✅ (2026-06-13) | Mashreq Solitaire Credit Ca
 #### Citi Premier Credit Card ✅ (verified 2026-04-07)
 - **Card ID:** 758d5d43-c8c4-4ca4-b111-7e41190ba11b
 - **Annual Fee:** AED 750 (corrected from AED 600) | **Forex markup:** 2.99%
-- **Reward type:** ThankYou Points — earned per USD charged (not per AED). 1 TY point = AED 0.033
+- **Reward type:** ThankYou Points — earned per USD charged (not per AED). 1 TY point = AED 0.022 (cash rebate floor: 45 pts = AED 1; confirmed citibank.ae). Higher via Cash for Points: 15,000 pts = AED 500 on any travel purchase (0.033/pt); or Fly with Points: 25 pts = AED 1 (0.04/pt).
 - **Earn rates (per USD charged):**
-  - **Dining, Fuel, Groceries:** 3 pts/USD = **2.70%** effective
-  - **International (non-AED, non-EEA):** 2 pts/USD = **1.80%** effective
-  - **EEA currency spend:** 1 pt/USD = **0.90%** effective (noted in international row)
-  - **All other standard AED categories** (shopping, online, entertainment, healthcare, airlines, hotels, travel, rent): 1 pt/USD = **0.90%**
-  - **Restricted MCCs** (insurance, education, utilities, government): 0.25 pts/USD = **0.22%**
+  - **Dining, Fuel, Groceries:** 3 pts/USD = **1.80%** effective
+  - **International (non-AED, non-EEA):** 2 pts/USD = **1.20%** effective
+  - **EEA currency spend:** 1 pt/USD = **0.60%** effective (noted in international row)
+  - **All other standard AED categories** (shopping, online, entertainment, healthcare, airlines, hotels, travel, rent): 1 pt/USD = **0.60%**
+  - **Restricted MCCs** (insurance, education, utilities, government): 0.25 pts/USD = **0.15%**
 - **No monthly caps**
 - **Key exclusions:** Utility bills via Citi channels = 0 points (noted in utilities row)
 - **DB changes:** Corrected annual_fee 600→750; fixed earn_unit per_aed→per_usd on 7 existing rows; inserted 10 missing category rows
@@ -1738,16 +1738,16 @@ Mashreq Platinum Plus Credit Card ✅ (2026-06-13) | Mashreq Solitaire Credit Ca
 #### Citi Prestige Credit Card ✅ (verified 2026-04-07)
 - **Card ID:** 41e18546-d724-4fb3-a9b8-8835298f6138
 - **Annual Fee:** AED 1,500 (corrected from AED 1,575) | **Forex markup:** 2.99%
-- **Reward type:** ThankYou Points — earned per USD charged. 1 TY point = AED 0.033
+- **Reward type:** ThankYou Points — earned per USD charged. 1 TY point = AED 0.022 (cash rebate floor: 45 pts = AED 1; confirmed citibank.ae). Higher via Cash for Points: 15,000 pts = AED 500 on any travel purchase (0.033/pt); or Fly with Points: 25 pts = AED 1 (0.04/pt).
 - **Earn rates (per USD charged):**
-  - **International (non-AED, non-EEA):** 3 pts/USD = **2.70%** effective — best category
-  - **Dining, Fuel, Groceries, General AED:** 2 pts/USD = **1.80%** effective
-  - **All other standard AED categories** (shopping, online, entertainment, healthcare, airlines, hotels, travel, rent): 2 pts/USD = **1.80%**
-  - **EEA currency spend:** 1.5 pts/USD = **1.35%** effective (noted in international row)
-  - **Restricted MCCs** (insurance, education, utilities, government): 0.5 pts/USD = **0.45%**
+  - **International (non-AED, non-EEA):** 3 pts/USD = **1.80%** effective — best category
+  - **Dining, Fuel, Groceries, General AED:** 2 pts/USD = **1.20%** effective
+  - **All other standard AED categories** (shopping, online, entertainment, healthcare, airlines, hotels, travel, rent): 2 pts/USD = **1.20%**
+  - **EEA currency spend:** 1.5 pts/USD = **0.90%** effective (noted in international row)
+  - **Restricted MCCs** (insurance, education, utilities, government): 0.5 pts/USD = **0.30%**
 - **No monthly caps**
 - **Key exclusions:** Utility bills via Citi channels = 0 points
-- **DB changes:** annual_fee 1575→1500; reward_currency_value_aed null→0.033; inserted 17 card_rewards rows from scratch
+- **DB changes:** annual_fee 1575→1500; reward_currency_value_aed null→0.033 (revised 2026-07-02 to 0.022 — cash rebate floor); inserted 17 card_rewards rows from scratch
 
 **Citi pattern notes:**
 - All ThankYou earn rates are expressed per USD charged (earn_unit=per_usd), NOT per AED
@@ -1874,7 +1874,7 @@ Mashreq Platinum Plus Credit Card ✅ (2026-06-13) | Mashreq Solitaire Credit Ca
 - **Forex markup corrected:** All 5 cards had `forex_markup_pct = 2.99%` — corrected to **3.70%** (non-AED transactions; AED international = 3.14%) per KFS PDF
 - **DIB Wala'a Infinite Covered Card replaced** with DIB Prime Platinum Covered Card (same card_id `da395862`); Wala'a Infinite no longer listed on DIB website
 - **Reward rates NOT in T&C PDF** — T&C explicitly says rates are "published on DIB website"; product pages used as source
-- **Wala'a Rewards value:** 20,000 points = AED 100 → **1 point = AED 0.005**
+- **Wala'a Rewards value:** **1 point = AED 0.004** (Pay with Rewards cashback floor: 20,000 pts = AED 80; confirmed dib.ae). Worth more for flights, hotels, or bill payments: 20,000 pts = AED 100 (0.005/pt). Conservative floor (0.004) used per project policy. Updated 2026-07-02.
 - **Reduced earn categories** (effective Jan 1, 2024): supermarkets, petroleum, telecom, education, government services earn only **0.2 pts/AED** (vs. standard rates)
 - **EU spend earns 0 points** (effective Dec 1, 2019)
 - **Utility/govt bills via DIB digital platforms earn 0** (cashback) or 0 points
@@ -1921,35 +1921,35 @@ Mashreq Platinum Plus Credit Card ✅ (2026-06-13) | Mashreq Solitaire Credit Ca
 #### 45. DIB Prime Infinite Covered Card ✅ (verified 2026-04-11)
 - **Card ID:** 33ed23d3-0217-4399-b54a-18d560205bc5
 - **Annual Fee:** AED 0 if spend criteria met (otherwise AED 733.95 from year 2) | **Forex:** 3.70%
-- **Reward currency:** Wala'a Rewards (1 pt = AED 0.005)
+- **Reward currency:** Wala'a Rewards (1 pt = AED 0.004 cashback floor — see Key Findings above)
 - **Earn rates:**
-  - **General domestic:** 3.0 pts/AED = **1.50%**
-  - **Reduced categories** (groceries, fuel, utilities, education, govt): 0.2 pts/AED = **0.10%**
-  - **Foreign currency:** 3.5 pts/AED equivalent = **1.75%**
+  - **General domestic:** 3.0 pts/AED = **1.20%**
+  - **Reduced categories** (groceries, fuel, utilities, education, govt): 0.2 pts/AED = **0.08%**
+  - **Foreign currency:** 3.5 pts/AED equivalent = **1.40%**
   - **EU spend:** 0 pts (excluded)
-- **DB changes:** Updated forex 2.99→3.70%; deleted 9 incorrect rows (had 5%-6% rates); inserted 17 correct rows
+- **DB changes:** Updated forex 2.99→3.70%; deleted 9 incorrect rows (had 5%-6% rates); inserted 17 correct rows; reward_currency_value_aed revised 0.005→0.004 (2026-07-02)
 
 #### 46. DIB Prime Signature Covered Card ✅ (verified 2026-04-11)
 - **Card ID:** 30f9bcd9-787d-4859-bde1-57ee305608ac
 - **Annual Fee:** AED 0 if spend criteria met (otherwise AED 523.95 from year 2) | **Forex:** 3.70%
-- **Reward currency:** Wala'a Rewards (1 pt = AED 0.005)
+- **Reward currency:** Wala'a Rewards (1 pt = AED 0.004 cashback floor — see Key Findings above)
 - **Earn rates:**
-  - **General domestic:** 2.5 pts/AED = **1.25%**
-  - **Reduced categories:** 0.2 pts/AED = **0.10%**
-  - **Foreign currency:** 3.0 pts/AED equivalent = **1.50%**
-- **DB changes:** Updated forex 2.99→3.70%; inserted 17 card_rewards rows (first-ever data)
+  - **General domestic:** 2.5 pts/AED = **1.00%**
+  - **Reduced categories:** 0.2 pts/AED = **0.08%**
+  - **Foreign currency:** 3.0 pts/AED equivalent = **1.20%**
+- **DB changes:** Updated forex 2.99→3.70%; inserted 17 card_rewards rows (first-ever data); reward_currency_value_aed revised 0.005→0.004 (2026-07-02)
 
 #### 47. DIB Prime Platinum Covered Card ✅ (verified 2026-04-11) — REPLACED Wala'a Infinite
 - **Card ID:** da395862-82d9-4d54-9b91-5f12f10c1206 *(previously DIB Wala'a Infinite Covered Card — same card_id retained)*
 - **Annual Fee:** AED 0 if spend criteria met (otherwise AED 208.95 from year 2) | **Min Salary:** AED 5,000 | **Forex:** 3.70%
-- **Reward currency:** Wala'a Rewards (1 pt = AED 0.005)
+- **Reward currency:** Wala'a Rewards (1 pt = AED 0.004 cashback floor — see Key Findings above)
 - **Earn rates:**
-  - **General domestic:** 2.0 pts/AED = **1.00%**
-  - **Reduced categories:** 0.2 pts/AED = **0.10%**
-  - **Foreign currency:** 2.2 pts/AED equivalent = **1.10%**
+  - **General domestic:** 2.0 pts/AED = **0.80%**
+  - **Reduced categories:** 0.2 pts/AED = **0.08%**
+  - **Foreign currency:** 2.2 pts/AED equivalent = **0.88%**
 - **Benefits:** Roadside assistance (2x/year), Credit Shield Takaful, Visa Luxury Hotels, travel insurance up to USD 100K
 - **Note:** Wala'a Infinite no longer visible on DIB website — replaced with Prime Platinum per user instruction
-- **DB changes:** Renamed from Wala'a Infinite; card_tier updated to platinum; annual_fee, min_salary, reward_currency fields updated; inserted 17 card_rewards rows
+- **DB changes:** Renamed from Wala'a Infinite; card_tier updated to platinum; annual_fee, min_salary, reward_currency fields updated; inserted 17 card_rewards rows; reward_currency_value_aed revised 0.005→0.004 (2026-07-02)
 
 ---
 

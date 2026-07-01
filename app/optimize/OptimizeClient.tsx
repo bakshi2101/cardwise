@@ -151,31 +151,38 @@ export default function OptimizeClient({ categories }: Props) {
           let primary = allCards[0] ?? null;
           if (!primary) return null;
 
+          // For international, use net return (after forex deduction). getAllCardsForCategory
+          // already populates net_return_pct and sorts by it for international.
+          const getRate = (c: typeof primary) =>
+            cat.slug === "international" && c.net_return_pct != null
+              ? c.net_return_pct
+              : c.effective_return_pct;
+
           // Wio bill-pay stacking: must run before effectiveRate is derived so we
           // can promote the stacking card to primary when it wins. When Wio is the
           // naive best card, check if any non-Wio card stacks higher via bill pay.
           let wioStack: WioStack | null = null;
           if (walletIds.includes(WIO_CARD_ID)) {
             const wioRow = allCards.find((c) => c.card_id === WIO_CARD_ID);
-            const wioDirectRate = wioRow?.effective_return_pct ?? 0;
+            const wioDirectRate = wioRow ? getRate(wioRow) : 0;
             if (primary.card_id === WIO_CARD_ID) {
               const bestNonWio = allCards.find((c) => c.card_id !== WIO_CARD_ID);
               if (bestNonWio) {
-                const stackedRate = bestNonWio.effective_return_pct + WIO_BILL_PAY_BONUS_PCT;
+                const stackedRate = getRate(bestNonWio) + WIO_BILL_PAY_BONUS_PCT;
                 if (stackedRate > wioDirectRate) {
                   primary = bestNonWio;
                   wioStack = { wioRate: wioDirectRate, stackedRate };
                 }
               }
             } else if (wioRow) {
-              const stackedRate = primary.effective_return_pct + WIO_BILL_PAY_BONUS_PCT;
+              const stackedRate = getRate(primary) + WIO_BILL_PAY_BONUS_PCT;
               if (stackedRate > wioDirectRate) {
                 wioStack = { wioRate: wioDirectRate, stackedRate };
               }
             }
           }
 
-          const effectiveRate = primary.effective_return_pct;
+          const effectiveRate = getRate(primary);
           const capSpend = deriveCapSpend(
             primary.monthly_cap_spend_aed,
             primary.monthly_cap_reward,
@@ -195,14 +202,15 @@ export default function OptimizeClient({ categories }: Props) {
           if (overflowSpend > 0.5) {
             const next = allCards.find((c) => c.card_id !== primary.card_id);
             if (next) {
+              const nextRate = getRate(next);
               overflow = {
                 cardName: next.card_name,
                 cardId: next.card_id,
-                effectiveRate: next.effective_return_pct,
+                effectiveRate: nextRate,
                 spend: overflowSpend,
                 monthlyReward: computeMonthlyReward(
                   overflowSpend,
-                  next.effective_return_pct,
+                  nextRate,
                   next.monthly_cap_spend_aed,
                   next.monthly_cap_reward
                 ),

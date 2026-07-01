@@ -27,6 +27,7 @@ interface CardData {
   min_salary_aed: number | null;
   min_salary_estimated: boolean;
   reward_currency_name: string | null;
+  reward_currency_value_aed: number | null;
   rewards: Record<string, { rate: number; cap_spend: number | null; cap_reward: number | null }>;
 }
 
@@ -343,7 +344,7 @@ export default function RecommendResultsClient({ categories }: Props) {
       ),
       supabase
         .from("cards_with_bank")
-        .select("id, bank_id, annual_fee_aed, annual_fee_waiver_spend, min_salary_aed, is_estimated, reward_currency_name")
+        .select("id, bank_id, annual_fee_aed, annual_fee_waiver_spend, min_salary_aed, is_estimated, reward_currency_name, reward_currency_value_aed")
         .eq("is_active", true),
     ]);
 
@@ -355,6 +356,7 @@ export default function RecommendResultsClient({ categories }: Props) {
         minSalary: c.min_salary_aed as number | null,
         minSalaryEstimated: c.is_estimated as boolean,
         rewardCurrency: c.reward_currency_name as string | null,
+        rewardCurrencyValueAed: c.reward_currency_value_aed as number | null,
       }])
     );
 
@@ -373,6 +375,7 @@ export default function RecommendResultsClient({ categories }: Props) {
           min_salary_aed: meta?.minSalary ?? null,
           min_salary_estimated: meta?.minSalaryEstimated ?? false,
           reward_currency_name: meta?.rewardCurrency ?? null,
+          reward_currency_value_aed: meta?.rewardCurrencyValueAed ?? null,
           rewards: {},
         });
       }
@@ -738,6 +741,11 @@ export default function RecommendResultsClient({ categories }: Props) {
                               </span>
                             )}
                           </div>
+                          {cb.card.reward_currency_value_aed != null && cb.card.reward_currency_value_aed !== 1 && cb.card.reward_currency_name && (
+                            <div className="text-xs text-white/30 mt-1">
+                              ⓘ Rates assume 1 {cb.card.reward_currency_name} = AED {cb.card.reward_currency_value_aed} — actual value varies by redemption
+                            </div>
+                          )}
                         </div>
                         <div className="text-right shrink-0">
                           <div className="text-sm font-bold text-[#22C55E] font-mono">
