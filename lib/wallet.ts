@@ -72,8 +72,7 @@ export type LoyaltyStatus =
   | "skywards_silver"
   | "skywards_gold"
   | "marriott_silver_gold"
-  | "marriott_platinum"
-  | "ihg_silver_gold";
+  | "marriott_platinum";
 
 // reward_currency_name patterns that match each loyalty program
 export const LOYALTY_CURRENCY_MATCH: Record<LoyaltyStatus, string[]> = {
@@ -83,7 +82,6 @@ export const LOYALTY_CURRENCY_MATCH: Record<LoyaltyStatus, string[]> = {
   skywards_gold:       ["Skywards Miles"],
   marriott_silver_gold:["Marriott Bonvoy Points"],
   marriott_platinum:   ["Marriott Bonvoy Points"],
-  ihg_silver_gold:     [], // no IHG card in DB yet
 };
 
 // Weighting multiplier applied to effective_return_pct during greedy scoring
@@ -95,7 +93,6 @@ export const LOYALTY_WEIGHT: Record<LoyaltyStatus, number> = {
   skywards_gold:        1.35,
   marriott_silver_gold: 1.20,
   marriott_platinum:    1.45,
-  ihg_silver_gold:      1.20,
 };
 
 export interface RecommendPreferences {

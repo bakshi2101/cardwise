@@ -46,7 +46,6 @@ const LOYALTY_OPTIONS: { value: LoyaltyStatus; label: string; program: string; e
   { value: "skywards_gold",        label: "Emirates Skywards Gold",       program: "Emirates", emoji: "✈️" },
   { value: "marriott_silver_gold", label: "Marriott Bonvoy Silver / Gold Elite", program: "Marriott", emoji: "🏨" },
   { value: "marriott_platinum",    label: "Marriott Bonvoy Platinum Elite",      program: "Marriott", emoji: "🏨" },
-  { value: "ihg_silver_gold",      label: "IHG Silver / Gold Elite",     program: "IHG",      emoji: "🏨" },
 ];
 
 export default function PreferencesClient({ banks }: Props) {
