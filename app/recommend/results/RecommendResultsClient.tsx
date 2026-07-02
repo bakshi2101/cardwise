@@ -111,8 +111,9 @@ function loyaltyMultiplier(
   let maxWeight = 1;
   for (const status of prefs.loyaltyStatus) {
     const matchCurrencies = LOYALTY_CURRENCY_MATCH[status];
+    if (!matchCurrencies) continue; // stale localStorage value for a removed status
     if (matchCurrencies.some((c) => card.reward_currency_name!.includes(c))) {
-      maxWeight = Math.max(maxWeight, LOYALTY_WEIGHT[status]);
+      maxWeight = Math.max(maxWeight, LOYALTY_WEIGHT[status] ?? 1);
     }
   }
   return maxWeight;
