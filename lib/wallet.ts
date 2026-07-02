@@ -79,8 +79,8 @@ export type LoyaltyStatus =
 export const LOYALTY_CURRENCY_MATCH: Record<LoyaltyStatus, string[]> = {
   etihad_silver:       ["Etihad Guest Miles"],
   etihad_gold:         ["Etihad Guest Miles"],
-  skywards_silver:     ["Skywards Miles", "Cashback AED / Skywards Miles"],
-  skywards_gold:       ["Skywards Miles", "Cashback AED / Skywards Miles"],
+  skywards_silver:     ["Skywards Miles"],
+  skywards_gold:       ["Skywards Miles"],
   marriott_silver_gold:["Marriott Bonvoy Points"],
   marriott_platinum:   ["Marriott Bonvoy Points"],
   ihg_silver_gold:     [], // no IHG card in DB yet

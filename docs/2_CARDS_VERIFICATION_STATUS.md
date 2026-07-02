@@ -1599,7 +1599,7 @@ Mashreq Platinum Plus Credit Card ✅ (2026-06-13) | Mashreq Solitaire Credit Ca
   - Retroactive model: once you cross a tier threshold, ALL spend that month is recalculated at new rate
   - Convert cashback to Emirates Skywards miles at 1:1 (limited time offer)
   - Forex fee 1.99% bank-stated; at 2% top tier: net ≈ +0.01% (essentially break-even internationally)
-- **DB Changes:** forex_markup_pct corrected 2.99%→1.99%; inserted international/government/utilities/insurance rows
+- **DB Changes:** forex_markup_pct corrected 2.99%→1.99%; inserted international/government/utilities/insurance rows; reward_currency_name corrected "Cashback AED / Skywards Miles"→"Cashback AED" (July 2026 — Skywards conversion is an optional redemption promo, not the card's primary earning mechanism; using the combined name caused Path B to incorrectly tag this card as a Skywards status match and apply a Skywards loyalty weight during greedy selection)
 
 #### Liv Cashback+ Credit Card ✅ (verified 2026-04-06)
 - **Card ID:** f461a75f-aaf0-4940-8f6b-b2b24dd86507
@@ -1613,7 +1613,7 @@ Mashreq Platinum Plus Credit Card ✅ (2026-06-13) | Mashreq Solitaire Credit Ca
 - **Key Notes:**
   - Same retroactive model as free card
   - At 4% top tier with 1.99% forex: net ≈ +2.01% internationally
-- **DB Changes:** min_salary corrected 10,000→12,000; forex_markup_pct corrected 2.99%→1.99%; inserted international/government/utilities/insurance rows
+- **DB Changes:** min_salary corrected 10,000→12,000; forex_markup_pct corrected 2.99%→1.99%; inserted international/government/utilities/insurance rows; reward_currency_name corrected "Cashback AED / Skywards Miles"→"Cashback AED" (July 2026 — card has no Skywards earning; the combined currency name was a data entry error that incorrectly triggered the Skywards loyalty weight and "Status Match" tag in Path B)
 
 ### ADIB (Abu Dhabi Islamic Bank) — ✅ 3/3 verified (2026-04-06)
 
