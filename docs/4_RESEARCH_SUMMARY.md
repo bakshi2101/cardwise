@@ -121,6 +121,8 @@
 | Mashreq Cashback | 0% | utilities excluded |
 **Winner for du customers:** FAB du Credit Card (15%) — dominant if you pay du bills, with up to AED 501/month rewards. **For non-du utility bills:** DIB Consumer Cashback Platinum (4%) remains the best option.
 
+> **Data model note (July 2026):** The FAB du 15% is stored as a 🎁 brand bonus in `card_rewards.notes`, not in `effective_return_pct`. The `utilities` row is set to 0.15% (low-interchange MCC 4900) — so the card ranks behind DIB (4%) and Wio (0.5%) for general utility spend in the recommendation engine. The du 15% surfaces only via the card detail note, visible to users who are active du subscribers.
+
 ### International Spend
 | Card | Rate | Notes |
 |------|------|-------|
@@ -198,7 +200,7 @@ These cards are effectively useless for travelers or online purchases from forei
 
 ### 5. Category Exclusions Are Inconsistent Across Banks
 There is no standard across UAE banks for which categories earn:
-- **Utilities:** FAB du earns 15% at du merchants specifically; DIB (4%), ADIB (4%), Wio (0.5%) earn on general utility bills; most cashback cards earn 0%
+- **Utilities:** FAB du earns 15% at du merchants specifically (modelled as a 🎁 brand bonus in `notes`, not in `effective_return_pct` — card ranks at 0.15% for the `utilities` category in the recommendation engine); DIB (4%), ADIB (4%), Wio (0.5%) earn on general utility bills; most cashback cards earn 0%
 - **Government fees:** Earns on DIB (4% on Salik/NOL only), Wio (0.5%) — typically 0% elsewhere
 - **Rent:** Typically 0% or general rate; RAKBank explicitly 0%; Wio 0.5%
 - **Insurance:** Varies — Citi excludes insurance; most cards treat it as general spend
