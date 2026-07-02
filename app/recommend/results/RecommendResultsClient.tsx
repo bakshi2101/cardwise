@@ -319,6 +319,8 @@ export default function RecommendResultsClient({ categories }: Props) {
   });
   const [expanded, setExpanded] = useState<number | null>(0);
   const [noResults, setNoResults] = useState(false);
+  const [noStrategies, setNoStrategies] = useState(false);
+  const [computeError, setComputeError] = useState(false);
 
   useEffect(() => {
     const p = getSpendingProfile();
@@ -338,6 +340,9 @@ export default function RecommendResultsClient({ categories }: Props) {
   async function compute() {
     setLoading(true);
     setNoResults(false);
+    setNoStrategies(false);
+    setComputeError(false);
+    try {
 
     const activeCategories = categories.filter((c) => (profile[c.slug] ?? 0) > 0);
     const totalAnnualSpend = Object.values(profile).reduce((s, v) => s + (v ?? 0), 0) * 12;
@@ -575,7 +580,12 @@ export default function RecommendResultsClient({ categories }: Props) {
 
     setStrategies(strats);
     setExpanded(0);
+    if (strats.length === 0) setNoStrategies(true);
     setLoading(false);
+    } catch {
+      setComputeError(true);
+      setLoading(false);
+    }
   }
 
   // ── Loading ───────────────────────────────────────────────────────────────
@@ -607,6 +617,24 @@ export default function RecommendResultsClient({ categories }: Props) {
     );
   }
 
+  if (computeError) {
+    return (
+      <div className="bg-[#1A1D27] border border-white/8 rounded-xl p-8 text-center space-y-4">
+        <div className="text-3xl">⚠️</div>
+        <h2 className="font-semibold text-white/90">Something went wrong</h2>
+        <p className="text-sm text-white/40 max-w-xs mx-auto">
+          We couldn&apos;t load the card data. Check your connection and try again.
+        </p>
+        <Link
+          href="/recommend/results"
+          className="inline-flex items-center gap-2 bg-[#6366F1] text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-[#4F46E5] transition-colors"
+        >
+          Try again
+        </Link>
+      </div>
+    );
+  }
+
   if (noResults) {
     return (
       <div className="bg-[#1A1D27] border border-white/8 rounded-xl p-8 text-center space-y-4">
@@ -614,6 +642,24 @@ export default function RecommendResultsClient({ categories }: Props) {
         <h2 className="font-semibold text-white/90">No cards match your filters</h2>
         <p className="text-sm text-white/40 max-w-xs mx-auto">
           Your salary tier, bank, or benefit preferences are too restrictive. Try widening them.
+        </p>
+        <Link
+          href="/recommend/preferences"
+          className="inline-flex items-center gap-2 bg-[#6366F1] text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-[#4F46E5] transition-colors"
+        >
+          ← Adjust preferences
+        </Link>
+      </div>
+    );
+  }
+
+  if (noStrategies) {
+    return (
+      <div className="bg-[#1A1D27] border border-white/8 rounded-xl p-8 text-center space-y-4">
+        <div className="text-3xl">🔍</div>
+        <h2 className="font-semibold text-white/90">No viable portfolio found</h2>
+        <p className="text-sm text-white/40 max-w-xs mx-auto">
+          The cards available with your current filters don&apos;t produce a net-positive reward portfolio. Try clearing the bank preference to see the full market.
         </p>
         <Link
           href="/recommend/preferences"
