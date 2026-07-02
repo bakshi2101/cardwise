@@ -433,11 +433,6 @@ export default function RecommendResultsClient({ categories }: Props) {
       (c) => c.min_salary_aed == null || c.min_salary_aed <= salaryCeiling
     );
 
-    // ── Hard filter: bank preference ──────────────────────────────────────
-    if (prefs.bankIds.length > 0) {
-      allCards = allCards.filter((c) => prefs.bankIds.includes(c.bank_id));
-    }
-
     // ── Hard filter: required benefits ────────────────────────────────────
     if (prefs.benefits.length > 0) {
       const { data: benefitsData } = await supabase
@@ -522,37 +517,58 @@ export default function RecommendResultsClient({ categories }: Props) {
 
     const freeCards = allCards.filter((c) => c.annual_fee_aed === 0);
 
-    // ── Pinned cards: always included, reduce remaining greedy slots ───────
-    const pinnedIds = new Set(prefs.pinnedCardIds ?? []);
-    const pinnedCards = allCards.filter((c) => pinnedIds.has(c.card_id));
-    // Cards not in the pinned set, available for greedy to fill remaining slots
-    const unpinnedPool = allCards.filter((c) => !pinnedIds.has(c.card_id));
-    const remainingSlots = Math.max(0, prefs.maxCards - pinnedCards.length);
+    // ── User-pinned cards ──────────────────────────────────────────────────
+    const userPinnedIds = new Set(prefs.pinnedCardIds ?? []);
+    const userPinnedCards = allCards.filter((c) => userPinnedIds.has(c.card_id));
+
+    // ── Bank preference: guarantee one best card per preferred bank ────────
+    // Not a hard filter — remaining slots are filled from the full market.
+    const bankGuaranteedCards: CardData[] = [];
+    if (prefs.bankIds.length > 0) {
+      const usedIds = new Set(userPinnedCards.map((c) => c.card_id));
+      for (const bankId of prefs.bankIds) {
+        const bankPool = allCards.filter((c) => c.bank_id === bankId && !usedIds.has(c.card_id));
+        if (bankPool.length === 0) continue;
+        let best = bankPool[0];
+        let bestScore = weightedMonthlyReward([best], profile, activeCategories, prefs);
+        for (const card of bankPool.slice(1)) {
+          const score = weightedMonthlyReward([card], profile, activeCategories, prefs);
+          if (score > bestScore) { bestScore = score; best = card; }
+        }
+        bankGuaranteedCards.push(best);
+        usedIds.add(best.card_id);
+      }
+    }
+
+    const allPinnedCards = [...userPinnedCards, ...bankGuaranteedCards];
+    const allPinnedIds = new Set(allPinnedCards.map((c) => c.card_id));
+    const unpinnedPool = allCards.filter((c) => !allPinnedIds.has(c.card_id));
+    const remainingSlots = Math.max(0, prefs.maxCards - allPinnedCards.length);
 
     function greedyWithPinned(pool: CardData[], slots: number, excludeIds: Set<string> = new Set()): CardData[] {
-      return [...pinnedCards, ...greedy(pool, profile, activeCategories, slots, prefs, new Set([...excludeIds, ...pinnedIds]))];
+      return [...allPinnedCards, ...greedy(pool, profile, activeCategories, slots, prefs, new Set([...excludeIds, ...allPinnedIds]))];
     }
 
     // ── Three greedy strategies (loyalty-weighted selection) ───────────────
     const combo1 = greedyWithPinned(unpinnedPool, remainingSlots);
     const combo2 = greedyWithPinned(
       unpinnedPool, remainingSlots,
-      new Set(combo1.filter((c) => !pinnedIds.has(c.card_id)).slice(0, 1).map((c) => c.card_id))
+      new Set(combo1.filter((c) => !allPinnedIds.has(c.card_id)).slice(0, 1).map((c) => c.card_id))
     );
     const freeUnpinned = unpinnedPool.filter((c) => c.annual_fee_aed === 0);
     const combo3 =
-      freeUnpinned.length >= 1 || pinnedCards.length > 0
+      freeUnpinned.length >= 1 || allPinnedCards.length > 0
         ? greedyWithPinned(freeUnpinned, remainingSlots)
         : greedyWithPinned(unpinnedPool, Math.max(0, remainingSlots - 1));
 
-    const pinnedLabel = pinnedCards.length > 0 ? ` (${pinnedCards.map((c) => c.card_name).join(", ")} locked in)` : "";
+    const pinnedLabel = userPinnedCards.length > 0 ? ` (${userPinnedCards.map((c) => c.card_name).join(", ")} locked in)` : "";
 
     const strats: Strategy[] = [
       buildStrategy(combo1, profile, activeCategories, totalAnnualSpend, welcomeMap, anniversaryMap, `Optimal portfolio${pinnedLabel}`),
       buildStrategy(combo2, profile, activeCategories, totalAnnualSpend, welcomeMap, anniversaryMap, `Alternative portfolio${pinnedLabel}`),
       buildStrategy(
         combo3, profile, activeCategories, totalAnnualSpend, welcomeMap, anniversaryMap,
-        freeCards.length >= 1 || pinnedCards.length > 0
+        freeCards.length >= 1 || allPinnedCards.length > 0
           ? `No annual fee portfolio${pinnedLabel}`
           : `${Math.max(1, prefs.maxCards - 1)}-card portfolio${pinnedLabel}`
       ),
@@ -681,6 +697,9 @@ export default function RecommendResultsClient({ categories }: Props) {
   const pinnedNote = (prefs.pinnedCardIds ?? []).length > 0
     ? `${(prefs.pinnedCardIds ?? []).length} card${(prefs.pinnedCardIds ?? []).length !== 1 ? "s" : ""} locked in as requested.`
     : null;
+  const bankNote = prefs.bankIds.length > 0
+    ? `Best card from your preferred bank is included; remaining slots are open to the full market.`
+    : null;
 
   return (
     <div className="space-y-4">
@@ -723,6 +742,12 @@ export default function RecommendResultsClient({ categories }: Props) {
           <div className="mt-2 text-xs text-[#6366F1]/70 flex items-center gap-1.5">
             <span>📌</span>
             {pinnedNote} The rest of each portfolio is optimised around them.
+          </div>
+        )}
+        {bankNote && (
+          <div className="mt-2 text-xs text-[#6366F1]/70 flex items-center gap-1.5">
+            <span>🏦</span>
+            {bankNote}
           </div>
         )}
       </div>
