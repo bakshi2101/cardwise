@@ -146,7 +146,7 @@ Points-based cards (FAB Rewards, ENBD Skywards, Citi ThankYou, SC 360°, DIB Wal
 **Point/mile values — sourcing tiers:**
 
 *T&C-stated cash conversion (most reliable):*
-- Citi ThankYou Points / Citi Miles: AED 0.022/pt (cash rebate floor: 45 pts = AED 1; confirmed citibank.ae). Higher via Cash for Points: 15,000 pts = AED 500 on any travel purchase (0.033/pt); or Fly with Points: 25 pts = AED 1 (0.04/pt).
+- Citi ThankYou Points: AED 0.022/pt (cash rebate floor: 45 pts = AED 1; confirmed citibank.ae). Higher via Cash for Points: 15,000 pts = AED 500 on any travel purchase (0.033/pt); or Fly with Points: 25 pts = AED 1 (0.04/pt).
 - SC 360° Rewards: AED 0.008/pt (125 pts = AED 1; confirmed sc.com/ae/360rewards/ — lowest floor; 50 pts = AED 1 available on airline ticket redemptions)
 - DIB Wala'a Rewards: AED 0.004/pt (Pay with Rewards cashback floor: 20,000 pts = AED 80; confirmed dib.ae). Higher for flights, hotels, or bill payments: 20,000 pts = AED 100 (0.005/pt).
 - FAB Rewards: AED 0.003/pt (66,800 pts = AED 200 cashback — confirmed bankfab.com calculator)
@@ -310,7 +310,7 @@ FAB Cashback, Mashreq Cashback, Mashreq Noon, Liv Cashback, Liv Cashback+, ADIB 
 - **SC Journey (360° Rewards):** AED 0.008/pt (T&C-stated: 125 pts = AED 1). 1.09% on domestic spend; weak vs. cashback alternatives.
 
 ### Points Programs
-- **Citi ThankYou Points / Citi Miles:** AED 0.022/pt (cash rebate floor, citibank.ae). Higher rates available for travel — see tier 1 above. Transfers to 11+ airline and hotel programs.
+- **Citi ThankYou Points:** AED 0.022/pt (cash rebate floor, citibank.ae). Higher rates available for travel — see tier 1 above. Transfers to 11+ airline and hotel programs.
 - **DIB Wala'a Rewards:** AED 0.004/pt (Pay with Rewards cashback floor, dib.ae; 20,000 pts = AED 100 for flights/hotels/bill payments). 24-month expiry.
 - **ADIB/FAB SHARE Points:** AED 0.01/pt (T&C-stated). 1.5% effective on general spend (Infinite tier).
 - **ENBD SHARE / Darna / UPoints:** AED 0.10/pt (T&C-stated: 10 pts = AED 1). Strong within ecosystem but base rate only 0.75%–2.0%.
@@ -349,7 +349,16 @@ Several cards in the initial scrape had wrong forex markups:
 
 **Pass 3 (July 2026):** Three `card_rewards.exclusions` fields contained stale, incorrect forex callouts that contradicted the live `forex_markup_pct` values: (1) ENBD Bonvoy Elite international row said "Forex markup ~2.99% applies. Net return negative." — the actual markup is 1.99% and net is positive; (2) Citi Premier international row said "Net return: -1.19%" — the gross rate had previously been corrected from 1.80% to 1.20%, making the correct net -1.79%, not -1.19%; (3) Wio international row said "ZERO forex markup" — Wio carries a 2% forex fee. All three were cleared to `null`. Additionally, five `card_rewards.notes` fields (Liv Cashback, Liv Cashback+, RAKBank Elevate, ENBD Etihad Guest Elevate, ENBD Etihad Guest Inspire) contained internal research notation decomposing the forex charge as "1.99% bank + ~1.15% Mastercard = ~3.14% total" — the ~1.15% is an interbank interchange fee, not a separately-billed consumer charge; the consumer pays only the bank's stated markup. These notes were corrected to state the bank's markup only and recalculate net figures accordingly.
 
-**Ongoing convention:** `notes` is user-facing text only. Put source references in `source_url`; never in `notes`. Do not decompose forex markup into bank + network components — state the bank's markup only (as shown on the KFS) since the network spread is not a separate consumer-visible charge.
+**Ongoing convention:** `notes` is user-facing text only. Put source references in `source_url`; never in `notes`. Do not decompose forex markup into bank + network components — state the bank's markup only (as shown on the KFS) since the network spread is not a separate consumer-visible charge. Card-level facts (e.g., monthly earning caps that apply across all categories) belong in `cards.summary`, not in a per-category `card_rewards.notes` row where they imply a category-specific restriction.
+
+**Pass 4 (July 2, 2026):** Two additional cards cleaned up:
+- **Emirates Islamic Amazon World Card (18 rows):** Removed multi-paragraph boilerplate repeated across all rows (rate structure explanation, Prime vs. non-Prime preamble, AED/points conversion). Each row now carries only the category-specific caveat (e.g., restricted MCC note, QSR carve-out, banking channel zero-earn, online sub-rates, EEA/UK international split).
+- **FAB Etihad Guest Platinum/Signature/Infinite (49 rows across 3 cards):** Removed PDF version history (Air Berlin references, older rate citations), miles-to-AED conversion notation, and "Standard domestic rate" placeholders on 10 rows (set to null — the rate itself communicates this). 21 rows sharing the same Specific Merchant caveat now use a single standardised note. Cap notes removed from `general` row `notes` and moved to `cards.summary` ("Monthly earning cap: X,000 miles across all categories") so the cap reads as a card-level fact rather than a category-specific restriction.
+
+**Pass 5 (July 2, 2026):** ENBD SHARE Visa cards cleaned up (72 updates across 4 cards):
+- **31 rows → null:** general, airlines, insurance, rent, fuel, government, education (all 4 tiers) + travel (Infinite/Signature/Platinum). These categories had no category-specific caveat beyond the rate itself.
+- **37 rows → specific note:** dining (QSR carve-out + tier-specific hotel-dining ecosystem rate), shopping (MAF mall + brand list with tier rate), entertainment (Vox/Ski Dubai/etc. with tier rate), groceries (non-Carrefour reduced rate + Carrefour bonus), international (EU/UK reduced rate stated explicitly per tier + 1.99% forex fee), hotels (room vs hotel-dining distinction), utilities (ENBD Online Banking zero-earn exclusion), online_shopping (no MAF ecosystem bonus), healthcare (assumed-rate note), travel/Private only (partner discounts are merchant offers, not stacked SHARE Points).
+- **4 `cards.summary` updates:** Monthly earning cap moved from per-row notes to card-level summary for all 4 tiers (200K/100K/50K/25K SHARE Points/month).
 
 ---
 

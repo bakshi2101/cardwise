@@ -150,7 +150,7 @@ Fixed list of 17 spending categories. Users earn different rewards for different
 - `display_label`: Short user-facing label for welcome/promo bonus rows (e.g., "75,000 Bonvoy points on activation"). Falls back to auto-generated label from `notes` if null.
 - `is_estimated`: `true` when the `effective_return_pct` was computed using an assumed or cross-tier redemption value rather than a rate confirmed directly from that card's own T&C. The UI should treat these rows as approximate.
 - `monthly_cap_spend_aed`, `monthly_cap_reward`: Caps apply per month.
-- `notes`: User-facing conditions, caveats, and brand bonuses. E.g., "2 miles/USD on Emirates = 2.40%. ⚠️ Other airlines = 1.20%." For welcome bonus rows, this holds the eligibility condition (e.g., "Spend USD 15,000 in first 3 billing cycles"). **Do not store source file citations here** — those belong in `source_url` only. Notes must be readable as standalone plain English by an end user (no `Source: xyz.pdf` trails).
+- `notes`: User-facing conditions, caveats, and brand bonuses. E.g., "2 miles/USD on Emirates = 2.40%. ⚠️ Other airlines = 1.20%." For welcome bonus rows, this holds the eligibility condition (e.g., "Spend USD 15,000 in first 3 billing cycles"). **Do not store source file citations here** — those belong in `source_url` only. Notes must be readable as standalone plain English by an end user (no `Source: xyz.pdf` trails). **Card-level facts** (e.g., a monthly earning cap that applies across all spend categories) belong in `cards.summary`, not in a single `card_rewards.notes` row where they imply a category-specific restriction.
 - `last_verified_date`: When this row was last checked against T&Cs.
 
 **Example rows:**

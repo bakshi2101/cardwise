@@ -89,7 +89,7 @@
 - RAKBank Elevate Credit Card *(all 17 categories inserted; point value derived from "up to 3% back" on Privilege tier)*
 - Citi Cash Back Credit Card *(all 17 categories verified from T&C PDF; insurance excluded)*
 - Citi Premier Credit Card *(all 17 categories verified from T&C PDF; earn_unit corrected to per_usd; annual fee corrected 600→750)*
-- Citi Prestige Credit Card *(all 17 categories verified from T&C PDF; annual fee corrected 1575→1500; reward_currency_value_aed set to 0.033)*
+- Citi Prestige Credit Card *(all 17 categories verified from T&C PDF; annual fee corrected 1575→1500; reward_currency_value_aed corrected 0.033→0.022; reward_currency_name corrected "Citi Miles"→"Citi ThankYou Points")*
 - Wio Credit Card *(all 17 categories verified from KFS PDF; forex corrected 0→2%; 0.5% rate for govt/utilities/rent confirmed)*
 - HSBC Live+ Credit Card *(all 17 categories verified from hsbc.ae; 7 existing rows updated + 10 inserted; forex corrected 2.99→2%)*
 - HSBC Cash+ Credit Card *(all 17 categories verified from hsbc.ae; flat 1% confirmed; forex corrected 2.99→2%; 10% annual bonus noted)*
@@ -222,6 +222,8 @@
 - **Key Caps:** AED 1,000 overall monthly cap (most restrictive)
 - **Min Spend:** AED 3K previous month required
 - **Source URL:** Official FAB T&C PDF verified (Apr 2025 V4)
+- **Data Fixes Applied (2026-07-02):**
+  - `reward_currency_value_aed` corrected: 0.003 → 1. The card earns direct AED cashback (`earn_unit = pct`) so the currency value must be 1 (1:1 with AED). The previous value of 0.003 was carried from the underlying FAB Rewards point value and was causing a spurious valuation disclosure on Path B.
 
 #### 6. FAB Etihad Guest Platinum Credit Card ✅ (verified 2026-03-31, re-verified 2026-06-13)
 - **Card ID:** 3902a2da-f5ed-4e17-8c7f-fc6a0ef6627e
@@ -256,6 +258,9 @@
   - `other_travel` earn_rate corrected: 0.25 → 0.20 miles/AED = 1.0% (was set to Specific Merchant rate in error; travel agencies NOT in Schedule 1). Note: car rental (MCC 3390/3400/3500) IS a Specific Merchant → earns 1.25%.
   - Duplicate null `general` row deleted
   - source_url and last_verified_date updated on all rows
+- **Data Fixes Applied (2026-07-02):**
+  - `card_rewards.notes` cleaned up: 21 Specific Merchant rows standardised to single note; 10 "Standard domestic rate" notes set to null; Air Berlin references and PDF version history stripped from all rows.
+  - Monthly earning cap (10,000 miles/month) moved from `general` row `card_rewards.notes` to `cards.summary` — it applies across all categories, not just general spend.
 - **Source URLs:** Official FAB T&C PDFs (3 documents) verified
 
 #### 7. FAB Etihad Guest Signature Credit Card ✅ (re-verified 2026-03-31, Gap #3 closed 2026-06-13)
@@ -293,6 +298,9 @@
   - Duplicate null `general` row deleted
   - source_url and last_verified_date updated on all rows
   - ✅ Per-category earn rates now fully verified against Feb 2025 T&C for all 17 categories
+- **Data Fixes Applied (2026-07-02):**
+  - `card_rewards.notes` cleaned up: 21 Specific Merchant rows standardised to single note; 10 "Standard domestic rate" notes set to null; Air Berlin references and PDF version history stripped from all rows.
+  - Monthly earning cap (30,000 miles/month) moved from `general` row `card_rewards.notes` to `cards.summary`.
 - **Source URLs:** Official FAB T&C PDFs verified
 
 #### 7. FAB Etihad Guest Infinite Credit Card ✅ (verified 2026-03-31, re-verified 2026-06-13)
@@ -335,6 +343,9 @@
   - Duplicate null `general` row deleted
   - source_url and last_verified_date updated on all rows
   - ✅ All 17 per-category earn rates fully verified against Feb 2025 T&C
+- **Data Fixes Applied (2026-07-02):**
+  - `card_rewards.notes` cleaned up: 21 Specific Merchant rows standardised to single note; 10 "Standard domestic rate" notes set to null; Air Berlin references and PDF version history stripped from all rows.
+  - Monthly earning cap (55,000 miles/month) moved from `general` row `card_rewards.notes` to `cards.summary`.
 - **Source URLs:** Official FAB T&C PDFs verified
 
 #### 8. FAB SHARE Rewards Credit Card ✅ (verified 2026-03-31) — NEW CARD DISCOVERED
@@ -497,6 +508,8 @@
 - **Key Note:** GEMS education bonus (10%) applies only to MCC 8299 school-related non-tuition spend. Tuition fees are Low Interchange → 0.15%.
 - **Benefits:** 8 lounge visits/year + 1 guest (Mastercard 1,000+ lounges). Cinema AED 20 tickets. Education Protection Plan up to AED 500K/child (optional AED 28/month). 20% off Emaar attractions.
 - **Corrections applied:** annual_fee 500→399, lounge_access_count 0→8, lounge_access_network none→mastercard_lounge. Benefits rows added.
+- **Data Fixes Applied (2026-07-02):**
+  - `reward_currency_name` corrected: "Cashback AED" → "FAB Rewards". Card earns FAB Rewards points (`earn_unit = per_aed`), not direct AED cashback; the previous name was causing the Path B disclosure to show an incorrect currency label.
 - **Source URLs:** [FAB Rewards T&C](https://www.bankfab.com/-/media/fab-uds/personal/terms-and-conditions-consolidated/card-specific/FAB-Rewards-Terms-and-Conditions-En.pdf) | [FAQs PDF](https://www.bankfab.com/en-ae/personal/credit-cards/gems-world)
 
 #### 15. FAB Z Card ✅ (verified 2026-04-02, re-reviewed)
@@ -1275,6 +1288,7 @@
 - **Benefits (8 card_benefits):** Buy 1 Get 1 Free VOX Cinemas (min AED 3,500/month spend); 0% Installment Plan (3/6/12/24/36mo); Purchase Protection + Extended Warranty (+12mo); optional Credit Shield Pro; SHARE App (+3% back within SHARE ecosystem); 20-25% dining discounts at select partner restaurants; exclusive SHARE Ecosystem 2025 discounts (ACTIVATE 25%, Ski Dubai free Snow Bullet, Snow Abu Dhabi 20%, Magic Planet, 10% off THAT/All Saints/Psycho Bunny/Shiseido/Crate & Barrel/CB2); signup promo AED 250 gift card
 - **No lounge access, no travel insurance, no concierge, no valet** (entry-level tier)
 - **DB changes:** NEW card inserted; 17 card_rewards rows; 8 card_benefits; purchase_protection=true
+- **Data Fixes Applied (2026-07-02):** Notes cleanup Pass 5 — 7 category rows set to null (general, airlines, insurance, rent, fuel, government, education); 10 rows updated with category-specific notes (dining, shopping, entertainment, groceries, international, hotels, utilities, online_shopping, healthcare, travel N/A for Platinum); monthly cap moved from per-row notes to `cards.summary`.
 
 #### 84. Emirates NBD SHARE Visa Signature Credit Card ✅ (verified 2026-06-15) — NEW (2/3)
 - **Card ID:** 9659dd8f-1fb9-4e00-bd39-897700eb1da1
@@ -1293,6 +1307,7 @@
 - **Welcome Offer:** 5,000 SHARE Points (worth AED 500) on spending AED 25,000 within the first 3 months (Table 1.1); no Joining Fee Reversal offer for this tier ("NA"); plus signup promo Majid Al Futtaim Mall eGift Card worth AED 350 by YOUGotaGift
 - **Benefits (13 card_benefits):** unlimited complimentary airport lounge access at 1,200+ lounges/300+ cities via Visa Airport Companion App; Concierge services (min AED 5,000/month spend); 24/7 Roadside Assistance (min AED 5,000/month spend); BOGOF VOX Cinemas (min AED 3,500/month spend); 0% Installment Plan; Purchase Protection + Extended Warranty (+12mo); optional Credit Shield Pro; Visa Privileges Bundle (airport dining, Avis, Visa Medical & Travel Assistance, BOGOF The Entertainer, Bicester Village, BookingBash, Digital Concierge); 20-25% dining discounts; SHARE App (+3%); exclusive SHARE Ecosystem 2025 discounts; Welcome Offer 5,000 SHARE Points; signup promo AED 350 gift card
 - **DB changes:** NEW card inserted; 17 card_rewards rows; 13 card_benefits; lounge_access_network=visa_airport_companion, purchase_protection=true, concierge=true
+- **Data Fixes Applied (2026-07-02):** Notes cleanup Pass 5 — 8 category rows set to null (general, airlines, insurance, rent, fuel, government, education, travel); 9 rows updated with category-specific notes; monthly cap moved to `cards.summary`.
 
 #### 85. Emirates NBD SHARE Visa Infinite Credit Card ✅ (verified 2026-06-15) — NEW (3/3)
 - **Card ID:** 24a37507-e7e7-49e3-bc7e-fa331411df66
@@ -1312,6 +1327,7 @@
 - **Benefits (15 card_benefits):** unlimited complimentary airport lounge access for cardholder + 1 guest at 1,200+ lounges/300+ cities via Visa Airport Companion App; Golf Privileges (free golf UAE up to 2x/month at min AED 5,000/month spend + up to 40% off premium golf worldwide); complimentary Valet Parking; Concierge services (min AED 5,000/month spend); 24/7 Roadside Assistance (min AED 5,000/month spend); BOGOF VOX Cinemas (min AED 3,500/month spend); 0% Installment Plan; Purchase Protection + Extended Warranty (+12mo); optional Credit Shield Pro; Visa Privileges Bundle; 20-25% dining discounts; SHARE App (+3%); exclusive SHARE Ecosystem 2025 discounts PLUS 5% off Poltrona Frau/Eleventy (Infinite leaflet only); Welcome Offer 10,000 SHARE Points + Joining Fee Reversal; signup promo AED 500 gift card
 - **DB changes:** NEW card inserted; 17 card_rewards rows; 15 card_benefits; lounge_access_network=visa_airport_companion, valet_parking_count=null, purchase_protection=true, concierge=true
 - **DISCOVERED 4TH TIER (ENTERED 2026-06-16 AS CARD #86):** "SHARE Visa Private Credit Card" (AED 1,500/1,575 Joining Fee, 200,000 pts/month cap, same Welcome Offer structure as Infinite) has DIFFERENT per-category reward percentages from this Infinite card (🎁10%/2%/0.5%/0.2% vs 8%/1.5%/0.375%/0.15%) — per CLAUDE.md's "Key Principle" this required a separate card entry; see "⚠️ Card Variant Discovery: SHARE Visa" section above and card #86 below
+- **Data Fixes Applied (2026-07-02):** Notes cleanup Pass 5 — 8 category rows set to null (general, airlines, insurance, rent, fuel, government, education, travel); 9 rows updated with category-specific notes; monthly cap moved to `cards.summary`.
 
 ---
 
@@ -1337,6 +1353,7 @@
   - **Upgraded vs Infinite:** Valet Parking now at NAMED Abu Dhabi locations (Yas Mall, Ferrari World, Warner Bros, Al Jimi Mall, min AED 5,000/month — Infinite's was "unspecified"); "New Credit Shield Pro" (optional, 0.99%/month — AED 300,000 decease cover, AED 100/day hospitalization, up to AED 60,000 job-loss/12mo); Premium dining discounts (20-25% at Palazzo Versace Dubai, W Dubai The Palm, AkiraBack Al Tasneem, Shabestan, Atrium Café, Fenk Sunset Terrace — more upscale than the generic list for other tiers)
   - **NEW Visa Private-exclusive benefits (not on Platinum/Signature/Infinite):** 15% off DUBZ home check-in (p.a.); 25% off YQ Meet & Assist (450+ destinations); complimentary BookingBash Pro Ultimate subscription; 12% off Agoda; up to 8% off booking.com; 15% off IHG; 11% off gettransfer.com (150 countries); OneVasco Concierge (2 free visa application concierge services/year + 25% off subsequent, cardholder + immediate family); complimentary Supper Club Signature Dining Membership (up to 60% off / BOGOF, valid until 30 Apr 2026); Bliss Club Beach Discounts (up to 50% off at 50 luxury beach clubs, valid until 30 Apr 2026); complimentary Padel Courts Access (4 bookings/year); Harrod's Gold Membership (valid until 30 Apr 2026); Airport Transfers in UAE (up to AED 100 off per ride)
 - **DB changes:** NEW card inserted; 17 card_rewards rows; 23 card_benefits; lounge_access_network=visa_airport_companion, valet_parking_count=null, purchase_protection=true, concierge=true, min_salary_aed=null
+- **Data Fixes Applied (2026-07-02):** Notes cleanup Pass 5 — 7 category rows set to null (general, airlines, insurance, rent, fuel, government, education); 10 rows updated with category-specific notes (includes travel — Private-exclusive partner discounts are merchant offers, not stacked SHARE Points); monthly cap moved to `cards.summary`.
 
 ---
 
@@ -1747,7 +1764,7 @@ Mashreq Platinum Plus Credit Card ✅ (2026-06-13) | Mashreq Solitaire Credit Ca
   - **Restricted MCCs** (insurance, education, utilities, government): 0.5 pts/USD = **0.30%**
 - **No monthly caps**
 - **Key exclusions:** Utility bills via Citi channels = 0 points
-- **DB changes:** annual_fee 1575→1500; reward_currency_value_aed null→0.033 (revised 2026-07-02 to 0.022 — cash rebate floor); inserted 17 card_rewards rows from scratch
+- **DB changes:** annual_fee 1575→1500; reward_currency_value_aed null→0.033 (revised 2026-07-02 to 0.022 — cash rebate floor); reward_currency_name corrected "Citi Miles"→"Citi ThankYou Points" (2026-07-02); inserted 17 card_rewards rows from scratch
 
 **Citi pattern notes:**
 - All ThankYou earn rates are expressed per USD charged (earn_unit=per_usd), NOT per AED
